@@ -16,17 +16,21 @@
       var n = nodes[i];
       n.textContent = n.getAttribute(lang === "am" ? "data-am" : "data-en");
     }
-    var toggle = document.getElementById("langToggle");
-    if (toggle) toggle.textContent = lang === "am" ? "English" : "አማርኛ";
+    var segs = document.querySelectorAll(".seg");
+    for (var s = 0; s < segs.length; s++) {
+      var on = segs[s].getAttribute("data-lang") === lang;
+      segs[s].classList.toggle("active", on);
+      segs[s].setAttribute("aria-pressed", String(on));
+    }
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   }
 
-  var langToggles = document.querySelectorAll(".lang-toggle");
-  function flipLang() { applyLang(current === "am" ? "en" : "am"); }
-  for (var t = 0; t < langToggles.length; t++) {
-    langToggles[t].addEventListener("click", flipLang);
+  var segs = document.querySelectorAll(".seg");
+  for (var s = 0; s < segs.length; s++) {
+    segs[s].addEventListener("click", function () {
+      applyLang(this.getAttribute("data-lang"));
+    });
   }
-  var langToggle = document.getElementById("langToggle");
   applyLang(current);
 
   /* ── nav: scroll border + mobile menu ───────────── */
