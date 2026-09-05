@@ -21,12 +21,12 @@
     try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
   }
 
-  var langToggle = document.getElementById("langToggle");
-  if (langToggle) {
-    langToggle.addEventListener("click", function () {
-      applyLang(current === "am" ? "en" : "am");
-    });
+  var langToggles = document.querySelectorAll(".lang-toggle");
+  function flipLang() { applyLang(current === "am" ? "en" : "am"); }
+  for (var t = 0; t < langToggles.length; t++) {
+    langToggles[t].addEventListener("click", flipLang);
   }
+  var langToggle = document.getElementById("langToggle");
   applyLang(current);
 
   /* ── nav: scroll border + mobile menu ───────────── */
