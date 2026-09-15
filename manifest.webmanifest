@@ -1,0 +1,24 @@
+{
+  "name": "Feven's Prints — Photo Printing, Addis Ababa",
+  "short_name": "Feven's Prints",
+  "description": "Premium prints, canvases, photo books and gifts, printed the same day in Bole, Addis Ababa. Order by phone or WhatsApp.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F4EE",
+  "theme_color": "#F8F4EE",
+  "categories": ["shopping", "photo", "business"],
+  "icons": [
+    { "src": "img/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "img/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "img/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Send us your photos", "short_name": "Send photos", "url": "./#send" },
+    { "name": "Place an order", "short_name": "Order", "url": "./#order" },
+    { "name": "Common questions", "short_name": "Questions", "url": "./#faq" }
+  ]
+}
