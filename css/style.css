@@ -20,7 +20,10 @@
   --pine-deep: #0A4632;
   --pine-soft: #DCE7DF;
   --white: #FFFDF9;
-  --display: 'Bricolage Grotesque', 'Outfit', system-ui, sans-serif;
+  /* 🔴 'Noto Sans Ethiopic' MUST stay in this stack: Bricolage + Outfit are
+     Latin-only (see their unicode-range), so without it Amharic headings fall
+     through to system-ui and the AM headline stops matching the AM body. */
+  --display: 'Bricolage Grotesque', 'Outfit', 'Noto Sans Ethiopic', system-ui, sans-serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-inout: cubic-bezier(0.77, 0, 0.175, 1);
   --shadow-warm: rgba(46, 37, 26, 0.4);
@@ -93,7 +96,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav.scrolled { border-bottom-color: var(--line); }
 .nav-inner { display: flex; align-items: center; gap: 22px; height: var(--nav-h); }
 .brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-family: var(--display); font-weight: 640; font-size: 21px; letter-spacing: -0.015em; }
-.brand-mark { width: 30px; height: 30px; flex: none; border-radius: 8px; }
 .brand-light { color: #fff; }
 .nav-links { display: flex; gap: 22px; margin-left: 6px; }
 .nav-links a { color: var(--ink-soft); font-size: 15px; font-weight: 570; position: relative; padding: 4px 0; transition: color 200ms ease; }
@@ -205,11 +207,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer { background: var(--ink); color: #CFC4B4; padding: 64px 0 0; }
 .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 44px; padding-bottom: 48px; }
 .f-brand .brand { font-size: 17.5px; }
-.f-brand .brand-mark { width: 27px; height: 27px; }
 .f-blurb { font-size: 14.5px; line-height: 1.7; margin: 16px 0 18px; max-width: 34ch; color: #A79B89; }
-.f-social { display: flex; gap: 18px; }
-.f-social a { font-size: 14px; font-weight: 620; color: #CFC4B4; transition: color 200ms ease; }
-.f-social a:hover { color: #fff; }
 .f-col { display: flex; flex-direction: column; gap: 9px; }
 .f-col h4 { font-size: 12.5px; font-weight: 720; letter-spacing: 0.14em; text-transform: uppercase; color: #fff; margin-bottom: 6px; }
 .f-col a, .f-col span { font-size: 14.5px; color: #A79B89; transition: color 200ms ease; }
