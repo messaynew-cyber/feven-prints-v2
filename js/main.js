@@ -78,7 +78,7 @@
   }
 
   /* ── order form → WhatsApp (no server, nothing stored) ── */
-  var ORDER_WA = "https://wa.me/251911729779?text=";
+  var ORDER_WA = "https://wa.me/358442715477?text=";
   var ORDER_KEY = "fevens-orders";
   var ORDER_MSG = {
     product: { en: "Please choose what you want printed.", am: "እባክዎ ምን ማተም እንደሚፈልጉ ይምረጡ።" },
