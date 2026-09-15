@@ -16,6 +16,10 @@
       var n = nodes[i];
       n.textContent = n.getAttribute(lang === "am" ? "data-am" : "data-en");
     }
+    var phs = document.querySelectorAll("[data-en-ph][data-am-ph]");
+    for (var p = 0; p < phs.length; p++) {
+      phs[p].setAttribute("placeholder", phs[p].getAttribute(lang === "am" ? "data-am-ph" : "data-en-ph"));
+    }
     var segs = document.querySelectorAll(".seg");
     for (var s = 0; s < segs.length; s++) {
       var on = segs[s].getAttribute("data-lang") === lang;
@@ -70,5 +74,89 @@
       });
     }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
     reveals.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ── order form → WhatsApp (no server, nothing stored) ── */
+  var ORDER_WA = "https://wa.me/251911729779?text=";
+  var ORDER_MSG = {
+    product: { en: "Please choose what you want printed.", am: "እባክዎ ምን ማተም እንደሚፈልጉ ይምረጡ።" },
+    name:    { en: "Please add your name.", am: "እባክዎ ስምዎን ያስገቡ።" },
+    phone:   { en: "Please add a phone number we can reach you on.", am: "እባክዎ የስልክ ቁጥርዎን ያስገቡ።" }
+  };
+  var form = document.getElementById("orderForm");
+  if (form) {
+    var lang = function () { return document.documentElement.lang === "am" ? "am" : "en"; };
+    var val = function (id) { var e = document.getElementById(id); return e && e.value ? e.value.trim() : ""; };
+    var setErr = function (id, key) {
+      var err = document.getElementById("of-err-" + id);
+      var input = document.getElementById("of-" + id);
+      var field = input ? input.closest(".field") : null;
+      if (!err || !field) return;
+      if (key) { err.textContent = ORDER_MSG[key][lang()]; err.hidden = false; field.classList.add("invalid"); }
+      else { err.textContent = ""; err.hidden = true; field.classList.remove("invalid"); }
+    };
+    var buildMessage = function () {
+      var am = lang() === "am";
+      var L = [];
+      L.push(am ? "ሰላም የፌቨን ህትመቶች — አዲስ ትዕዛዝ" : "Hello Feven's Prints - new order");
+      L.push("");
+      L.push((am ? "ምርት: " : "Product: ") + val("of-product"));
+      if (val("of-size")) L.push((am ? "መጠን: " : "Size: ") + val("of-size"));
+      L.push((am ? "ብዛት: " : "Quantity: ") + (val("of-qty") || "1"));
+      if (val("of-date")) L.push((am ? "የሚፈልጉበት ቀን: " : "Needed by: ") + val("of-date"));
+      if (val("of-notes")) L.push((am ? "ተጨማሪ: " : "Notes: ") + val("of-notes"));
+      L.push("");
+      L.push((am ? "ስም: " : "Name: ") + val("of-name"));
+      L.push((am ? "ስልክ: " : "Phone: ") + val("of-phone"));
+      return L.join("\n");
+    };
+    var showFallback = function (msg) {
+      var box = document.getElementById("orderFallback");
+      var ta = document.getElementById("orderText");
+      if (!box || !ta) return;
+      ta.value = msg; box.hidden = false; return box;
+    };
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var ok = true;
+      if (!val("of-product")) { setErr("product", "product"); ok = false; } else setErr("product");
+      if (!val("of-name")) { setErr("name", "name"); ok = false; } else setErr("name");
+      if (val("of-phone").replace(/[^0-9]/g, "").length < 9) { setErr("phone", "phone"); ok = false; } else setErr("phone");
+      if (!ok) {
+        var first = form.querySelector(".field.invalid input, .field.invalid select");
+        if (first) first.focus();
+        return;
+      }
+      var msg = buildMessage();
+      showFallback(msg);
+      var win = window.open(ORDER_WA + encodeURIComponent(msg), "_blank", "noopener");
+      if ((!win || win.closed) && typeof msg === "string") {
+        var box = document.getElementById("orderFallback");
+        if (box && box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    });
+
+    var copyBtn = document.getElementById("orderCopy");
+    if (copyBtn) copyBtn.addEventListener("click", function () {
+      var ta = document.getElementById("orderText");
+      var box = document.getElementById("orderFallback");
+      if (!ta) return;
+      if (!ta.value) showFallback(buildMessage());
+      var text = ta.value;
+      var done = function () {
+        var old = copyBtn.getAttribute(lang() === "am" ? "data-am" : "data-en");
+        copyBtn.textContent = lang() === "am" ? "ተቀድቷል" : "Copied";
+        setTimeout(function () { copyBtn.textContent = old; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { ta.select(); try { document.execCommand("copy"); done(); } catch (e2) {} });
+      } else {
+        ta.removeAttribute("readonly"); ta.select();
+        try { document.execCommand("copy"); done(); } catch (e3) {}
+        ta.setAttribute("readonly", "readonly");
+      }
+      if (box) box.hidden = false;
+    });
   }
 })();
