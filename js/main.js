@@ -20,6 +20,7 @@
     for (var p = 0; p < phs.length; p++) {
       phs[p].setAttribute("placeholder", phs[p].getAttribute(lang === "am" ? "data-am-ph" : "data-en-ph"));
     }
+    if (typeof renderHistory === "function") renderHistory();
     var segs = document.querySelectorAll(".seg");
     for (var s = 0; s < segs.length; s++) {
       var on = segs[s].getAttribute("data-lang") === lang;
@@ -78,6 +79,7 @@
 
   /* ── order form → WhatsApp (no server, nothing stored) ── */
   var ORDER_WA = "https://wa.me/251911729779?text=";
+  var ORDER_KEY = "fevens-orders";
   var ORDER_MSG = {
     product: { en: "Please choose what you want printed.", am: "እባክዎ ምን ማተም እንደሚፈልጉ ይምረጡ።" },
     name:    { en: "Please add your name.", am: "እባክዎ ስምዎን ያስገቡ።" },
@@ -95,10 +97,23 @@
       if (key) { err.textContent = ORDER_MSG[key][lang()]; err.hidden = false; field.classList.add("invalid"); }
       else { err.textContent = ""; err.hidden = true; field.classList.remove("invalid"); }
     };
-    var buildMessage = function () {
+    var genRef = function () {
+      var A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; /* no I, O, 0, 1 — avoids misreads on the phone */
+      var s = "";
+      for (var i = 0; i < 4; i++) s += A.charAt(Math.floor(Math.random() * A.length));
+      return "FP-" + s;
+    };
+    var readStore = function () {
+      try { var raw = localStorage.getItem(ORDER_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
+    };
+    var writeStore = function (list) {
+      try { localStorage.setItem(ORDER_KEY, JSON.stringify(list.slice(0, 5))); } catch (e) {}
+    };
+    var buildMessage = function (ref) {
       var am = lang() === "am";
       var L = [];
       L.push(am ? "ሰላም የፌቨን ህትመቶች — አዲስ ትዕዛዝ" : "Hello Feven's Prints - new order");
+      if (ref) L.push((am ? "ማጣቀሻ: " : "Reference: ") + ref);
       L.push("");
       L.push((am ? "ምርት: " : "Product: ") + val("of-product"));
       if (val("of-size")) L.push((am ? "መጠን: " : "Size: ") + val("of-size"));
@@ -110,11 +125,31 @@
       L.push((am ? "ስልክ: " : "Phone: ") + val("of-phone"));
       return L.join("\n");
     };
-    var showFallback = function (msg) {
-      var box = document.getElementById("orderFallback");
-      var ta = document.getElementById("orderText");
-      if (!box || !ta) return;
-      ta.value = msg; box.hidden = false; return box;
+    var renderHistory = function () {
+      var box = document.getElementById("orderHistory");
+      var ul = document.getElementById("orderHistoryList");
+      if (!box || !ul) return;
+      var list = readStore();
+      if (!list.length) { box.hidden = true; return; }
+      box.hidden = false;
+      var am = lang() === "am";
+      ul.textContent = "";
+      for (var i = 0; i < list.length; i++) {
+        var o = list[i];
+        var li = document.createElement("li");
+        var meta = document.createElement("span");
+        meta.className = "oh-meta";
+        meta.textContent = o.ref + " · " + o.when + " · " + o.summary;
+        var a = document.createElement("a");
+        a.className = "oh-send";
+        a.href = ORDER_WA + encodeURIComponent(o.msg || "");
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = am ? "እንደገና ላክ" : "Send again";
+        li.appendChild(meta);
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
     };
 
     form.addEventListener("submit", function (e) {
@@ -128,21 +163,41 @@
         if (first) first.focus();
         return;
       }
-      var msg = buildMessage();
-      showFallback(msg);
+      var ref = genRef();
+      var msg = buildMessage(ref);
+      var done = document.getElementById("orderDone");
+      var ta = document.getElementById("orderText");
+      var refEl = document.getElementById("orderRef");
+      if (ta) ta.value = msg;
+      if (refEl) refEl.textContent = ref;
+      if (done) done.hidden = false;
       var win = window.open(ORDER_WA + encodeURIComponent(msg), "_blank", "noopener");
-      if ((!win || win.closed) && typeof msg === "string") {
-        var box = document.getElementById("orderFallback");
-        if (box && box.scrollIntoView) box.scrollIntoView({ behavior: "smooth", block: "center" });
+      var list = readStore();
+      list.unshift({
+        ref: ref,
+        when: new Date().toLocaleDateString(),
+        summary: val("of-product") + (val("of-qty") ? " × " + val("of-qty") : ""),
+        msg: msg
+      });
+      writeStore(list);
+      renderHistory();
+      if ((!win || win.closed) && done && done.scrollIntoView) {
+        done.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     });
 
     var copyBtn = document.getElementById("orderCopy");
     if (copyBtn) copyBtn.addEventListener("click", function () {
       var ta = document.getElementById("orderText");
-      var box = document.getElementById("orderFallback");
       if (!ta) return;
-      if (!ta.value) showFallback(buildMessage());
+      if (!ta.value) {
+        var rf = genRef();
+        ta.value = buildMessage(rf);
+        var re = document.getElementById("orderRef");
+        if (re) re.textContent = rf;
+        var dn = document.getElementById("orderDone");
+        if (dn) dn.hidden = false;
+      }
       var text = ta.value;
       var done = function () {
         var old = copyBtn.getAttribute(lang() === "am" ? "data-am" : "data-en");
@@ -156,7 +211,11 @@
         try { document.execCommand("copy"); done(); } catch (e3) {}
         ta.setAttribute("readonly", "readonly");
       }
-      if (box) box.hidden = false;
     });
+
+    var clearBtn = document.getElementById("orderHistoryClear");
+    if (clearBtn) clearBtn.addEventListener("click", function () { writeStore([]); renderHistory(); });
+
+    renderHistory();
   }
 })();

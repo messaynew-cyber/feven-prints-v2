@@ -372,7 +372,7 @@
 <section class="section section-tint" id="order">
   <div class="wrap">
     <h2 class="section-h reveal" data-en="Place an order" data-am="ትዕዛዝ ይስጡ">Place an order</h2>
-    <p class="order-sub reveal" data-en="Fill this in and WhatsApp opens with your order already written. Nothing is stored on this website." data-am="ይህን ይሙሉ፤ ዋትስአፕ ትዕዛዙን ይዞ ይከፈታል። በዚህ ድረ-ገጽ ላይ ምንም አይቀመጥም።">Fill this in and WhatsApp opens with your order already written. Nothing is stored on this website.</p>
+    <p class="order-sub reveal" data-en="Fill this in and WhatsApp opens with your order already written. Nothing is sent to a server — your order goes straight to us on WhatsApp." data-am="ይህን ይሙሉ፤ ዋትስአፕ ትዕዛዙን ይዞ ይከፈታል። ወደ ሰርቨር ምንም አይላክም፤ ትዕዛዙ በቀጥታ በዋትስአፕ ይደርሰናል።">Fill this in and WhatsApp opens with your order already written. Nothing is sent to a server — your order goes straight to us on WhatsApp.</p>
 
     <form class="order-form reveal d1" id="orderForm" novalidate>
       <div class="field">
@@ -439,14 +439,31 @@
 
       <div class="field field-submit">
         <button class="btn btn-primary order-send" type="submit" data-en="Send order on WhatsApp" data-am="ትዕዛዙን በዋትስአፕ ይላኩ">Send order on WhatsApp</button>
-        <button class="btn btn-pill" type="button" id="orderCopy" data-en="Copy instead" data-am="ቅዳ">Copy instead</button>
       </div>
       <p class="form-note" data-en="We reply with the price and a pickup time. Same-day for orders before 16:00." data-am="ዋጋውንና የመውሰጃ ሰዓቱን እንመልስልዎታለን። ከ16:00 በፊት ለታዘዙ በዚያው ቀን።">We reply with the price and a pickup time. Same-day for orders before 16:00.</p>
     </form>
 
-    <div class="order-fallback" id="orderFallback" hidden>
-      <p data-en="WhatsApp did not open. Copy your order below and send it to us on +251 91 172 9779." data-am="ዋትስአፕ አልተከፈተም። ትዕዛዙን ከታች ቅዱና በ +251 91 172 9779 ይላኩልን።">WhatsApp did not open. Copy your order below and send it to us on +251 91 172 9779.</p>
+    <!-- [FEVEN] New Amharic strings: ትዕዛዙ ለመላክ ተዘጋጅቷል · የእርስዎ ማጣቀሻ · እዚያ ይላኩ · በዚህ መሳሪያ ላይ ያሉ የቅርብ ጊዜ ትዕዛዞች · እንደገና ላክ · አጥፋ -->
+    <!-- T1-08: reference code + on-device history. There is no backend, so this is
+         deliberately NOT a fake tracking page — it gives the order a handle for the
+         WhatsApp/phone conversation and lets the customer re-send their own order.
+         A real status lookup needs a server or a shared sheet (see todo). -->
+    <div class="order-done" id="orderDone" hidden>
+      <h3 data-en="Order ready to send" data-am="ትዕዛዙ ለመላክ ተዘጋጅቷል">Order ready to send</h3>
+      <p class="order-ref"><span data-en="Your reference" data-am="የእርስዎ ማጣቀሻ">Your reference</span> <strong id="orderRef">—</strong></p>
+      <p data-en="WhatsApp should have opened — press send there. Quote this reference when you call or message us." data-am="ዋትስአፕ መከፈት አለበት — እዚያ ይላኩ። ሲደውሉ ወይም ሲጽፉ ይህን ማጣቀሻ ይጠቀሱ።">WhatsApp should have opened — press send there. Quote this reference when you call or message us.</p>
       <textarea id="orderText" rows="7" readonly aria-label="Your order"></textarea>
+      <div class="order-done-row">
+        <button class="btn btn-pill" type="button" id="orderCopy" data-en="Copy order" data-am="ትዕዛዙን ቅዳ">Copy order</button>
+        <p class="field-hint" data-en="If WhatsApp did not open, copy this and send it to +251 91 172 9779." data-am="ዋትስአፕ ካልተከፈተ ይህን ቅድና በ +251 91 172 9779 ይላኩ።">If WhatsApp did not open, copy this and send it to +251 91 172 9779.</p>
+      </div>
+    </div>
+
+    <div class="order-history" id="orderHistory" hidden>
+      <h3 data-en="Your recent orders on this device" data-am="በዚህ መሳሪያ ላይ ያሉ የቅርብ ጊዜ ትዕዛዞች">Your recent orders on this device</h3>
+      <p class="field-hint" data-en="Saved in this browser only — nothing is sent to our server." data-am="በዚህ አሳሽ ውስጥ ብቻ ተቀምጧል።">Saved in this browser only — nothing is sent to our server.</p>
+      <ul id="orderHistoryList"></ul>
+      <button class="btn btn-pill" type="button" id="orderHistoryClear" data-en="Clear" data-am="አጥፋ">Clear</button>
     </div>
   </div>
 </section>
