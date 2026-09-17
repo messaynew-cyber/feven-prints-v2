@@ -151,8 +151,8 @@ ul { margin: 0; padding: 0; list-style: none; }
    dark-on-green at 2:1 before this) */
 .nav-mobile a.btn { color: var(--btn-fg); }
 .nav-mobile a.btn { margin-top: 8px; justify-content: center; }
-.nav-mobile.open { display: flex; animation: menuIn 220ms var(--ease-out); }
-@keyframes menuIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.nav-mobile.open { display: flex; transform-origin: top right; animation: menuIn 190ms var(--ease-out); }
+@keyframes menuIn { from { opacity: 0; transform: scale(.97) translateY(-4px); } to { opacity: 1; transform: none; } }
 
 /* ── hero ────────────────────────────────────────────── */
 .hero { padding: 76px 0 88px; overflow: hidden; background: radial-gradient(1000px 620px at 86% -16%, var(--hero-glow), transparent 60%), var(--paper); }
@@ -614,6 +614,34 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
 .skip:focus { left:12px; top:12px; padding:12px 18px; border-radius:10px;
                background:var(--white); color:var(--ink); border:1px solid var(--line-strong);
                font-weight:700; box-shadow:0 10px 24px -12px var(--shadow-warm); }
+
+/* ══ MOTION VARIETY ══════════════════════════════════════
+   Canon: if everything enters the same way it reads as machine-made. Three
+   behaviours now, assigned by what the element IS - headings resolve from a
+   blur, cards and images settle from a slight scale, prose rises. */
+.reveal.reveal-scale { opacity:0; transform:scale(.97);
+  transition:opacity 460ms var(--ease-out), transform 460ms var(--ease-out); }
+.reveal.reveal-scale.in { opacity:1; transform:none; }
+.reveal.reveal-blur { opacity:0; filter:blur(7px); transform:translateY(7px);
+  transition:opacity 520ms var(--ease-out), filter 520ms var(--ease-out), transform 520ms var(--ease-out); }
+.reveal.reveal-blur.in { opacity:1; filter:blur(0); transform:none; }
+
+/* once-only silk sheen across the ribbon as it draws in */
+.tibeb-wrap { position:relative; }
+.tibeb-wrap::after { content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(100deg, transparent 34%, rgba(255,255,255,.45) 50%, transparent 66%);
+  transform:translateX(-100%); }
+.tibeb-wrap.in::after { animation:sheen 1150ms var(--ease-out) 480ms 1 both; }
+@keyframes sheen { from { transform:translateX(-100%); } to { transform:translateX(100%); } }
+
+/* the adey abeba opens on hover (fine pointers only) */
+@media (hover:hover) and (pointer:fine) {
+  .hero-facts li::before { transition:transform 280ms var(--ease-out), filter 280ms ease; }
+  .hero-facts li:hover::before { transform:rotate(24deg) scale(1.2); filter:brightness(1.15); }
+}
+
+/* the carousel track owns horizontal drags, the page keeps vertical scroll */
+.hero-slides { touch-action:pan-y; }
 
 /* ── responsive ──────────────────────────────────────── */
 @media (max-width: 1024px) {

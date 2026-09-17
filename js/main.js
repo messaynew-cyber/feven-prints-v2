@@ -336,16 +336,34 @@
       else if (e.key === "ArrowRight") { goTo(idx + 1, true); }
     });
 
-    var startX = null;
+    /* Interruptible drag: the track follows the finger and the release decides
+       the outcome. A flick-only swipe cannot be changed mid-gesture, which is
+       what makes a carousel feel like it is arguing with you. */
+    var dragActive = false, dragStart = 0, dragBase = 0, dragX = 0;
+    function trackWidth() { return slidesEl.getBoundingClientRect().width || 1; }
     slidesEl.addEventListener("touchstart", function (e) {
-      startX = e.touches[0].clientX;
+      dragActive = true;
+      dragStart = e.touches[0].clientX;
+      dragBase = -idx * trackWidth();
+      dragX = dragBase;
+      slidesEl.style.transition = "none";
     }, { passive: true });
-    slidesEl.addEventListener("touchend", function (e) {
-      if (startX === null) return;
-      var dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 44) goTo(idx + (dx < 0 ? 1 : -1), true);
-      startX = null;
+    slidesEl.addEventListener("touchmove", function (e) {
+      if (!dragActive) return;
+      dragX = dragBase + (e.touches[0].clientX - dragStart);
+      slidesEl.style.transform = "translateX(" + dragX + "px)";
     }, { passive: true });
+    function endDrag() {
+      if (!dragActive) return;
+      dragActive = false;
+      slidesEl.style.transition = "";
+      var dx = dragX - dragBase;
+      var w = trackWidth();
+      if (Math.abs(dx) > w * 0.18) goTo(idx + (dx < 0 ? 1 : -1), true);
+      else goTo(idx, false);   /* snap back */
+    }
+    slidesEl.addEventListener("touchend", endDrag, { passive: true });
+    slidesEl.addEventListener("touchcancel", endDrag, { passive: true });
 
     goTo(0);
     startAuto();
