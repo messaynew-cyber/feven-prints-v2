@@ -283,6 +283,18 @@ ul { margin: 0; padding: 0; list-style: none; }
   .hung:hover img { transform: scale(1.035); }
 }
 
+/* ── section chapter-mark ────────────────────────────────
+   One ornament-scale Ge'ez numeral, ghosted behind the section that opens the
+   order flow - the same ፩ as the first step marker inside it, at chapter scale.
+   z-index -1 puts it above the section's own background and below its text,
+   which is exactly where a watermark belongs (a positioned child at z-index
+   auto would have painted over the heading). */
+#send { position: relative; }
+.ghost-num { position: absolute; z-index: -1; top: 34px; right: 3vw;
+  font-family: var(--display); font-size: clamp(120px, 20vw, 240px); line-height: .8;
+  color: var(--gold); opacity: .10; pointer-events: none; user-select: none; }
+[data-theme="dark"] .ghost-num { opacity: .13; }
+
 /* ── visit ───────────────────────────────────────────── */
 .visit-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 64px; align-items: start; }
 .visit-copy .section-h { margin-bottom: 18px; }
@@ -754,6 +766,7 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
   /* never print the wall panel: it would flood the page with ink */
   .wall-stage { background-image:none !important; background-color:#fff !important; border:0 !important; padding:0 !important; }
+  .ghost-num { display:none !important; }
   .hung, .hung:nth-child(n) { rotate:0deg !important; translate:0 0 !important; box-shadow:none !important; }
   .wall-band { background-image:none !important; background-color:#fff !important; border:0 !important; padding:0 !important; margin:0 !important; box-shadow:none !important; }
   .wall-band::before { display:none !important; }
@@ -790,6 +803,7 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .section { padding: 68px 0; }
   .bento { grid-template-columns: 1fr; }
   .wall-band { padding: 36px 0 42px; margin: 16px 0 32px; }
+  .ghost-num { font-size: 104px; top: 10px; right: 1vw; opacity: .085; }
   .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
   .tile-big, .tile-tall, .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5), .tile-wide { grid-column: span 1; }
   .tile-wide { flex-direction: column; }
