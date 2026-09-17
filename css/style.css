@@ -371,11 +371,33 @@ button.btn { cursor: pointer; }
    Tibeb: the woven border from habesha kemis, reduced to a repeating
    gold diamond-and-cross band. Used as a signature rule at the top of the
    page and above the footer, never as a decorative border on cards. */
-/* ── the ceremonial tricolour: green / yellow / red woven ribbon.
-      This is the ONE place all three flag colours appear together, plus the
-      scroll progress bar. Everywhere else they act as separate accents. */
-.tibeb { height:24px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='24' viewBox='0 0 36 24'%3E%3Crect width='36' height='8' fill='%23078930'/%3E%3Crect y='8' width='36' height='8' fill='%23FCDD09'/%3E%3Crect y='16' width='36' height='8' fill='%23DA121A'/%3E%3Cg fill='%23F8F4EE' fill-opacity='.9'%3E%3Cpath d='M9 4l2.5 2L9 8 6.5 6z'/%3E%3Cpath d='M27 4l2.5 2L27 8l-2.5-2z'/%3E%3Cpath d='M18 12l2.5 2L18 16l-2.5-2z'/%3E%3Cpath d='M0 12l2.5 2L0 16l-2.5-2z'/%3E%3Cpath d='M9 19l2.5 2L9 23l-2.5-2z'/%3E%3Cpath d='M27 19l2.5 2L27 23l-2.5-2z'/%3E%3C/g%3E%3C/svg%3E");
-        background-repeat:repeat-x; background-position:center; }
+/* ── the ceremonial tricolour, as a SILK SELVEDGE.
+      Deep dyed threads rather than flag-bright ones, hairline gold edging and
+      a soft sheen so it reads as couture trim. The full flag colours still live
+      in the theme as accent roles; this band is the woven edge of the cloth. */
+.tibeb { height:11px;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,.13) 100%),
+    repeating-linear-gradient(115deg, rgba(255,255,255,.09) 0 1px, rgba(0,0,0,.05) 1px 3px),
+    linear-gradient(180deg,
+      #17532F 0 33.4%,
+      #B8912F 33.4% 66.7%,
+      #7E211C 66.7% 100%);
+  background-size: auto, 7px 7px, auto;
+  border-top: 1px solid rgba(184,145,47,.42);
+  border-bottom: 1px solid rgba(184,145,47,.30);
+  box-shadow: 0 1px 2px rgba(60,45,28,.10), inset 0 1px 0 rgba(255,255,255,.24); }
+[data-theme="dark"] .tibeb {
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,.20) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,.22) 100%),
+    repeating-linear-gradient(115deg, rgba(255,255,255,.07) 0 1px, rgba(0,0,0,.08) 1px 3px),
+    linear-gradient(180deg,
+      #2C7A4B 0 33.4%,
+      #D4AF4A 33.4% 66.7%,
+      #A63229 66.7% 100%);
+  border-top-color: rgba(212,175,74,.45);
+  border-bottom-color: rgba(212,175,74,.30); }
+
 /* loom: the ribbon draws across as the page scrolls it into view */
 /* Loom reveal. The band must NOT be hidden with clip-path or a transform on
    itself: Chromium computes an empty intersection rect for a clipped element,
@@ -524,7 +546,7 @@ button.btn { cursor: pointer; }
 
 /* scroll progress bar */
 .progress { position:fixed; top:0; left:0; height:2.5px; width:100%; z-index:40;
-  background:linear-gradient(90deg, var(--flag-green), var(--flag-yellow) 52%, var(--flag-red)); transform:scaleX(0); transform-origin:left;
+  background:linear-gradient(90deg, #17532F, #B8912F 52%, #7E211C); transform:scaleX(0); transform-origin:left;
   pointer-events:none; }
 /* heading flourish + cards cadence */
 .price-card, .faq { transition:transform 240ms var(--ease-out), box-shadow 240ms var(--ease-out), border-color 240ms ease; }
