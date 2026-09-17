@@ -855,8 +855,10 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
   .hung-c { grid-column: span 12; translate: 0 0; }
   .price-grid { grid-template-columns: repeat(2, 1fr); }
   .visit-grid { grid-template-columns: 1fr; gap: 40px; }
-  .tile-big, .tile-tall { grid-column: span 6; }
-  .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5) { grid-column: span 6; }
+  /* three per row, not two: with two columns the five small tiles leave the
+     sixth cell of row three empty, which reads as a missing product image.
+     Six tiles over two rows of three, plus the full-width tile, leaves no hole. */
+  .tile-big, .tile-tall, .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5) { grid-column: span 4; }
   .tile-wide { grid-column: span 12; }
 }
 @media (max-width: 860px) {
