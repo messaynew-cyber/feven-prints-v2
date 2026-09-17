@@ -244,7 +244,13 @@
   <div class="wrap">
     <p class="am-eye">ምርቶች</p>
     <h2 class="section-h reveal reveal-blur" data-en="What we print" data-am="የምናተማቸው ምርቶች">What we print</h2>
-    <div class="bento">
+  </div>
+
+  <!-- The wall: a full-bleed panel so the prints hang on something.
+       Prints inside keep their own .wrap, so the panel reaches both edges. -->
+  <div class="wall-band">
+    <div class="wrap">
+      <div class="bento">
       <a class="tile tile-big reveal reveal-scale accent-green" href="https://wa.me/358442715477?text=Hello%20Feven%27s%20Prints%20-%20I%27d%20like%20to%20order%20a%20canvas%20print." target="_blank" rel="noopener">
         <figure class="tile-media"><picture><source type="image/webp" srcset="img/canvas.webp"><img src="img/canvas.jpg" alt="Framed canvas print of a family portrait in a living room" width="1024" height="1024" loading="lazy" decoding="async"></picture></figure>
         <div class="tile-cap">
@@ -293,8 +299,11 @@
           <span class="tile-price" data-en="from 25 ETB" data-am="ከ25 ብር ጀምሮ">from 25 ETB</span>
         </div>
       </a>
+      </div>
     </div>
+  </div>
 
+  <div class="wrap">
     <!-- 🔴 TEMPORARY PRICES — placeholders until Feven confirms her real list.
          Every price cell carries data-temp-price, so:  grep -n 'data-temp-price' index.html
          They are consistent with the "from" prices already on the tiles above.

@@ -194,6 +194,27 @@ ul { margin: 0; padding: 0; list-style: none; }
 .bento > .tile:nth-child(3n+1) { translate: 0 -9px; }
 /* the full-width print hangs straight and level */
 .bento > .tile.tile-wide { rotate: 0deg; translate: 0 0; }
+
+/* ── the wall: a full-bleed pine panel ────────────────────
+   ONE accent surface, the way a print shop hangs a wall — not a colour wash.
+   The prints keep the colour (a single dyed thread each); the gold hairlines
+   are ornament. Reaching both viewport edges is what makes it read as a wall
+   rather than another card. */
+.wall-band { position: relative; margin: 22px 0 44px; padding: 54px 0 60px;
+  background-image: linear-gradient(180deg, #0F5F44 0%, #0B4A35 55%, #083D2A 100%);
+  border-top: 1px solid rgba(193,146,43,.42); border-bottom: 1px solid rgba(193,146,43,.42);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05); }
+.wall-band::before { content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 3.5h7M3.5 0v7' stroke='%23FFF' stroke-opacity='.045' stroke-width='.7'/%3E%3C/svg%3E"); }
+/* a print on a dark wall casts deeper than a card on paper, and its paper edge
+   needs a light hairline to separate it from the wall */
+.wall-band .tile { border-color: rgba(255,255,255,.10);
+  box-shadow: 0 1px 1px rgba(0,0,0,.30), 0 26px 46px -24px rgba(0,0,0,.72); }
+@media (hover:hover) and (pointer:fine) {
+  .wall-band .bento > .tile:hover { box-shadow: 0 2px 4px rgba(0,0,0,.32), 0 42px 68px -28px rgba(0,0,0,.82); }
+}
+[data-theme="dark"] .wall-band { background-image: linear-gradient(180deg,#15382B,#0E2A20); }
+[data-theme="dark"] .wall-band .tile { background: #2A241D; border-color: rgba(255,255,255,.09); }
 .tile-big { grid-column: span 7; }
 .tile-tall { grid-column: span 5; }
 .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5) { grid-column: span 4; }
@@ -689,6 +710,10 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .price-grid { display:grid !important; grid-template-columns:1fr 1fr !important; gap:6mm !important; }
   .bento { display:block !important; }
   .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
+  /* never print the wall panel: it would flood the page with ink */
+  .wall-band { background-image:none !important; background-color:#fff !important; border:0 !important; padding:0 !important; margin:0 !important; box-shadow:none !important; }
+  .wall-band::before { display:none !important; }
+  .wall-band .tile, [data-theme="dark"] .wall-band .tile { border-color:#999 !important; box-shadow:none !important; background:#fff !important; }
   .tile { margin-bottom:6mm; }
   .faq p { color:#000 !important; }
   a { color:#000 !important; text-decoration:none !important; }
@@ -719,6 +744,7 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .band-grid p + p { border-left: 0; border-top: 1px solid var(--line); }
   .section { padding: 68px 0; }
   .bento { grid-template-columns: 1fr; }
+  .wall-band { padding: 36px 0 42px; margin: 16px 0 32px; }
   .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
   .tile-big, .tile-tall, .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5), .tile-wide { grid-column: span 1; }
   .tile-wide { flex-direction: column; }
