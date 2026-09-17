@@ -213,6 +213,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (hover:hover) and (pointer:fine) {
   .wall-band .bento > .tile:hover { box-shadow: 0 2px 4px rgba(0,0,0,.32), 0 42px 68px -28px rgba(0,0,0,.82); }
 }
+[data-theme="dark"] .wall-stage { background-color: #1A170F; }
 [data-theme="dark"] .wall-band { background-image: linear-gradient(180deg,#15382B,#0E2A20); }
 [data-theme="dark"] .wall-band .tile { background: #2A241D; border-color: rgba(255,255,255,.09); }
 .tile-big { grid-column: span 7; }
@@ -250,14 +251,36 @@ ul { margin: 0; padding: 0; list-style: none; }
 .how-item h3 { font-size: 22px; font-weight: 720; margin-bottom: 10px; }
 .how-item p { font-size: 15.5px; color: var(--ink-soft); max-width: 34ch; line-height: 1.7; }
 
-/* ── gallery masonry ─────────────────────────────────── */
-.masonry { columns: 3; column-gap: 24px; }
-.m-item { margin: 0 0 22px; break-inside: avoid; border-radius: 12px; overflow: hidden; background: var(--white); border: 1px solid var(--line); }
-.m-item img { width: 100%; height: auto; transition: transform 700ms var(--ease-out); }
-.m-item figcaption { padding: 11px 16px; font-size: 13px; font-weight: 620; color: var(--ink-soft); background: var(--white); }
+/* ── the display wall ────────────────────────────────────
+   Replaces the old "Recent prints" masonry, which showed the same six
+   product files a second time under a heading that implied a portfolio.
+   This is a SCALE display instead: three prints hung with the same paper
+   matte + dyed thread as the catalogue, each tagged with a size that
+   exists in the price table, plus an honest note offering a real mockup. */
+.wall-note { max-width: 64ch; color: var(--text-soft); margin: -20px 0 34px; font-size: 16.5px; }
+.wall-stage { display: grid; grid-template-columns: repeat(12, 1fr); gap: 26px; align-items: start;
+  padding: 42px 24px 50px; background-color: var(--paper); border: 1px solid var(--line); border-radius: 4px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Cpath d='M0 3.5h7M3.5 0v7' stroke='%23000' stroke-opacity='.030' stroke-width='.7'/%3E%3C/svg%3E"); }
+.hung { margin: 0; display: flex; flex-direction: column; background: var(--white); padding: 13px 13px 0;
+  border: 1px solid var(--line); border-radius: 3px;
+  box-shadow: 0 1px 1px var(--card-shadow), 0 20px 36px -22px var(--shadow-warm); }
+.hung picture { display: block; overflow: hidden; background: var(--paper-2);
+  border: 1px solid var(--line-strong); border-color: color-mix(in srgb, var(--accent) 40%, var(--line-strong)); }
+.hung img { display: block; width: 100%; height: 100%; object-fit: cover;
+  transition: transform 700ms var(--ease-out); }
+.hung figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 12px 4px 16px; font-size: 13.5px; font-weight: 650; color: var(--ink); }
+.hung figcaption em { font-style: normal; font-size: 12.5px; font-weight: 600;
+  color: var(--text-mute); font-variant-numeric: tabular-nums; }
+.hung-a { grid-column: span 5; rotate: -1.2deg; }
+.hung-a picture { aspect-ratio: 4 / 3; }
+.hung-b { grid-column: span 4; translate: 0 30px; rotate: 1.1deg; }
+.hung-b picture { aspect-ratio: 4 / 5; }
+.hung-c { grid-column: span 3; translate: 0 -10px; rotate: -1.6deg; }
+.hung-c picture { aspect-ratio: 1 / 1; }
 @media (hover: hover) and (pointer: fine) {
-  .m-item { overflow: hidden; }
-  .m-item:hover img { transform: scale(1.04); }
+  .hung:hover { rotate: 0deg; box-shadow: 0 2px 3px var(--card-shadow), 0 38px 60px -26px var(--shadow-warm); }
+  .hung:hover img { transform: scale(1.035); }
 }
 
 /* ── visit ───────────────────────────────────────────── */
@@ -541,9 +564,9 @@ button.btn { cursor: pointer; }
 [data-theme="dark"] .tibeb { filter: brightness(1.3) saturate(1.05); }
 [data-theme="dark"] .hero-arrow { background: rgba(32,27,21,.92); }
 [data-theme="dark"] .hero-media img { box-shadow: 0 40px 80px -44px rgba(0,0,0,.9); }
-[data-theme="dark"] .tile-media img, [data-theme="dark"] .m-item img,
+[data-theme="dark"] .tile-media img, [data-theme="dark"] .hung img,
 [data-theme="dark"] .hero-media img, [data-theme="dark"] .price-card { filter: brightness(.90) contrast(.98); }
-[data-theme="dark"] .tile-media img, [data-theme="dark"] .m-item img, [data-theme="dark"] .hero-media img {
+[data-theme="dark"] .tile-media img, [data-theme="dark"] .hung img, [data-theme="dark"] .hero-media img {
   box-shadow: 0 0 0 1px rgba(255,255,255,.06); }
 
 /* ── theme toggle ─────────────────────────────────────── */
@@ -711,6 +734,8 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .bento { display:block !important; }
   .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
   /* never print the wall panel: it would flood the page with ink */
+  .wall-stage { background-image:none !important; background-color:#fff !important; border:0 !important; padding:0 !important; }
+  .hung, .hung:nth-child(n) { rotate:0deg !important; translate:0 0 !important; box-shadow:none !important; }
   .wall-band { background-image:none !important; background-color:#fff !important; border:0 !important; padding:0 !important; margin:0 !important; box-shadow:none !important; }
   .wall-band::before { display:none !important; }
   .wall-band .tile, [data-theme="dark"] .wall-band .tile { border-color:#999 !important; box-shadow:none !important; background:#fff !important; }
@@ -722,7 +747,8 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
 
 /* ── responsive ──────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .masonry { columns: 2; }
+  .hung-a, .hung-b { grid-column: span 6; }
+  .hung-c { grid-column: span 12; translate: 0 0; }
   .price-grid { grid-template-columns: repeat(2, 1fr); }
   .visit-grid { grid-template-columns: 1fr; gap: 40px; }
   .tile-big, .tile-tall { grid-column: span 6; }
@@ -750,7 +776,8 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .tile-wide { flex-direction: column; }
   .tile-media-side { flex: none; aspect-ratio: 4 / 3; }
   .how-grid { grid-template-columns: 1fr; gap: 36px; }
-  .masonry { columns: 1; }
+  .wall-stage { grid-template-columns: 1fr; padding: 28px 16px 34px; }
+  .hung:nth-child(n) { grid-column: span 1; rotate: 0deg; translate: 0 0; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .f-bottom { flex-direction: column; }
 }

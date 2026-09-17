@@ -460,7 +460,7 @@
     /* staggered reveals: cascade the children of each grid instead of
        everything arriving at once. The delay is cleared as soon as the
        element has revealed, so hover transitions are never delayed. */
-    var groups = document.querySelectorAll(".bento, .price-grid, .faq-list, .masonry, .send-steps, .how-grid");
+    var groups = document.querySelectorAll(".bento, .price-grid, .faq-list, .wall-stage, .send-steps, .how-grid");
     for (var g = 0; g < groups.length; g++) {
       var kids = groups[g].querySelectorAll(".reveal");
       for (var k = 0; k < kids.length; k++) {
