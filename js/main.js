@@ -218,4 +218,93 @@
 
     renderHistory();
   }
+  /* ── Ethiopian calendar year (footer only) ──────────────
+     Enkutatash falls on 11 September (12 in the year before a Gregorian leap
+     year). Year-level only on purpose - no day or month, so a one-day edge
+     case can never print something wrong. */
+  (function () {
+    var now = new Date();
+    var g = now.getFullYear();
+    var gNext = g + 1;
+    var leapNext = (gNext % 4 === 0 && gNext % 100 !== 0) || gNext % 400 === 0;
+    var newYear = new Date(g, 8, leapNext ? 12 : 11);
+    var et = now >= newYear ? g - 7 : g - 8;
+    var marks = document.querySelectorAll("[data-etyear]");
+    for (var ei = 0; ei < marks.length; ei++) marks[ei].textContent = String(et);
+  })();
+
+  /* ── hero carousel: auto-advance, arrows, dots, swipe, keyboard ── */
+  var slidesEl = document.getElementById("heroSlides");
+  if (slidesEl) {
+    var slides = slidesEl.querySelectorAll(".hero-slide");
+    var dotsWrap = document.getElementById("heroDots");
+    var carousel = document.getElementById("heroCarousel");
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var idx = 0, timer = null, paused = false;
+
+    for (var si = 0; si < slides.length; si++) {
+      (function (n) {
+        var b = document.createElement("button");
+        b.className = "hero-dot";
+        b.type = "button";
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-label", "Slide " + (n + 1));
+        b.setAttribute("aria-selected", n === 0 ? "true" : "false");
+        b.addEventListener("click", function () { goTo(n); });
+        dotsWrap.appendChild(b);
+      })(si);
+    }
+    var dots = dotsWrap.querySelectorAll(".hero-dot");
+
+    function goTo(n) {
+      idx = (n + slides.length) % slides.length;
+      slidesEl.style.transform = "translateX(" + (-idx * 100) + "%)";
+      for (var d = 0; d < dots.length; d++) {
+        dots[d].setAttribute("aria-selected", String(d === idx));
+      }
+      for (var s2 = 0; s2 < slides.length; s2++) {
+        slides[s2].setAttribute("aria-hidden", String(s2 !== idx));
+        var links = slides[s2].querySelectorAll("a, button");
+        for (var l = 0; l < links.length; l++) {
+          if (s2 === idx) links[l].removeAttribute("tabindex");
+          else links[l].setAttribute("tabindex", "-1");
+        }
+      }
+    }
+    function startAuto() {
+      if (reduceMotion) return;
+      stopAuto();
+      timer = setInterval(function () { if (!paused) goTo(idx + 1); }, 6500);
+    }
+    function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+
+    var prevBtn = carousel.querySelector(".hero-arrow.prev");
+    var nextBtn = carousel.querySelector(".hero-arrow.next");
+    if (prevBtn) prevBtn.addEventListener("click", function () { goTo(idx - 1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { goTo(idx + 1); });
+
+    carousel.addEventListener("pointerenter", function () { paused = true; });
+    carousel.addEventListener("pointerleave", function () { paused = false; });
+    carousel.addEventListener("focusin", function () { paused = true; });
+    carousel.addEventListener("focusout", function () { paused = false; });
+    document.addEventListener("visibilitychange", function () { paused = document.hidden; });
+    carousel.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") { goTo(idx - 1); }
+      else if (e.key === "ArrowRight") { goTo(idx + 1); }
+    });
+
+    var startX = null;
+    slidesEl.addEventListener("touchstart", function (e) {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+    slidesEl.addEventListener("touchend", function (e) {
+      if (startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 44) goTo(idx + (dx < 0 ? 1 : -1));
+      startX = null;
+    }, { passive: true });
+
+    goTo(0);
+    startAuto();
+  }
 })();

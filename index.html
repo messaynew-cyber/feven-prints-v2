@@ -80,7 +80,7 @@
 }
 </script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='6' fill='%230E5C41'/%3E%3Crect x='8' y='8' width='16' height='16' rx='3' fill='%23FAFBFA'/%3E%3Ccircle cx='13' cy='13' r='2' fill='%230E5C41'/%3E%3Cpath d='M8 21l5-5 3 3 4-4 4 4' stroke='%230E5C41' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<link rel="preload" as="image" href="img/hero_book.webp" type="image/webp">
+<link rel="preload" as="image" href="img/photobook.webp" type="image/webp">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -123,30 +123,81 @@
 
 <main id="top">
 
-<!-- ═══════════ HERO ═══════════ -->
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-copy">
-      <p class="eyebrow reveal" data-en="Addis Ababa · Photo Print Studio" data-am="አዲስ አበባ · የፎቶ ህትመት ስቱዲዮ">Addis Ababa · Photo Print Studio</p>
-      <h1 class="reveal d1"><span class="h-line" data-en="Your memories," data-am="ትውስታዎችዎ፣">Your memories,</span><span class="h-line" data-en="beautifully printed." data-am="በሚያማምር ህትመት።">beautifully printed.</span></h1>
-      <p class="hero-sub reveal d2" data-en="Premium prints, canvases, photo books and gifts, printed the same day in the heart of Addis Ababa." data-am="ከፍተኛ ጥራት ያላቸው ህትመቶች፣ ካንቫስ፣ የፎቶ መጽሐፍ እና ስጦታዎች፤ በአዲስ አበባ እምብርት በዚያው ቀን የሚዘጋጁ።">Premium prints, canvases, photo books and gifts, printed the same day in the heart of Addis Ababa.</p>
-      <div class="hero-cta reveal d3">
-        <a class="btn btn-primary" href="tel:+358442715477" data-en="Order now" data-am="አሁን ይዘዙ">Order now</a>
-        <a class="link-cta" href="#products" data-en="See products" data-am="ምርቶቹን ይመልከቱ">See products</a>
-      </div>
-      <ul class="hero-facts reveal d3">
-        <li data-en="Prints from 25 ETB" data-am="ከ25 ብር ጀምሮ">Prints from 25 ETB</li>
-        <li data-en="Same-day pickup for orders before 16:00" data-am="ከ16:00 በፊት ለታዘዙ ትዕዛዞች በዚያው ቀን ዝግጁ">Same-day pickup for orders before 16:00</li>
-        <li data-en="Bole, Addis Ababa" data-am="ቦሌ፣ አዲስ አበባ">Bole, Addis Ababa</li>
-      </ul>
+<div class="tibeb" aria-hidden="true"></div>
+
+<!-- ═══════════ HERO (horizontal image carousel) ═══════════ -->
+<h1 class="sr-only">Feven&rsquo;s Prints — photo printing studio, Bole, Addis Ababa</h1>
+<section class="hero" id="heroCarousel" aria-roledescription="carousel" aria-label="Featured products">
+  <div class="hero-carousel">
+    <div class="hero-slides" id="heroSlides">
+
+      <article class="hero-slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="hero-badge" data-en="Photo books" data-am="የፎቶ መጽሐፍ">Photo books</p>
+            <h2 class="hero-title" data-en="Your memories, bound." data-am="ትውስታዎችዎ፣ በመጽሐፍ።">Your memories, bound.</h2>
+            <p class="hero-sub" data-en="Hardcover and softcover, 20 to 80 pages. From 1,800 ETB." data-am="ከ20 እስከ 80 ገጽ። ከ1,800 ብር ጀምሮ።">Hardcover and softcover, 20 to 80 pages. From 1,800 ETB.</p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#order" data-en="Order a photo book" data-am="የፎቶ መጽሐፍ ይዘዙ">Order a photo book</a>
+              <a class="link-cta" href="#products" data-en="See all products" data-am="ሁሉንም ምርቶች">See all products</a>
+            </div>
+          </div>
+          <figure class="hero-media">
+            <picture><source type="image/webp" srcset="img/photobook.webp"><img src="img/photobook.jpg" alt="Hardcover photo book with a printed photograph" width="1024" height="1024"></picture>
+          </figure>
+        </div>
+      </article>
+
+      <article class="hero-slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="hero-badge" data-en="Canvas prints" data-am="የካንቫስ ህትመት">Canvas prints</p>
+            <h2 class="hero-title" data-en="Wall art that lasts." data-am="ለዘመናት የሚቆይ የግድግዳ ጥበብ።">Wall art that lasts.</h2>
+            <p class="hero-sub" data-en="Gallery-wrapped canvas, every size up to 120 cm. From 950 ETB." data-am="እስከ 120 ሳ.ሜ ድረስ በሁሉም መጠን። ከ950 ብር ጀምሮ።">Gallery-wrapped canvas, every size up to 120 cm. From 950 ETB.</p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#order" data-en="Order a canvas" data-am="ካንቫስ ይዘዙ">Order a canvas</a>
+              <a class="link-cta" href="#products" data-en="See all products" data-am="ሁሉንም ምርቶች">See all products</a>
+            </div>
+          </div>
+          <figure class="hero-media">
+            <picture><source type="image/webp" srcset="img/canvas.webp"><img src="img/canvas.jpg" alt="Gallery-wrapped canvas print on a wall" width="1024" height="1024"></picture>
+          </figure>
+        </div>
+      </article>
+
+      <article class="hero-slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="hero-badge" data-en="Wall calendars" data-am="የግድግዳ የቀን መቁጠሪያ">Wall calendars</p>
+            <h2 class="hero-title" data-en="A year of your best moments." data-am="የአንድ ዓመት ምርጥ ትውስታዎች።">A year of your best moments.</h2>
+            <p class="hero-sub" data-en="Your photos, all twelve months, on your wall. From 450 ETB." data-am="ፎቶዎችዎ ለ12 ወራት በግድግዳዎ ላይ። ከ450 ብር ጀምሮ።">Your photos, all twelve months, on your wall. From 450 ETB.</p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#order" data-en="Order a calendar" data-am="የቀን መቁጠሪያ ይዘዙ">Order a calendar</a>
+              <a class="link-cta" href="#products" data-en="See all products" data-am="ሁሉንም ምርቶች">See all products</a>
+            </div>
+          </div>
+          <figure class="hero-media">
+            <picture><source type="image/webp" srcset="img/calendar.webp"><img src="img/calendar.jpg" alt="Wall photo calendar with a printed photograph" width="1024" height="1024"></picture>
+          </figure>
+        </div>
+      </article>
+
     </div>
-    <div class="hero-visual reveal d2">
-      <figure class="hero-fig">
-        <picture><source type="image/webp" srcset="img/hero_book.webp"><img src="img/hero_book.jpg" alt="Open premium photo book with scenic travel photos" width="1024" height="1152" fetchpriority="high"></picture>
-      </figure>
-      <p class="hero-cap" data-en="Softcover photo book · 21 × 21 cm" data-am="የፎቶ መጽሐፍ · 21 × 21 ሳ.ሜ">Softcover photo book · 21 × 21 cm</p>
-    </div>
+
+    <button class="hero-arrow prev" type="button" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button class="hero-arrow next" type="button" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <div class="hero-dots" id="heroDots" role="tablist" aria-label="Choose a slide"></div>
   </div>
+
+  <ul class="wrap hero-facts reveal">
+    <li data-en="Prints from 25 ETB" data-am="ከ25 ብር ጀምሮ">Prints from 25 ETB</li>
+    <li data-en="Same-day pickup for orders before 16:00" data-am="ከ16:00 በፊት ለታዘዙ ትዕዛዞች በዚያው ቀን ዝግጁ">Same-day pickup for orders before 16:00</li>
+    <li data-en="Bole, Addis Ababa" data-am="ቦሌ፣ አዲስ አበባ">Bole, Addis Ababa</li>
+  </ul>
 </section>
 
 <!-- ═══════════ TRUST BAND ═══════════ -->
@@ -596,6 +647,8 @@
   </div>
 </section>
 
+  <div class="wrap"><div class="tibeb tibeb-foot" aria-hidden="true"></div></div>
+
 </main>
 
 <!-- ═══════════ FOOTER ═══════════ -->
@@ -633,7 +686,7 @@
     </div>
   </div>
   <div class="wrap f-bottom">
-    <p>© 2026 Feven's Prints</p>
+    <p>© 2026 Feven's Prints &middot; <span data-etyear>2019</span> ዓ.ም</p>
     <p data-en="Made with love in Addis Ababa" data-am="በአዲስ አበባ በፍቅር ተሰርቷል">Made with love in Addis Ababa</p>
   </div>
 </footer>
