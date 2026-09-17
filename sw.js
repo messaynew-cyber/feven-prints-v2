@@ -11,7 +11,10 @@
    The shell is precached on install; images cache as they are first seen, which
    keeps the initial download small on a metered connection. */
 
-const CACHE = "fevens-v1";
+/* Bump CACHE on every deploy that changes css/js: the shell is precached and
+   assets are stale-while-revalidate, so without a bump the first load after a
+   deploy serves the OLD stylesheet. */
+const CACHE = "fevens-v2";
 
 const SHELL = [
   "./",
@@ -63,6 +66,22 @@ self.addEventListener("fetch", (event) => {
         .catch(() =>
           caches.match(req).then((hit) => hit || caches.match("./index.html"))
         )
+    );
+    return;
+  }
+
+  /* css/js go network-first: this site is under active iteration, and a stale
+     stylesheet is worse than a slow one. Images stay stale-while-revalidate. */
+  const isCode = /\.(css|js)$/.test(url.pathname);
+  if (isCode) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => undefined);
+          return res;
+        })
+        .catch(() => caches.match(req).then((hit) => hit || Response.error()))
     );
     return;
   }
