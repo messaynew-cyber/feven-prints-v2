@@ -188,10 +188,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   padding: 15px 15px 0; border-radius: 3px; overflow: hidden; border: 1px solid var(--line);
   box-shadow: 0 1px 1px var(--card-shadow), 0 18px 32px -22px var(--shadow-warm);
   transition: transform 260ms var(--ease-out), rotate 340ms var(--ease-out), translate 340ms var(--ease-out), box-shadow 260ms var(--ease-out), border-color 260ms ease;
-  color: var(--ink); rotate: -0.7deg; }
-.bento > .tile:nth-child(even) { rotate: 0.65deg; }
-.bento > .tile:nth-child(3n) { translate: 0 11px; }
-.bento > .tile:nth-child(3n+1) { translate: 0 -9px; }
+  color: var(--ink); rotate: -1.5deg; }
+.bento > .tile:nth-child(even) { rotate: 1.4deg; }
+.bento > .tile:nth-child(3n) { translate: 0 14px; }
+.bento > .tile:nth-child(3n+1) { translate: 0 -11px; }
 /* the full-width print hangs straight and level */
 .bento > .tile.tile-wide { rotate: 0deg; translate: 0 0; }
 
