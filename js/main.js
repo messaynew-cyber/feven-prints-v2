@@ -355,6 +355,24 @@
       if (!prog) prog = document.getElementById("progress");
       if (!topBtn) topBtn = document.getElementById("toTop");
     }
+    /* Safety sweep. IntersectionObserver samples per frame, so a small element
+       (a 12px woven divider) can be scrolled past between two samples and then
+       never fires - it would stay hidden for good. This guarantees anything on
+       screen or already scrolled past gets revealed. */
+    var pending = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+    function sweep() {
+      if (!pending.length) return;
+      var limit = window.innerHeight - 40;
+      var keep = [];
+      for (var i = 0; i < pending.length; i++) {
+        var el = pending[i];
+        if (el.classList.contains("in")) continue;
+        if (el.getBoundingClientRect().top < limit) el.classList.add("in");
+        else keep.push(el);
+      }
+      pending = keep;
+    }
+
     function onScroll() {
       resolve();
       var y = window.scrollY;
@@ -363,6 +381,7 @@
         prog.style.transform = "scaleX(" + (max > 0 ? Math.min(1, y / max) : 0) + ")";
       }
       if (topBtn) topBtn.classList.toggle("show", y > 900);
+      sweep();
       /* subtle parallax on the hero product photo, above the fold only */
       if (!reduce && y < 760 && heroImgs.length) {
         var shift = (y * 0.055).toFixed(2);

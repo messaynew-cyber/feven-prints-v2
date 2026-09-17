@@ -20,6 +20,16 @@
   --pine-deep: #0A4632;
   --pine-soft: #DCE7DF;
   --gold: #C1922B;          /* Meskel gold — second Ethiopian accent */
+  /* Ethiopian flag, used as thread: saturated for ornament, muted for text */
+  --flag-green:  #078930;
+  --flag-yellow: #FCDD09;
+  --flag-red:    #DA121A;
+  --red:         #B3261E;      /* flag red is ~4:1 on cream - too weak for text */
+  --red-soft:    #F3DAD7;
+  --green-soft:  #DCE9DF;
+  --yellow-soft: #F6EFD5;
+  --accent: var(--pine);
+  --accent-soft: var(--pine-soft);
   /* semantic tokens — every one of these is remapped for the dark theme */
   --text-soft: #5C5246;
   --text-mute: #8D8171;
@@ -166,7 +176,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ── bento products ──────────────────────────────────── */
 .bento { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; }
-.tile { display: flex; flex-direction: column; background: var(--white); border-radius: 14px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 1px 2px var(--card-shadow); transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out), border-color 260ms ease; color: var(--ink); }
+.tile { display: flex; flex-direction: column; background: var(--white); border-radius: 14px; overflow: hidden; border: 1px solid var(--line-strong); box-shadow: 0 1px 2px var(--card-shadow); transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out), border-color 260ms ease; color: var(--ink); }
 .tile-big { grid-column: span 7; }
 .tile-tall { grid-column: span 5; }
 .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5) { grid-column: span 4; }
@@ -181,7 +191,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .tile-cap-side { justify-content: center; }
 .tile h3 { font-size: 19px; font-weight: 720; }
 .tile p { font-size: 15px; color: var(--text-soft); line-height: 1.55; }
-.tile-price { margin-top: auto; padding-top: 10px; font-size: 16.5px; font-weight: 780; letter-spacing: -0.012em; color: var(--pine-deep); }
+.tile-price { margin-top: auto; padding-top: 11px; border-top: 1px solid var(--rule-soft); font-size: 16.5px; font-weight: 780; letter-spacing: -0.012em; color: var(--pine-deep); }
 .tile-wide .tile-price { margin-top: 8px; }
 @media (hover: hover) and (pointer: fine) {
   .tile:hover { transform: translateY(-4px); box-shadow: 0 26px 52px -22px var(--shadow-warm); border-color: var(--line-strong); }
@@ -334,12 +344,12 @@ button.btn { cursor: pointer; }
 .hero-slide { min-width:100%; flex:0 0 100%; }
 .hero-badge { display:inline-flex; align-items:center; font-size:12.5px; font-weight:700;
               letter-spacing:0.13em; text-transform:uppercase; color:var(--pine);
-              background:var(--pine-soft); border-radius:999px; padding:6px 14px; }
+              background:var(--accent-soft); color:var(--accent); border-radius:999px; padding:6px 14px; }
 .hero-title { font-family:var(--display); font-size:clamp(32px,3.8vw,50px); font-weight:680;
               letter-spacing:-0.03em; line-height:1.06; margin-top:16px; max-width:22ch; }
 .hero-media { margin:0; }
 .hero-media img { width:100%; height:auto; border-radius:10px; display:block;
-                  box-shadow:0 40px 80px -44px rgba(46,37,26,.5); }
+                  box-shadow:0 26px 54px -34px rgba(46,37,26,.42); }
 .hero-arrow { position:absolute; top:calc(50% - 17px); transform:translateY(-50%);
               width:46px; height:46px; border-radius:50%; border:1px solid var(--line);
               background:rgba(255,253,249,.92); display:grid; place-items:center; cursor:pointer; z-index:6;
@@ -361,10 +371,29 @@ button.btn { cursor: pointer; }
    Tibeb: the woven border from habesha kemis, reduced to a repeating
    gold diamond-and-cross band. Used as a signature rule at the top of the
    page and above the footer, never as a decorative border on cards. */
-.tibeb { height:18px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cg fill='none' stroke='%23C1922B' stroke-width='1.3'%3E%3Cpath d='M9 2.6l6.4 6.4L9 15.4 2.6 9z'/%3E%3Cpath d='M27 2.6L33.4 9 27 15.4 20.6 9z'/%3E%3Cpath d='M9 5.6v6.8M5.6 9h6.8'/%3E%3C/g%3E%3C/svg%3E");
-        background-repeat:repeat-x; background-position:center; opacity:.85; }
-.tibeb-foot { margin-bottom:34px; opacity:.55; }
-.hero .tibeb { margin-bottom:26px; }
+/* ── the ceremonial tricolour: green / yellow / red woven ribbon.
+      This is the ONE place all three flag colours appear together, plus the
+      scroll progress bar. Everywhere else they act as separate accents. */
+.tibeb { height:24px; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='24' viewBox='0 0 36 24'%3E%3Crect width='36' height='8' fill='%23078930'/%3E%3Crect y='8' width='36' height='8' fill='%23FCDD09'/%3E%3Crect y='16' width='36' height='8' fill='%23DA121A'/%3E%3Cg fill='%23F8F4EE' fill-opacity='.9'%3E%3Cpath d='M9 4l2.5 2L9 8 6.5 6z'/%3E%3Cpath d='M27 4l2.5 2L27 8l-2.5-2z'/%3E%3Cpath d='M18 12l2.5 2L18 16l-2.5-2z'/%3E%3Cpath d='M0 12l2.5 2L0 16l-2.5-2z'/%3E%3Cpath d='M9 19l2.5 2L9 23l-2.5-2z'/%3E%3Cpath d='M27 19l2.5 2L27 23l-2.5-2z'/%3E%3C/g%3E%3C/svg%3E");
+        background-repeat:repeat-x; background-position:center; }
+/* loom: the ribbon draws across as the page scrolls it into view */
+/* Loom reveal. The band must NOT be hidden with clip-path or a transform on
+   itself: Chromium computes an empty intersection rect for a clipped element,
+   so IntersectionObserver never fires and it stays hidden forever. Observe an
+   unclipped wrapper instead and slide the band inside it. */
+.tibeb-wrap { overflow:hidden; }
+.tibeb-wrap > .tibeb, .tibeb-wrap > .tibeb-div { display:block; transform:translateX(-101%);
+  transition:transform 950ms var(--ease-out); }
+.tibeb-wrap.in > .tibeb, .tibeb-wrap.in > .tibeb-div { transform:none; }
+
+/* slimmer woven divider between sections, one colour per section, cycling */
+.tibeb-div { height:12px; background-repeat:repeat-x; background-position:left center; background-size:auto 12px; }
+
+
+.tibeb-div.g { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23078930' stroke-width='1.6'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }
+.tibeb-div.y { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23B98A16' stroke-width='1.6'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }
+.tibeb-div.r { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23B3261E' stroke-width='1.6'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }.tibeb-foot { margin-bottom:34px; }
+.hero .tibeb-wrap { margin-bottom:26px; }
 /* gold hairline under section headings instead of the neutral rule */
 .section-h { border-bottom-color:var(--gold-rule); }
 /* the active carousel dot carries the gold so the motif repeats */
@@ -430,7 +459,15 @@ button.btn { cursor: pointer; }
   --btn-fg: #0F211A;
   --panel-inv-bg: #0D0B08;
   --panel-inv-fg: #CBC2B2;
+  --red: #E8615A;
+  --red-soft: #3A211E;
+  --green-soft: #1C2C21;
+  --yellow-soft: #332C16;
 }
+[data-theme="dark"] .accent-green  { --accent:#3FA463; --accent-soft:#1C2C21; }
+[data-theme="dark"] .accent-yellow { --accent:#D9AF52; --accent-soft:#332C16; }
+[data-theme="dark"] .accent-red    { --accent:#E0574F; --accent-soft:#3A211E; }
+[data-theme="dark"] body::before { opacity:.35; }
 [data-theme="dark"] .tibeb { filter: brightness(1.3) saturate(1.05); }
 [data-theme="dark"] .hero-arrow { background: rgba(32,27,21,.92); }
 [data-theme="dark"] .hero-media img { box-shadow: 0 40px 80px -44px rgba(0,0,0,.9); }
@@ -456,9 +493,12 @@ button.btn { cursor: pointer; }
 /* ══ ETHIOPIAN THEME — carried through the page ══════════ */
 
 /* 1. every section heading gets a tibeb flourish instead of a plain rule */
-.section-h { position:relative; padding-bottom:17px; border-bottom:0; }
-.section-h::after { content:""; position:absolute; left:0; bottom:0; width:112px; height:12px;
-  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12' viewBox='0 0 36 18'%3E%3Cg fill='none' stroke='%23C1922B' stroke-width='2.4'%3E%3Cpath d='M9 2.6l6.4 6.4L9 15.4 2.6 9z'/%3E%3Cpath d='M27 2.6L33.4 9 27 15.4 20.6 9z'/%3E%3C/g%3E%3C/svg%3E") repeat-x left center / auto 12px;
+.section-h { position:relative; padding-bottom:15px; border-bottom:0; }
+.section-h::after { content:""; position:absolute; left:0; bottom:0; width:143px; height:12px;
+  background-color:var(--accent); opacity:.95;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E"); mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size:11px 9px; mask-size:11px 9px; mask-repeat:repeat-x; -webkit-mask-repeat:repeat-x;
+  mask-position:left center; -webkit-mask-position:left center;
   transform:scaleX(0); transform-origin:left; transition:transform 620ms var(--ease-out) 90ms; }
 .section-h.in::after { transform:scaleX(1); }
 [data-theme="dark"] .section-h::after { filter:brightness(1.35); }
@@ -484,7 +524,7 @@ button.btn { cursor: pointer; }
 
 /* scroll progress bar */
 .progress { position:fixed; top:0; left:0; height:2.5px; width:100%; z-index:40;
-  background:linear-gradient(90deg, var(--pine), var(--gold)); transform:scaleX(0); transform-origin:left;
+  background:linear-gradient(90deg, var(--flag-green), var(--flag-yellow) 52%, var(--flag-red)); transform:scaleX(0); transform-origin:left;
   pointer-events:none; }
 /* heading flourish + cards cadence */
 .price-card, .faq { transition:transform 240ms var(--ease-out), box-shadow 240ms var(--ease-out), border-color 240ms ease; }
@@ -509,6 +549,38 @@ button.btn { cursor: pointer; }
 .to-top:hover { border-color:var(--pine); }
 .to-top:active { transform:scale(.94); }
 .to-top svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+/* ══ ETHIOPIAN IDENTITY, STRUCTURAL ══════════════════════
+   Colour as thread: one accent per surface, all three as a family. */
+.accent-green  { --accent:#078930; --accent-soft:var(--green-soft); }
+.accent-yellow { --accent:#B98A16; --accent-soft:var(--yellow-soft); }
+.accent-red    { --accent:#B3261E; --accent-soft:var(--red-soft); }
+/* woven top edge on every card — the tibeb motif repeated at every surface */
+.tile::before, .price-card::before, .faq::before, .quality-card::before {
+  content:""; display:block; height:9px; flex:none; background-color:var(--accent);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size:11px 9px; mask-size:11px 9px; mask-repeat:repeat-x; -webkit-mask-repeat:repeat-x;
+  mask-position:center; -webkit-mask-position:center; }
+/* corners: clip the woven band so it follows the card radius */
+.price-card, .quality-card, .faq { overflow:hidden; }
+.tile::before { margin:-1px -1px 0; }
+.tile-wide { position:relative; }
+.tile-wide::before { position:absolute; top:0; left:0; right:0; height:9px; }
+.price-card, .faq, .quality-card { position:relative; }
+/* Amharic is visible, not hidden behind the toggle */
+.am-eye { font-family:'Noto Sans Ethiopic',var(--body); font-size:15px; font-weight:600; letter-spacing:.02em;
+          color:var(--gold); margin-bottom:6px; display:block; }
+body.am .am-eye { display:none; }
+.brand-txt { display:flex; flex-direction:column; line-height:1.1; }
+.brand-am { font-family:'Noto Sans Ethiopic',var(--body); font-size:10.5px; font-weight:600; letter-spacing:.04em;
+            color:var(--gold); margin-top:1px; }
+body.am .brand-am { display:none; }
+.footer .brand-am { color:var(--gold); }
+/* page-wide cotton weave, with a hint of the three colours in the thread */
+body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M0 4.5h9M4.5 0v9' stroke='%23000' stroke-opacity='.022' stroke-width='.7'/%3E%3C/svg%3E"); }
+main, .footer { position:relative; z-index:1; }
 
 /* ── responsive ──────────────────────────────────────── */
 @media (max-width: 1024px) {

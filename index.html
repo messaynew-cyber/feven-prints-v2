@@ -102,7 +102,8 @@
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
     <a class="brand" href="#top" aria-label="Feven's Prints home">
-      <span class="brand-name" data-en="Feven's Prints" data-am="የፌቨን ህትመቶች">Feven's Prints</span>
+      <span class="brand-txt"><span class="brand-name" data-en="Feven's Prints" data-am="የፌቨን ህትመቶች">Feven's Prints</span>
+      <span class="brand-am">የፌቨን ህትመቶች</span></span>
     </a>
     <nav class="nav-links" aria-label="Primary">
       <a href="#products" data-en="Products" data-am="ምርቶች">Products</a>
@@ -144,7 +145,7 @@
 
 <main id="top">
 
-<div class="tibeb" aria-hidden="true"></div>
+<div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>
 
 <!-- ═══════════ HERO (horizontal image carousel) ═══════════ -->
 <h1 class="sr-only">Feven&rsquo;s Prints — photo printing studio, Bole, Addis Ababa</h1>
@@ -152,7 +153,7 @@
   <div class="hero-carousel">
     <div class="hero-slides" id="heroSlides">
 
-      <article class="hero-slide" role="group" aria-roledescription="slide" aria-label="1 of 3">
+      <article class="hero-slide accent-red" role="group" aria-roledescription="slide" aria-label="1 of 3">
         <div class="wrap hero-grid">
           <div class="hero-copy">
             <p class="hero-badge" data-en="Photo books" data-am="የፎቶ መጽሐፍ">Photo books</p>
@@ -169,7 +170,7 @@
         </div>
       </article>
 
-      <article class="hero-slide" role="group" aria-roledescription="slide" aria-label="2 of 3">
+      <article class="hero-slide accent-green" role="group" aria-roledescription="slide" aria-label="2 of 3">
         <div class="wrap hero-grid">
           <div class="hero-copy">
             <p class="hero-badge" data-en="Canvas prints" data-am="የካንቫስ ህትመት">Canvas prints</p>
@@ -186,7 +187,7 @@
         </div>
       </article>
 
-      <article class="hero-slide" role="group" aria-roledescription="slide" aria-label="3 of 3">
+      <article class="hero-slide accent-yellow" role="group" aria-roledescription="slide" aria-label="3 of 3">
         <div class="wrap hero-grid">
           <div class="hero-copy">
             <p class="hero-badge" data-en="Wall calendars" data-am="የግድግዳ የቀን መቁጠሪያ">Wall calendars</p>
@@ -233,9 +234,10 @@
 <!-- ═══════════ PRODUCTS ═══════════ -->
 <section class="section" id="products">
   <div class="wrap">
+    <p class="am-eye">ምርቶች</p>
     <h2 class="section-h reveal" data-en="What we print" data-am="የምናተማቸው ምርቶች">What we print</h2>
     <div class="bento">
-      <a class="tile tile-big reveal" href="https://wa.me/358442715477?text=Hello%20Feven%27s%20Prints%20-%20I%27d%20like%20to%20order%20a%20canvas%20print." target="_blank" rel="noopener">
+      <a class="tile tile-big reveal accent-green accent-red accent-yellow accent-green accent-red accent-yellow" href="https://wa.me/358442715477?text=Hello%20Feven%27s%20Prints%20-%20I%27d%20like%20to%20order%20a%20canvas%20print." target="_blank" rel="noopener">
         <figure class="tile-media"><picture><source type="image/webp" srcset="img/canvas.webp"><img src="img/canvas.jpg" alt="Framed canvas print of a family portrait in a living room" width="1024" height="1024" loading="lazy"></picture></figure>
         <div class="tile-cap">
           <h3 data-en="Canvas prints" data-am="የካንቫስ ህትመት">Canvas prints</h3>
@@ -294,7 +296,7 @@
       <p class="price-note reveal" data-en="Prices depend on paper and finish — we confirm the exact price when you order." data-am="ዋጋው እንደ ወረቀቱ እና አጨራረሱ ይለያያል፤ ትክክለኛውን ዋጋ ሲያዙ እናረጋግጣለን።">Prices depend on paper and finish — we confirm the exact price when you order.</p>
       <div class="price-grid">
 
-        <div class="price-card reveal">
+        <div class="price-card reveal accent-yellow">
           <h4 data-en="Standard prints" data-am="መደበኛ ህትመት">Standard prints</h4>
           <table>
             <thead><tr><th data-en="Size" data-am="መጠን">Size</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>
@@ -309,7 +311,7 @@
           </table>
         </div>
 
-        <div class="price-card reveal">
+        <div class="price-card reveal accent-green">
           <h4 data-en="Canvas prints" data-am="የካንቫስ ህትመት">Canvas prints</h4>
           <table>
             <thead><tr><th data-en="Size" data-am="መጠን">Size</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>
@@ -322,7 +324,7 @@
           </table>
         </div>
 
-        <div class="price-card reveal">
+        <div class="price-card reveal accent-red">
           <h4 data-en="Photo books" data-am="የፎቶ መጽሐፍ">Photo books</h4>
           <table>
             <thead><tr><th data-en="Format" data-am="መጠን">Format</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>
@@ -335,7 +337,7 @@
           </table>
         </div>
 
-        <div class="price-card reveal">
+        <div class="price-card reveal accent-red">
           <h4 data-en="Framed prints" data-am="የተከፈፈ ህትመት">Framed prints</h4>
           <table>
             <thead><tr><th data-en="Size" data-am="መጠን">Size</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>
@@ -347,7 +349,7 @@
           </table>
         </div>
 
-        <div class="price-card reveal">
+        <div class="price-card reveal accent-yellow">
           <h4 data-en="Wall calendars" data-am="የግድግዳ የቀን መቁጠሪያ">Wall calendars</h4>
           <table>
             <thead><tr><th data-en="Size" data-am="መጠን">Size</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>
@@ -358,7 +360,7 @@
           </table>
         </div>
 
-        <div class="price-card reveal">
+        <div class="price-card reveal accent-green">
           <h4 data-en="Photo mugs" data-am="የፎቶ ሙግ">Photo mugs</h4>
           <table>
             <thead><tr><th data-en="Quantity" data-am="ብዛት">Quantity</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>
@@ -376,8 +378,11 @@
 </section>
 
 <!-- ═══════════ HOW IT WORKS ═══════════ -->
+<div class="wrap"><div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb-div g"></i></div></div>
+
 <section class="section section-tint" id="how">
   <div class="wrap">
+    <p class="am-eye">አሰራሩ</p>
     <h2 class="section-h reveal" data-en="How it works" data-am="እንዴት እንደሚሰራ">How it works</h2>
     <div class="how-grid">
       <div class="how-item reveal">
@@ -402,8 +407,11 @@
 <!-- ═══════════ SEND YOUR PHOTOS ═══════════ -->
 <!-- [FEVEN] New Amharic strings in this section — please have Feven proofread:
      ፎቶዎችዎን ይላኩ · ዋትስአፕ ወይም ቴሌግራም ይክፈቱ · ዋናዎቹን ፎቶዎች እንደ ሰነድ ይላኩ · መጠን እና ብዛት ይንገሩን · ከመላክዎ በፊት -->
+<div class="wrap"><div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb-div y"></i></div></div>
+
 <section class="section" id="send">
   <div class="wrap">
+    <p class="am-eye">ፎቶ ይላኩ</p>
     <h2 class="section-h reveal" data-en="Send us your photos" data-am="ፎቶዎችዎን ይላኩ">Send us your photos</h2>
     <div class="send-grid">
       <ol class="send-steps">
@@ -451,8 +459,11 @@
 <!-- [FEVEN] New Amharic strings — please have Feven proofread:
      ትዕዛዝ ይስጡ · ምን ማተም ይፈልጋሉ? · ምርት ይምረጡ · መጠን · እርግጠኛ አልሆንኩም · ብዛት · የሚፈልጉበት ቀን (አማራጭ) · ተጨማሪ መረጃ (አማራጭ) · ስምዎ · ስልክ ቁጥርዎ · ትዕዛዙን በዋትስአፕ ይላኩ
      [FEVEN] Sizes and prices below are not confirmed yet — replace with her real price list. -->
+<div class="wrap"><div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb-div r"></i></div></div>
+
 <section class="section section-tint" id="order">
   <div class="wrap">
+    <p class="am-eye">ትዕዛዝ</p>
     <h2 class="section-h reveal" data-en="Place an order" data-am="ትዕዛዝ ይስጡ">Place an order</h2>
     <p class="order-sub reveal" data-en="Fill this in and WhatsApp opens with your order already written. Nothing is sent to a server — your order goes straight to us on WhatsApp." data-am="ይህን ይሙሉ፤ ዋትስአፕ ትዕዛዙን ይዞ ይከፈታል። ወደ ሰርቨር ምንም አይላክም፤ ትዕዛዙ በቀጥታ በዋትስአፕ ይደርሰናል።">Fill this in and WhatsApp opens with your order already written. Nothing is sent to a server — your order goes straight to us on WhatsApp.</p>
 
@@ -561,8 +572,11 @@
      · passport/visa photos
      · scanning an old printed photo
      [FEVEN] New Amharic strings in this section need proofreading too. -->
+<div class="wrap"><div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb-div g"></i></div></div>
+
 <section class="section" id="faq">
   <div class="wrap">
+    <p class="am-eye">ጥያቄዎች</p>
     <h2 class="section-h reveal" data-en="Common questions" data-am="ተደጋጋሚ ጥያቄዎች">Common questions</h2>
     <div class="faq-list reveal d1">
 
@@ -621,8 +635,11 @@
 </section>
 
 <!-- ═══════════ GALLERY ═══════════ -->
+<div class="wrap"><div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb-div y"></i></div></div>
+
 <section class="section section-tint" id="gallery">
   <div class="wrap">
+    <p class="am-eye">ጋለሪ</p>
     <h2 class="section-h reveal" data-en="Recent prints" data-am="የቅርብ ጊዜ ህትመቶች">Recent prints</h2>
     <div class="masonry">
       <figure class="m-item reveal"><picture><source type="image/webp" srcset="img/photobook.webp"><img src="img/photobook.jpg" alt="Premium photo book, open" width="1024" height="1024" loading="lazy"></picture><figcaption data-en="Photo book" data-am="የፎቶ መጽሐፍ">Photo book</figcaption></figure>
@@ -636,10 +653,13 @@
 </section>
 
 <!-- ═══════════ VISIT ═══════════ -->
+<div class="wrap"><div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb-div r"></i></div></div>
+
 <section class="section" id="visit">
   <div class="wrap visit-grid">
     <div class="visit-copy">
-      <h2 class="section-h reveal" data-en="Visit the studio" data-am="ስቱዲዮአችንን ይጎብኙ">Visit the studio</h2>
+      <p class="am-eye">አድራሻ</p>
+    <h2 class="section-h reveal" data-en="Visit the studio" data-am="ስቱዲዮአችንን ይጎብኙ">Visit the studio</h2>
       <p class="reveal d1" data-en="Come say hello, or just send your photos and we will handle the rest." data-am="እንኳን ወደ ስቱዲዮአችን በደህና መጡ፤ ወይም ፎቶዎችዎን ይላኩ፣ የቀረውን እኛ እንሰራለን።">Come say hello, or just send your photos and we will handle the rest.</p>
       <div class="visit-block reveal d2">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
@@ -671,7 +691,7 @@
   </div>
 </section>
 
-  <div class="wrap"><div class="tibeb tibeb-foot" aria-hidden="true"></div></div>
+  <div class="wrap"><div class="tibeb-wrap tibeb-foot reveal" aria-hidden="true"><i class="tibeb"></i></div></div>
 
 </main>
 
@@ -680,7 +700,8 @@
   <div class="wrap footer-grid">
     <div class="f-brand">
       <a class="brand brand-light" href="#top">
-        <span class="brand-name" data-en="Feven's Prints" data-am="የፌቨን ህትመቶች">Feven's Prints</span>
+        <span class="brand-txt"><span class="brand-name" data-en="Feven's Prints" data-am="የፌቨን ህትመቶች">Feven's Prints</span>
+        <span class="brand-am">የፌቨን ህትመቶች</span></span>
       </a>
       <p class="f-blurb" data-en="A family-run photo studio in Addis Ababa, turning your best moments into prints worth keeping." data-am="በአዲስ አበባ የሚገኝ የቤተሰብ የፎቶ ስቱዲዮ፤ ምርጥ ጊዜዎችዎን ሊያስቀምጧቸው በሚገቡ ህትመቶች እንለውጣለን።">A family-run photo studio in Addis Ababa, turning your best moments into prints worth keeping.</p>
       <!-- [FEVEN] social links removed until she confirms real handles — dead
