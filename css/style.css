@@ -674,6 +674,25 @@ body.am .brand-am { display:none; }
 body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9'%3E%3Cpath d='M0 4.5h9M4.5 0v9' stroke='%23000' stroke-opacity='.022' stroke-width='.7'/%3E%3C/svg%3E"); }
 main, .footer { position:relative; z-index:1; }
+/* page-wide print grain + a faint diagonal weave OVER the content.
+   The body::before weave above sits at z-index 0 — behind every surface that
+   has its own background — so it only ever showed through the gaps. This one
+   rides above the content (z-index 2, under the nav at 10) so the whole page
+   reads as one sheet of printed cloth rather than a stack of panels. Alpha is
+   baked per layer so the layers can differ. Deliberately NOT masked: a mask on
+   a fixed overlay fades a band that travels with the viewport while scrolling. */
+body::after { content:""; position:fixed; inset:0; z-index:2; pointer-events:none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(45deg, transparent 0 19px, rgba(165,122,43,.045) 19px 20px, transparent 20px 38px),
+    repeating-linear-gradient(135deg, transparent 0 19px, rgba(165,122,43,.045) 19px 20px, transparent 20px 38px);
+}
+[data-theme="dark"] body::after {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' fill='%23fff' opacity='.055'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(45deg, transparent 0 19px, rgba(217,175,82,.04) 19px 20px, transparent 20px 38px),
+    repeating-linear-gradient(135deg, transparent 0 19px, rgba(217,175,82,.04) 19px 20px, transparent 20px 38px);
+}
 
 /* ── typographic wrapping + skip link ─────────────────── */
 h1, h2, h3, .hero-title, .section-h, .tile h3, .price-card h4 { text-wrap: balance; }
@@ -723,7 +742,7 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .print-only h2 { font-size:16pt; margin-bottom:2mm; }
   .print-only p { font-size:10pt; color:#333; }
   body { background:#fff !important; color:#000 !important; font-size:10.5pt; }
-  body::before { display:none !important; }
+  body::before, body::after { display:none !important; }
   .section, .price-block { padding:0 0 9mm !important; }
   .section-h::after { display:none !important; }
   .am-eye { color:#000 !important; }
