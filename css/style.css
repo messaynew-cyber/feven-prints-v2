@@ -643,6 +643,33 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
 /* the carousel track owns horizontal drags, the page keeps vertical scroll */
 .hero-slides { touch-action:pan-y; }
 
+/* ══ PRINT ═══════════════════════════════════════════════
+   Customers print price lists. Without this they get the nav, the carousel and
+   a collapsed FAQ. */
+.print-only { display:none; }
+@media print {
+  @page { margin: 14mm; }
+  .nav, .progress, .to-top, .skip, .hero, .order-form, .channel-row,
+  .tibeb-wrap, .visit-card, .send-grid .quality-card { display:none !important; }
+  .print-only { display:block !important; margin-bottom:8mm; }
+  .print-only h2 { font-size:16pt; margin-bottom:2mm; }
+  .print-only p { font-size:10pt; color:#333; }
+  body { background:#fff !important; color:#000 !important; font-size:10.5pt; }
+  body::before { display:none !important; }
+  .section, .price-block { padding:0 0 9mm !important; }
+  .section-h::after { display:none !important; }
+  .am-eye { color:#000 !important; }
+  .tile::before, .price-card::before, .faq::before, .quality-card::before { display:none !important; }
+  .tile, .price-card, .faq, .quality-card { break-inside:avoid; page-break-inside:avoid;
+    border-color:#999 !important; box-shadow:none !important; transform:none !important; }
+  .price-grid { display:grid !important; grid-template-columns:1fr 1fr !important; gap:6mm !important; }
+  .bento { display:block !important; }
+  .tile { margin-bottom:6mm; }
+  .faq p { color:#000 !important; }
+  a { color:#000 !important; text-decoration:none !important; }
+  .reveal, .reveal-scale, .reveal-blur { opacity:1 !important; transform:none !important; filter:none !important; }
+}
+
 /* ── responsive ──────────────────────────────────────── */
 @media (max-width: 1024px) {
   .masonry { columns: 2; }

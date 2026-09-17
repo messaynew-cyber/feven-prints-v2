@@ -369,6 +369,28 @@
     startAuto();
   }
 
+  /* ── offline: service worker + print behaviour ────────── */
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+  /* a collapsed <details> prints collapsed - open every answer for the printout,
+     then restore what the reader had open when printing finishes */
+  window.addEventListener("beforeprint", function () {
+    var ds = document.querySelectorAll("details");
+    for (var i = 0; i < ds.length; i++) {
+      if (!ds[i].open) { ds[i].setAttribute("data-was-closed", "1"); ds[i].open = true; }
+    }
+  });
+  window.addEventListener("afterprint", function () {
+    var closed = document.querySelectorAll('details[data-was-closed]');
+    for (var j = 0; j < closed.length; j++) {
+      closed[j].open = false;
+      closed[j].removeAttribute("data-was-closed");
+    }
+  });
+
   /* ── extra motion: progress bar, back-to-top, hero parallax, stagger ── */
   (function () {
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

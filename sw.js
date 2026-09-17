@@ -1,0 +1,84 @@
+/* Feven's Prints — service worker.
+   Goal: the site keeps working when the signal does not. Prices, hours and the
+   FAQ are exactly the things a customer wants when they are standing in Bole
+   with one bar of signal.
+
+   Strategy:
+   - Navigations (the HTML): network-first, so prices and content are never
+     stale, falling back to cache when offline.
+   - Everything else: stale-while-revalidate — instant from cache, refreshed in
+     the background.
+   The shell is precached on install; images cache as they are first seen, which
+   keeps the initial download small on a metered connection. */
+
+const CACHE = "fevens-v1";
+
+const SHELL = [
+  "./",
+  "./index.html",
+  "./css/style.css",
+  "./js/main.js",
+  "./manifest.webmanifest",
+  "./img/icons/icon-192.png",
+  "./img/icons/icon-512.png",
+  "./img/canvas.webp",
+  "./img/calendar.webp"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(SHELL).catch(() => undefined))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  if (req.method !== "GET") return;
+
+  let url;
+  try { url = new URL(req.url); } catch (e) { return; }
+  if (url.origin !== self.location.origin) return;
+
+  const isDocument = req.mode === "navigate" ||
+    (req.headers.get("accept") || "").indexOf("text/html") !== -1;
+
+  if (isDocument) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => undefined);
+          return res;
+        })
+        .catch(() =>
+          caches.match(req).then((hit) => hit || caches.match("./index.html"))
+        )
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(req).then((hit) => {
+      const network = fetch(req)
+        .then((res) => {
+          if (res && res.status === 200 && res.type === "basic") {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => undefined);
+          }
+          return res;
+        })
+        .catch(() => hit);
+      return hit || network;
+    })
+  );
+});
