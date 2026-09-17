@@ -1,4 +1,4 @@
-# DESIGN.md — Feven's Prints
+# DESIGN.md — Norcha Print
 
 The design contract for this site. Read this before changing anything visual, so the decisions
 below survive contact with the next person who edits it.
@@ -171,3 +171,11 @@ Before adding a bespoke pixel value, ask whether one of the scale steps works.
   boolean attribute and the styling silently dies.
 - Add a scroll listener, a built-in easing, or a bespoke pixel value.
 - Assume a colour is readable. Measure it.
+
+
+---
+
+**Brand note (17 Sep 2026):** the shop's public brand is now **Norcha Print**, domain
+**norchaprint.com** (bought by the Architect; zone active on Cloudflare, no DNS records yet). The client is
+still Feven; "Norcha" is the trading name. Site, manifest, service worker, style guide and the social card
+were renamed the same day. The proposal documents still carry "Feven's Prints" pending a decision.

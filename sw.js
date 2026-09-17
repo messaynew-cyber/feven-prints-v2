@@ -1,4 +1,4 @@
-/* Feven's Prints — service worker.
+/* Norcha Print — service worker.
    Goal: the site keeps working when the signal does not. Prices, hours and the
    FAQ are exactly the things a customer wants when they are standing in Bole
    with one bar of signal.
