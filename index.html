@@ -96,6 +96,8 @@
 </head>
 <body>
 
+<a class="skip" href="#main">Skip to content</a>
+
 <div class="progress" id="progress" aria-hidden="true"></div>
 
 <!-- ═══════════ NAV ═══════════ -->
@@ -149,8 +151,9 @@
 
 <!-- ═══════════ HERO (horizontal image carousel) ═══════════ -->
 <h1 class="sr-only">Feven&rsquo;s Prints — photo printing studio, Bole, Addis Ababa</h1>
-<section class="hero" id="heroCarousel" aria-roledescription="carousel" aria-label="Featured products">
-  <div class="hero-carousel">
+<section class="hero" id="main" aria-roledescription="carousel" aria-label="Featured products">
+  <div class="hero-carousel" id="heroCarousel">
+    <p class="sr-only" id="heroStatus" aria-live="polite"></p>
     <div class="hero-slides" id="heroSlides">
 
       <article class="hero-slide accent-red" role="group" aria-roledescription="slide" aria-label="1 of 3">

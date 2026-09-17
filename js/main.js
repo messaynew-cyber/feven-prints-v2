@@ -285,13 +285,13 @@
         b.setAttribute("role", "tab");
         b.setAttribute("aria-label", "Slide " + (n + 1));
         b.setAttribute("aria-selected", n === 0 ? "true" : "false");
-        b.addEventListener("click", function () { goTo(n); });
+        b.addEventListener("click", function () { goTo(n, true); });
         dotsWrap.appendChild(b);
       })(si);
     }
     var dots = dotsWrap.querySelectorAll(".hero-dot");
 
-    function goTo(n) {
+    function goTo(n, announce) {
       idx = (n + slides.length) % slides.length;
       slidesEl.style.transform = "translateX(" + (-idx * 100) + "%)";
       for (var d = 0; d < dots.length; d++) {
@@ -305,6 +305,14 @@
           else links[l].setAttribute("tabindex", "-1");
         }
       }
+      /* announce only when the user chose the slide - announcing autoplay every
+         6.5s would be hostile to a screen reader */
+      var status = document.getElementById("heroStatus");
+      if (status && announce) {
+        var t = slides[idx].querySelector(".hero-title");
+        status.textContent = "Slide " + (idx + 1) + " of " + slides.length +
+                             (t && t.textContent ? ": " + t.textContent.trim() : "");
+      }
     }
     function startAuto() {
       if (reduceMotion) return;
@@ -315,8 +323,8 @@
 
     var prevBtn = carousel.querySelector(".hero-arrow.prev");
     var nextBtn = carousel.querySelector(".hero-arrow.next");
-    if (prevBtn) prevBtn.addEventListener("click", function () { goTo(idx - 1); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { goTo(idx + 1); });
+    if (prevBtn) prevBtn.addEventListener("click", function () { goTo(idx - 1, true); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { goTo(idx + 1, true); });
 
     carousel.addEventListener("pointerenter", function () { paused = true; });
     carousel.addEventListener("pointerleave", function () { paused = false; });
@@ -324,8 +332,8 @@
     carousel.addEventListener("focusout", function () { paused = false; });
     document.addEventListener("visibilitychange", function () { paused = document.hidden; });
     carousel.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowLeft") { goTo(idx - 1); }
-      else if (e.key === "ArrowRight") { goTo(idx + 1); }
+      if (e.key === "ArrowLeft") { goTo(idx - 1, true); }
+      else if (e.key === "ArrowRight") { goTo(idx + 1, true); }
     });
 
     var startX = null;
@@ -335,7 +343,7 @@
     slidesEl.addEventListener("touchend", function (e) {
       if (startX === null) return;
       var dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 44) goTo(idx + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 44) goTo(idx + (dx < 0 ? 1 : -1), true);
       startX = null;
     }, { passive: true });
 
