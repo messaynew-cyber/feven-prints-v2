@@ -30,6 +30,13 @@
   --yellow-soft: #F6EFD5;
   --accent: var(--pine);
   --accent-soft: var(--pine-soft);
+  /* --body was never defined: `.am-eye` and `.brand-am` do
+     font-family:'Noto Sans Ethiopic', var(--body), so an undefined token made
+     the whole declaration invalid at computed-value time and both rules fell
+     back to the inherited stack. Amharic only looked right because Android
+     ships an Ethiopic system font. Defined here, with the self-hosted Ethiopic
+     face in the stack so a desktop without one still renders Amharic. */
+  --body: 'Outfit', 'Noto Sans Ethiopic', system-ui, -apple-system, sans-serif;
   /* semantic tokens — every one of these is remapped for the dark theme */
   --text-soft: #5C5246;
   --text-mute: #8D8171;
@@ -53,7 +60,7 @@
   /* 🔴 'Noto Sans Ethiopic' MUST stay in this stack: Bricolage + Outfit are
      Latin-only (see their unicode-range), so without it Amharic headings fall
      through to system-ui and the AM headline stops matching the AM body. */
-  --display: 'Bricolage Grotesque', 'Outfit', 'Noto Sans Ethiopic', system-ui, sans-serif;
+  --display: 'EB Garamond', 'Bricolage Grotesque', 'Noto Sans Ethiopic', Georgia, serif;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-inout: cubic-bezier(0.77, 0, 0.175, 1);
   --shadow-warm: rgba(46, 37, 26, 0.4);
@@ -70,10 +77,12 @@
 @font-face { font-family: 'Noto Sans Ethiopic'; font-style: normal; font-weight: 400 900; font-display: swap; src: url('../fonts/noto-ethiopic.woff2') format('woff2'); unicode-range: U+030E, U+1200-1399, U+2D80-2DDE, U+AB01-AB2E, U+1E7E0-1E7E6, U+1E7E8-1E7EB, U+1E7ED-1E7EE, U+1E7F0-1E7FE; }
 @font-face { font-family: 'Noto Sans Ethiopic'; font-style: normal; font-weight: 400 900; font-display: swap; src: url('../fonts/noto-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
+@font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 400 800; font-display: swap; src: url('../fonts/ebgaramond-latin.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 16px); }
 body {
   margin: 0;
-  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  font-family: var(--body);
   background: var(--paper);
   color: var(--ink);
   font-size: 17px;
@@ -87,6 +96,16 @@ img { display: block; max-width: 100%; }
 a { color: var(--pine-deep); text-decoration: none; }
 h1, h2, h3, h4 { margin: 0; line-height: 1.14; font-weight: 750; letter-spacing: -0.015em; }
 h1, h2, .brand, .phone-xl { font-family: var(--display); }
+/* ── serif display tuning ────────────────────────────────
+   EB Garamond has a small x-height and far less colour than the grotesque it
+   replaces, so at the old numbers the headings read thin and undersized. Less
+   negative tracking (serifs collide long before grotesques do), a touch more
+   size, and weight down to ~560 — a Garamond at 750 turns to mud. */
+h1, h2 { font-weight: 560; letter-spacing: -0.008em; }
+.section-h { font-size: clamp(32px, 3.6vw, 45px); font-weight: 560; letter-spacing: -0.012em; }
+.hero-title { font-size: clamp(34px, 4vw, 54px); font-weight: 560; letter-spacing: -0.015em; }
+.brand { font-weight: 560; letter-spacing: 0; }
+.phone-xl { font-family: var(--body); } /* digits stay in the sans: Garamond's old-style figures are lovely in prose and wrong in a phone number */
 p { margin: 0; }
 ul { margin: 0; padding: 0; list-style: none; }
 :focus-visible { outline: 2px solid var(--pine); outline-offset: 3px; border-radius: 4px; }
