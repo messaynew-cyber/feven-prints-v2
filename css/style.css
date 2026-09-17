@@ -96,15 +96,6 @@ img { display: block; max-width: 100%; }
 a { color: var(--pine-deep); text-decoration: none; }
 h1, h2, h3, h4 { margin: 0; line-height: 1.14; font-weight: 750; letter-spacing: -0.015em; }
 h1, h2, .brand, .phone-xl { font-family: var(--display); }
-/* ── serif display tuning ────────────────────────────────
-   EB Garamond has a small x-height and far less colour than the grotesque it
-   replaces, so at the old numbers the headings read thin and undersized. Less
-   negative tracking (serifs collide long before grotesques do), a touch more
-   size, and weight down to ~560 — a Garamond at 750 turns to mud. */
-h1, h2 { font-weight: 560; letter-spacing: -0.008em; }
-.section-h { font-size: clamp(32px, 3.6vw, 45px); font-weight: 560; letter-spacing: -0.012em; }
-.hero-title { font-size: clamp(34px, 4vw, 54px); font-weight: 560; letter-spacing: -0.015em; }
-.brand { font-weight: 560; letter-spacing: 0; }
 .phone-xl { font-family: var(--body); } /* digits stay in the sans: Garamond's old-style figures are lovely in prose and wrong in a phone number */
 p { margin: 0; }
 ul { margin: 0; padding: 0; list-style: none; }
@@ -447,6 +438,15 @@ button.btn { cursor: pointer; }
               background:var(--accent-soft); color:var(--accent); border-radius:999px; padding:6px 14px; }
 .hero-title { font-family:var(--display); font-size:clamp(32px,3.8vw,50px); font-weight:680;
               letter-spacing:-0.03em; line-height:1.06; margin-top:16px; max-width:22ch; }
+/* ── serif display tuning (must stay AFTER the rules it corrects) ────────
+   EB Garamond has a small x-height and far less colour than the grotesque it
+   replaced, so at the old numbers the headings read thin and undersized. Less
+   negative tracking (serifs collide long before grotesques do), a touch more
+   size, and weight down to ~560 — a Garamond at 750 turns to mud. */
+h1, h2 { font-weight: 560; letter-spacing: -0.008em; }
+.section-h { font-size: clamp(32px, 3.6vw, 45px); font-weight: 560; letter-spacing: -0.012em; }
+.hero-title { font-size: clamp(34px, 4vw, 54px); font-weight: 560; letter-spacing: -0.015em; }
+.brand { font-weight: 560; letter-spacing: 0; }
 .hero-media { margin:0; }
 .hero-media img { width:100%; height:auto; border-radius:10px; display:block;
                   box-shadow:0 26px 54px -34px rgba(46,37,26,.42); }
