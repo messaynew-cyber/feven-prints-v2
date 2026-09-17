@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Feven's Prints — internal style guide</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='6' fill='%230E5C41'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .sg-wrap { max-width: 900px; margin: 0 auto; padding: 34px 24px 90px; }
+  .sg-head { display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+             padding-bottom:18px; border-bottom:2px solid var(--line-strong); margin-bottom:30px; }
+  .sg-note { font-size:14px; color:var(--text-mute); margin-top:6px; }
+  .sg-sect { margin: 40px 0 0; }
+  .sg-sect > h2 { font-size:22px; margin-bottom:4px; }
+  .sg-sect > .sg-rule { height:12px; width:132px; margin:8px 0 18px; background-color:var(--accent);
+    -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-size:11px 9px; mask-size:11px 9px; mask-repeat:repeat-x; }
+  .sg-swatches { display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:12px; }
+  .sg-sw { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--white); }
+  .sg-sw i { display:block; height:52px; }
+  .sg-sw b { display:block; font-size:13px; padding:8px 10px 2px; font-family:var(--display); }
+  .sg-sw span { display:block; font-size:11.5px; padding:0 10px 9px; color:var(--text-mute); font-variant-numeric:tabular-nums; }
+  .sg-row { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-bottom:14px; }
+  .sg-demo { background:var(--paper-2); border:1px solid var(--line); border-radius:12px; padding:18px; }
+  .sg-type p { margin:6px 0; }
+  .sg-small { font-size:13px; color:var(--text-mute); }
+</style>
+</head>
+<body>
+
+<div class="sg-wrap">
+  <div class="sg-head">
+    <div>
+      <h1 style="font-size:26px;">Feven&rsquo;s Prints — style guide</h1>
+      <p class="sg-note">Internal. Not linked from the site, <code>noindex</code>, and disallowed in robots.txt.
+        Every value below is read from the live stylesheet, so this page cannot drift from the site.
+        Read <code>DESIGN.md</code> for the rules behind it.</p>
+    </div>
+    <button class="theme-toggle" id="sgTheme" type="button" aria-pressed="false" aria-label="Switch theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.9"/><path d="M12 3.4v2.1M12 18.5v2.1M3.4 12h2.1M18.5 12h2.1M6.1 6.1l1.5 1.5M16.4 16.4l1.5 1.5M17.9 6.1l-1.5 1.5M7.6 16.4l-1.5 1.5"/></svg>
+    </button>
+  </div>
+
+  <section class="sg-sect accent-green">
+    <h2>Colour tokens</h2><div class="sg-rule"></div>
+    <div class="sg-swatches" id="sgSwatches"></div>
+    <p class="sg-small" style="margin-top:12px;">Flag yellow is <strong>ornament only</strong> — it is unreadable as text on cream. Red used for
+      text is <code>--red</code>, not <code>--flag-red</code>. Re-measure contrast after any change.</p>
+  </section>
+
+  <section class="sg-sect accent-yellow">
+    <h2>Accent roles</h2><div class="sg-rule"></div>
+    <div class="sg-row">
+      <span class="hero-badge accent-green">Canvas prints</span>
+      <span class="hero-badge accent-red">Photo books</span>
+      <span class="hero-badge accent-yellow">Wall calendars</span>
+    </div>
+    <p class="sg-small">One accent per product, carried on the woven trim and the hero badge. Never a third tricolour — see DESIGN.md §2.</p>
+  </section>
+
+  <section class="sg-sect accent-red">
+    <h2>The motif</h2><div class="sg-rule"></div>
+    <div class="sg-demo">
+      <div class="tibeb-wrap reveal" style="margin-bottom:14px;"><i class="tibeb"></i></div>
+      <p class="sg-small" style="margin-bottom:10px;">Ceremonial silk selvedge — the only place all three flag colours appear together (with the progress bar).</p>
+      <div style="display:flex; gap:14px; align-items:center; margin-bottom:12px;">
+        <span class="tibeb-div g" style="width:120px;height:12px;"></span>
+        <span class="tibeb-div y" style="width:120px;height:12px;"></span>
+        <span class="tibeb-div r" style="width:120px;height:12px;"></span>
+      </div>
+      <p class="sg-small">Section dividers, cycling green → yellow → red. The heading ornament and the card trim are the same diamond chain.</p>
+    </div>
+  </section>
+
+  <section class="sg-sect accent-green">
+    <h2>Buttons</h2><div class="sg-rule"></div>
+    <div class="sg-row">
+      <a class="btn btn-primary" href="#">Primary</a>
+      <a class="btn btn-outline" href="#">Outline</a>
+      <a class="btn btn-pill" href="#">Pill</a>
+      <a class="btn btn-outline btn-sm" href="#">Small</a>
+    </div>
+    <p class="sg-small">Press feedback is mandatory (scale .94–.985). Minimum touch target 44×44 — the visual may be smaller than the target.</p>
+  </section>
+
+  <section class="sg-sect accent-red">
+    <h2>Cards &amp; price table</h2><div class="sg-rule"></div>
+    <div class="price-grid" style="margin-top:0;">
+      <div class="price-card accent-green">
+        <h4>Canvas prints</h4>
+        <table><thead><tr><th>Size</th><th>Price</th></tr></thead>
+          <tbody><tr><td>30 × 40 cm</td><td>950 ETB</td></tr><tr><td>40 × 60 cm</td><td>1,600 ETB</td></tr></tbody></table>
+      </div>
+      <div class="price-card accent-yellow">
+        <h4>Wall calendars</h4>
+        <table><thead><tr><th>Size</th><th>Price</th></tr></thead>
+          <tbody><tr><td>A4</td><td>450 ETB</td></tr><tr><td>A3</td><td>700 ETB</td></tr></tbody></table>
+      </div>
+    </div>
+    <p class="sg-small">Prices use tabular numerals so digits align. Note: these are the TEMPORARY placeholders pending Feven&rsquo;s price list.</p>
+  </section>
+
+  <section class="sg-sect accent-yellow">
+    <h2>FAQ</h2><div class="sg-rule"></div>
+    <div class="faq-list">
+      <details class="faq" open><summary>How fast can I get my prints?</summary>
+        <p>Same day for orders before 16:00.</p></details>
+      <details class="faq"><summary>Do you deliver?</summary>
+        <p>Free delivery in Bole and the surrounding areas.</p></details>
+    </div>
+    <p class="sg-small">The marker is + / −, never a rotated + (which reads as dismiss). A <code>beforeprint</code> handler opens every answer for printing.</p>
+  </section>
+
+  <section class="sg-sect accent-green">
+    <h2>Type</h2><div class="sg-rule"></div>
+    <div class="sg-type">
+      <p style="font-family:var(--display);font-size:clamp(30px,3.4vw,42px);font-weight:660;letter-spacing:-0.025em;">Section heading</p>
+      <p style="font-size:17.5px;color:var(--text-soft);">Body copy — Outfit, 17.5px, line-height 1.8.</p>
+      <p style="font-weight:700;font-size:16.5px;color:var(--pine-deep);font-variant-numeric:tabular-nums;">from 1,800 ETB</p>
+      <p class="am-eye" style="display:block;">የፌቨን ህትመቶች — Noto Sans Ethiopic, visible beside the English by design.</p>
+    </div>
+    <p class="sg-small">Bricolage Grotesque (display) · Outfit (body) · Noto Sans Ethiopic (Amharic, must stay in the display stack).</p>
+  </section>
+
+  <section class="sg-sect accent-red">
+    <h2>Spacing &amp; motion</h2><div class="sg-rule"></div>
+    <p class="sg-small">Scale: 4 / 8 / 12 / 16 / 24 / 32. Easing: only <code>--ease-out</code> and <code>--ease-inout</code>.
+      UI feedback &lt;300ms, entrances 420–520ms, carousel 620ms, ribbon 950ms. Transform and opacity only.
+      Three entrance behaviours by element type (blur for headings, scale for cards, rise for prose), 70ms sibling stagger.
+      Everything off under <code>prefers-reduced-motion</code>; autoplay disabled, not just sped up.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  /* theme: same key as the site, so the choice follows you here */
+  var root = document.documentElement;
+  var btn = document.getElementById("sgTheme");
+  var saved = null;
+  try { saved = localStorage.getItem("fevens-theme"); } catch (e) {}
+  var os = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  root.setAttribute("data-theme", saved || os);
+  function sync() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-pressed", String(dark));
+  }
+  btn.addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("fevens-theme", next); } catch (e) {}
+    sync(); render();
+  });
+  sync();
+
+  /* swatches report the LIVE token values, so this page cannot drift */
+  var TOKENS = ["--paper","--paper-2","--ink","--ink-soft","--line","--white","--pine","--pine-deep",
+    "--pine-soft","--gold","--flag-green","--flag-yellow","--flag-red","--red",
+    "--accent","--accent-soft","--text-soft","--text-mute"];
+  function render() {
+    var cs = getComputedStyle(root);
+    var host = document.getElementById("sgSwatches");
+    host.innerHTML = "";
+    TOKENS.forEach(function (t) {
+      var v = cs.getPropertyValue(t).trim();
+      var box = document.createElement("div");
+      box.className = "sg-sw";
+      var chip = document.createElement("i");
+      chip.style.background = v;
+      var name = document.createElement("b"); name.textContent = t;
+      var hex = document.createElement("span"); hex.textContent = v || "(unset)";
+      box.appendChild(chip); box.appendChild(name); box.appendChild(hex);
+      host.appendChild(box);
+    });
+  }
+  render();
+
+  /* run the loom reveals on this page too */
+  var els = document.querySelectorAll(".reveal");
+  for (var i = 0; i < els.length; i++) els[i].classList.add("in");
+})();
+</script>
+</body>
+</html>
