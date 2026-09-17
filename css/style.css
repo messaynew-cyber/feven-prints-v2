@@ -683,7 +683,7 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
     border-color:#999 !important; box-shadow:none !important; transform:none !important; }
   .price-grid { display:grid !important; grid-template-columns:1fr 1fr !important; gap:6mm !important; }
   .bento { display:block !important; }
-  .bento > .tile { rotate: 0deg; translate: 0 0; }
+  .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
   .tile { margin-bottom:6mm; }
   .faq p { color:#000 !important; }
   a { color:#000 !important; text-decoration:none !important; }
@@ -714,7 +714,7 @@ p, li, .hero-sub, .section-h + p { text-wrap: pretty; }
   .band-grid p + p { border-left: 0; border-top: 1px solid var(--line); }
   .section { padding: 68px 0; }
   .bento { grid-template-columns: 1fr; }
-  .bento > .tile { rotate: 0deg; translate: 0 0; }
+  .bento > .tile:nth-child(n) { rotate: 0deg; translate: 0 0; } /* :nth-child(n) to out-rank the stagger rules above */
   .tile-big, .tile-tall, .tile:nth-of-type(3), .tile:nth-of-type(4), .tile:nth-of-type(5), .tile-wide { grid-column: span 1; }
   .tile-wide { flex-direction: column; }
   .tile-media-side { flex: none; aspect-ratio: 4 / 3; }
