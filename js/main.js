@@ -233,6 +233,41 @@
     for (var ei = 0; ei < marks.length; ei++) marks[ei].textContent = String(et);
   })();
 
+  /* ── light / dark theme ───────────────────────────────── */
+  (function () {
+    var root = document.documentElement;
+    var KEY = "fevens-theme";
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var toggles = document.querySelectorAll(".theme-toggle");
+    var LABEL = {
+      en: { toDark: "Switch to dark theme", toLight: "Switch to light theme" },
+      am: { toDark: "ወደ ጨለማ ገጽታ ቀይር", toLight: "ወደ ብሩህ ገጽታ ቀይር" }
+    };
+    function apply(t) {
+      var dark = t === "dark";
+      root.setAttribute("data-theme", dark ? "dark" : "light");
+      if (meta) meta.setAttribute("content", dark ? "#15120E" : "#F8F4EE");
+      var lang = document.documentElement.lang === "am" ? "am" : "en";
+      for (var i = 0; i < toggles.length; i++) {
+        toggles[i].setAttribute("aria-pressed", String(dark));
+        toggles[i].setAttribute("aria-label", dark ? LABEL[lang].toLight : LABEL[lang].toDark);
+      }
+    }
+    for (var j = 0; j < toggles.length; j++) {
+      toggles[j].addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        try { localStorage.setItem(KEY, next); } catch (e) {}
+        apply(next);
+      });
+    }
+    apply(root.getAttribute("data-theme") === "dark" ? "dark" : "light");
+    /* keep the toggle labels in step with the language switch */
+    var segsAll = document.querySelectorAll(".seg");
+    for (var k = 0; k < segsAll.length; k++) {
+      segsAll[k].addEventListener("click", function () { setTimeout(function () { apply(root.getAttribute("data-theme")); }, 0); });
+    }
+  })();
+
   /* ── hero carousel: auto-advance, arrows, dots, swipe, keyboard ── */
   var slidesEl = document.getElementById("heroSlides");
   if (slidesEl) {
@@ -307,4 +342,66 @@
     goTo(0);
     startAuto();
   }
+
+  /* ── extra motion: progress bar, back-to-top, hero parallax, stagger ── */
+  (function () {
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var prog = null, topBtn = null;             /* resolved lazily: this script sits
+                                                   before the to-top button in the DOM */
+    var heroImgs = document.querySelectorAll(".hero-media img");
+    var queued = false;
+
+    function resolve() {
+      if (!prog) prog = document.getElementById("progress");
+      if (!topBtn) topBtn = document.getElementById("toTop");
+    }
+    function onScroll() {
+      resolve();
+      var y = window.scrollY;
+      if (prog) {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        prog.style.transform = "scaleX(" + (max > 0 ? Math.min(1, y / max) : 0) + ")";
+      }
+      if (topBtn) topBtn.classList.toggle("show", y > 900);
+      /* subtle parallax on the hero product photo, above the fold only */
+      if (!reduce && y < 760 && heroImgs.length) {
+        var shift = (y * 0.055).toFixed(2);
+        for (var i = 0; i < heroImgs.length; i++) heroImgs[i].style.transform = "translateY(" + shift + "px)";
+      }
+    }
+    function onScrollThrottled() {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; onScroll(); });
+    }
+    function bindBackToTop() {
+      resolve();
+      if (topBtn && !topBtn.dataset.bound) {
+        topBtn.dataset.bound = "1";
+        topBtn.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+        });
+      }
+      onScroll();
+    }
+    window.addEventListener("scroll", onScrollThrottled, { passive: true });
+    window.addEventListener("resize", onScrollThrottled, { passive: true });
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindBackToTop);
+    else bindBackToTop();
+    setTimeout(bindBackToTop, 400);   /* and once more, in case of late layout */
+
+    /* staggered reveals: cascade the children of each grid instead of
+       everything arriving at once. The delay is cleared as soon as the
+       element has revealed, so hover transitions are never delayed. */
+    var groups = document.querySelectorAll(".bento, .price-grid, .faq-list, .masonry, .send-steps, .how-grid");
+    for (var g = 0; g < groups.length; g++) {
+      var kids = groups[g].querySelectorAll(".reveal");
+      for (var k = 0; k < kids.length; k++) {
+        kids[k].style.transitionDelay = (k * 70) + "ms";
+        kids[k].addEventListener("transitionend", function () {
+          this.style.transitionDelay = "";
+        }, { once: true });
+      }
+    }
+  })();
 })();

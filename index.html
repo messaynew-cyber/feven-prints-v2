@@ -6,7 +6,18 @@
 <title>Feven's Prints | Photo Printing Studio, Addis Ababa</title>
 <meta name="description" content="Premium photo prints, canvases, photo books and gifts, printed the same day in Bole, Addis Ababa. Order by phone or WhatsApp: +358 44 2715477">
 <meta name="theme-color" content="#F8F4EE">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="light dark">
+<script>
+  /* Set the theme before first paint so there is never a flash of the wrong one.
+     Saved choice wins; otherwise follow the operating system. */
+  (function () {
+    try {
+      var saved = localStorage.getItem("fevens-theme");
+      var os = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", saved || os);
+    } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+  })();
+</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Feven's Prints">
@@ -85,6 +96,8 @@
 </head>
 <body>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
+
 <!-- ═══════════ NAV ═══════════ -->
 <header class="nav" id="nav">
   <div class="wrap nav-inner">
@@ -99,6 +112,10 @@
       <a href="#visit" data-en="Visit" data-am="አድራሻ">Visit</a>
     </nav>
     <div class="nav-cta">
+      <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.9"/><path d="M12 3.4v2.1M12 18.5v2.1M3.4 12h2.1M18.5 12h2.1M6.1 6.1l1.5 1.5M16.4 16.4l1.5 1.5M17.9 6.1l-1.5 1.5M7.6 16.4l-1.5 1.5"/></svg>
+      </button>
       <div class="lang-group" role="group" aria-label="Language / ቋንቋ">
         <button class="seg" type="button" data-lang="en" aria-pressed="true">EN</button>
         <button class="seg" type="button" data-lang="am" aria-pressed="false">አማ</button>
@@ -113,6 +130,10 @@
     <a href="#send" data-en="Send photos" data-am="ፎቶ ይላኩ">Send photos</a>
     <a href="#order" data-en="Order" data-am="ትዕዛዝ">Order</a>
     <a href="#visit" data-en="Visit" data-am="አድራሻ">Visit</a>
+    <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.9"/><path d="M12 3.4v2.1M12 18.5v2.1M3.4 12h2.1M18.5 12h2.1M6.1 6.1l1.5 1.5M16.4 16.4l1.5 1.5M17.9 6.1l-1.5 1.5M7.6 16.4l-1.5 1.5"/></svg>
+    </button>
     <div class="lang-group lang-group-mobile" role="group" aria-label="Language / ቋንቋ">
       <button class="seg" type="button" data-lang="en" aria-pressed="true">EN</button>
       <button class="seg" type="button" data-lang="am" aria-pressed="false">አማ</button>
@@ -360,14 +381,17 @@
     <h2 class="section-h reveal" data-en="How it works" data-am="እንዴት እንደሚሰራ">How it works</h2>
     <div class="how-grid">
       <div class="how-item reveal">
+        <span class="how-n" aria-hidden="true">፩</span>
         <h3 data-en="Send your photos" data-am="ፎቶዎችዎን ይላኩ">Send your photos</h3>
         <p data-en="Message us on Telegram or WhatsApp with the photos and sizes you want." data-am="ፎቶዎችዎን እና የሚፈልጉትን መጠን በቴሌግራም ወይም ዋትስአፕ ይላኩልን።">Message us on Telegram or WhatsApp with the photos and sizes you want.</p>
       </div>
       <div class="how-item reveal">
+        <span class="how-n" aria-hidden="true">፪</span>
         <h3 data-en="We print them" data-am="እናተምታለን">We print them</h3>
         <p data-en="Professional printing on premium paper, ready the same day." data-am="በከፍተኛ ጥራት ወረቀት ላይ ሙያዊ ህትመት፣ በዚያው ቀን ዝግጁ።">Professional printing on premium paper, ready the same day.</p>
       </div>
       <div class="how-item reveal">
+        <span class="how-n" aria-hidden="true">፫</span>
         <h3 data-en="Pick up or delivery" data-am="ይቀበሉ ወይም እናደርስልዎታለን">Pick up or delivery</h3>
         <p data-en="Collect from our studio or get it delivered anywhere in Addis." data-am="ከስቱዲዮአችን ይውሰዱ ወይም በአዲስ አበባ ውስጥ በማንኛውም ቦታ እናደርስልዎታለን።">Collect from our studio or get it delivered anywhere in Addis.</p>
       </div>
@@ -384,21 +408,21 @@
     <div class="send-grid">
       <ol class="send-steps">
         <li class="send-step reveal">
-          <span class="send-n" aria-hidden="true">1</span>
+          <span class="send-n" aria-hidden="true">፩</span>
           <div>
             <h3 data-en="Open WhatsApp or Telegram" data-am="ዋትስአፕ ወይም ቴሌግራም ይክፈቱ">Open WhatsApp or Telegram</h3>
             <p data-en="Tap a button below. The chat opens with us ready." data-am="ከታች ያለውን ቁልፍ ይንኩ። ውይይቱ ይከፈታል።">Tap a button below. The chat opens with us ready.</p>
           </div>
         </li>
         <li class="send-step reveal">
-          <span class="send-n" aria-hidden="true">2</span>
+          <span class="send-n" aria-hidden="true">፪</span>
           <div>
             <h3 data-en="Send the originals as documents" data-am="ዋናዎቹን ፎቶዎች እንደ ሰነድ ይላኩ">Send the originals as documents</h3>
             <p data-en="This is the one that matters. WhatsApp shrinks photos by default, and a shrunk photo prints soft or pixelated." data-am="ይህ በጣም አስፈልጋል። ዋትስአፕ ፎቶዎችን ያሳንሳል፤ የተነከሰ ፎቶ ግልጽ አይሆንም።">This is the one that matters. WhatsApp shrinks photos by default, and a shrunk photo prints soft or pixelated.</p>
           </div>
         </li>
         <li class="send-step reveal">
-          <span class="send-n" aria-hidden="true">3</span>
+          <span class="send-n" aria-hidden="true">፫</span>
           <div>
             <h3 data-en="Tell us size and quantity" data-am="መጠን እና ብዛት ይንገሩን">Tell us size and quantity</h3>
             <p data-en="Not sure what you need? Send the photos and we will recommend a size and price." data-am="መጠን ካላወቁ ችግር የለም። ፎቶዎቹን ይላኩ፣ እኛ መጠንና ዋጋ እንመክርዎታለን።">Not sure what you need? Send the photos and we will recommend a size and price.</p>
@@ -692,5 +716,9 @@
 </footer>
 
 <script src="js/main.js"></script>
+<button class="to-top" id="toTop" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
 </body>
 </html>
