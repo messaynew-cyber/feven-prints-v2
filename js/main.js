@@ -42,6 +42,11 @@
   var nav = document.getElementById("nav");
   function onScroll() {
     if (nav) nav.classList.toggle("scrolled", window.scrollY > 8);
+    /* ambient hero animations pause when the hero is gone: three infinite
+       animations running off-screen is pure heat on a phone */
+    var hero = document.getElementById("main");
+    var past = hero ? (window.scrollY > hero.offsetHeight + 120) : false;
+    document.documentElement.classList.toggle("past-hero", past);
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
