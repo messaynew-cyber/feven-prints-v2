@@ -1,14 +1,13 @@
 name: Deploy to Cloudflare Pages
 
-# Why this exists instead of Cloudflare's own Git integration: connecting the
+# Why GitHub Actions instead of Cloudflare's own Git integration: connecting the
 # repo in the Cloudflare dashboard loops (GitHub reports success, Cloudflare
-# never registers the installation — error 8000011). Deploying from GitHub
-# Actions gives the same outcome — push to main, site updates — with no OAuth
-# dance and no vendor lock on the repo connection.
+# never registers the installation - error 8000011). Deploying from Actions
+# gives the same outcome - push to main, site updates - with no OAuth dance.
 #
 # Requires two repository secrets:
-#   CLOUDFLARE_API_TOKEN  — scoped to this account (Pages:Edit)
-#   CLOUDFLARE_ACCOUNT_ID — fad74f3967eb7954911fb2518f990b53
+#   CLOUDFLARE_API_TOKEN  - scoped to this account (Pages:Edit)
+#   CLOUDFLARE_ACCOUNT_ID - fad74f3967eb7954911fb2518f990b53
 
 on:
   push:
@@ -28,9 +27,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Stage only what a visitor should be able to fetch. DESIGN.md and
+      # styleguide.html are internal working documents and are NOT for the
+      # public web; deploying the repo root published them by accident.
+      - name: Stage public files
+        run: |
+          mkdir -p dist
+          rsync -a --exclude '.git' --exclude '.github' --exclude 'DESIGN.md' \
+                --exclude 'styleguide.html' --exclude '*.md' --exclude '.gitignore' \
+                ./ dist/
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=norcha-print
+          command: pages deploy dist --project-name=norcha-print
