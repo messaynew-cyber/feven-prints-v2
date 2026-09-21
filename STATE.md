@@ -233,6 +233,37 @@ why that matters):
 Verified across 15 product/size/quantity combinations in a real DOM, in both
 languages, before pushing.
 
+
+### T-14 + T-17 — SHIPPED 2026-09-22 (`eeaefda`)
+
+**T-14 · hreflang.** The site has called itself bilingual since it shipped,
+but Google had no way to know the Amharic and English views are the same
+document — so half the work of building two languages was being thrown away.
+
+Three tags (`en`, `am`, `x-default`), all pointing at the **same** url,
+because that is the honest description: one page, one language state,
+switched client-side. `sitemap.xml` now carries matching `xhtml:link`
+alternates and declares the `xhtml` namespace, so the relationship is
+stated in both places a crawler looks.
+
+**T-17 · FAQ deep links + schema.** Ten real questions with ten real answers
+were on the page but **not linkable** — invisible to search, impossible to
+send to a customer.
+
+- Every answer has a stable id from its question (`#do-you-deliver`,
+  `#how-do-i-pay`, …)
+- Arriving on a deep link opens that answer and scrolls to it
+- Opening an answer updates the address bar, so it can be **copied and sent
+  on WhatsApp** — which is how this shop actually communicates
+- `history.replaceState`, not `pushState`: a FAQ click should not fill the
+  back button with ten entries
+- `FAQPage` schema with all ten Q&As — answers become eligible to appear
+  directly in search results
+
+**Live verification:** 61/61 reveals visible, zero runtime errors, both
+JSON-LD blocks valid (`LocalBusiness` + `FAQPage` with 10 questions), three
+hreflang tags, ten anchored FAQ items, sitemap alternates present.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
