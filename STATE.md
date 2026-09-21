@@ -187,6 +187,52 @@ error is thrown **or** if any `.reveal` element is still hidden.
 > **Run `node livetest.js` after any deploy that touches `js/` or
 > `index.html`.** A blank page passes every other check we have.
 
+
+### T-02 — SHIPPED 2026-09-22 (`9dafaf1`) · volume pricing + live quote
+
+**The ladder, shaped for this market.** Ifolor runs 2 → −10%, 3+ → −20%,
+100 → −50%. Ours is built for weddings, funerals, church events and
+graduations, where quantity jumps fast:
+
+| tier | prints | wall (canvas/frames/calendars) | books | gifts (mugs) |
+|---|---|---|---|---|
+| 1 | — | — | — | — |
+| 2–4 | — | −10% | −8% (2+) | −8% (2+) |
+| 5–9 | — | −15% | −15% (5+) | — |
+| 10–49 | −10% | −22% (10+) | — | −15% (4+) |
+| 50–99 | −20% | — | — | −25% (12+) |
+| 100–499 | −35% | — | — | — |
+| 500+ | −50% | — | — | — |
+
+**Buyer-facing:** a live estimate under the quantity field (unit, discount,
+total), plus a **nudge** — "Order 500 or more and get 50% off." Telling
+someone the next rung of the ladder is the whole point of volume pricing.
+
+**Shop-facing:** the estimate now travels inside the WhatsApp message —
+`Estimated price: 2,437 ETB (volume discount 1,313 ETB, −35%)`. Without it
+Feven re-prices every order by hand and the feature is decoration.
+
+**Honest by omission:** "Something else", custom dimensions, and any size
+that matches nothing show **no box** rather than a guessed number.
+
+**Four bugs found by testing, before deploy** (see the reasoning below on
+why that matters):
+1. `renderQuote` called from `applyLang` during boot, but `val()` is defined
+   ~200 lines below — the same hoisting class as the blank-page regression.
+   Now guarded with a `typeof` check.
+2. Mugs and photo books have no size field, so the buyer leaves it blank and
+   the box bailed out entirely. Now falls back to the single/first variant —
+   **only** when the field is genuinely empty.
+3. The discount row was hidden at qty=1 but its `textContent` still held the
+   previous product's discount. Cleared, not just hidden.
+4. A test that *looked* like it found a pricing bug ("photo book qty=1 →
+   −15%") turned out to be bug 3, read back through a stale node. The engine
+   was right the whole time. Worth keeping: when a number looks wrong,
+   confirm whether you are reading the value or its ghost.
+
+Verified across 15 product/size/quantity combinations in a real DOM, in both
+languages, before pushing.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
