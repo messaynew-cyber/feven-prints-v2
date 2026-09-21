@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<!-- Norcha Print — one page, two languages, switched client-side.
+     The xhtml:link alternates below declare that the English and Amharic
+     views are the same document, which is what stops them being treated
+     as duplicate content. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://norchaprint.com/</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-09-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/"/>
   </url>
 </urlset>

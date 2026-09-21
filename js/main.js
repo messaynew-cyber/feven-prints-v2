@@ -101,6 +101,53 @@
 
 
 
+  /* ── FAQ deep links (T-17) ──────────────────────────
+     Each answer has a stable id now, but a plain id is only half a feature:
+     the link has to OPEN the answer and the address bar has to reflect which
+     one is open, or the URL cannot be copied, shared on WhatsApp, or
+     surfaced by a search engine.
+
+     Native <details> means no JS is needed for the toggling itself — this
+     only keeps the URL and the open state in step, in both directions. */
+  (function () {
+    var faqs = document.querySelectorAll("details.faq[id]");
+    if (!faqs.length) return;
+
+    function openFromHash() {
+      var id = (location.hash || "").slice(1);
+      if (!id) return;
+      for (var i = 0; i < faqs.length; i++) {
+        if (faqs[i].id === id) {
+          faqs[i].open = true;
+          /* let layout settle before scrolling to it */
+          setTimeout(function (el) {
+            return function () { el.scrollIntoView({ behavior: "smooth", block: "center" }); };
+          }(faqs[i]), 60);
+          return;
+        }
+      }
+    }
+
+    for (var i = 0; i < faqs.length; i++) {
+      (function (el) {
+        el.addEventListener("toggle", function () {
+          if (el.open) {
+            /* replaceState, not pushState: a FAQ click should not fill the
+               back button with ten entries. */
+            try { history.replaceState(null, "", "#" + el.id); }
+            catch (e) { location.hash = el.id; }
+          } else if ((location.hash || "").slice(1) === el.id) {
+            try { history.replaceState(null, "", location.pathname + location.search); }
+            catch (e) {}
+          }
+        });
+      })(faqs[i]);
+    }
+
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
+  })();
+
   /* ── nav: scroll border + mobile menu ───────────── */
   var nav = document.getElementById("nav");
   function onScroll() {

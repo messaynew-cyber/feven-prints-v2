@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lang-default="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +26,20 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="img/icons/apple-touch-icon.png">
 <link rel="canonical" href="https://norchaprint.com/">
+
+<!-- ── bilingual signals (T-14) ──────────────────────────────────────
+     The site is one page in two languages, switched client-side and
+     remembered in localStorage. It has always been "bilingual" but Google
+     had no way to know the Amharic and English views are the same page,
+     so half the value of building it was being thrown away.
+
+     These tags declare the relationship. Both point at the SAME url
+     because there is one page and one language state — that is the honest
+     description of this site. x-default sends anyone we cannot match to
+     the English view, since that is what loads for a first-time visitor. -->
+<link rel="alternate" hreflang="en" href="https://norchaprint.com/">
+<link rel="alternate" hreflang="am" href="https://norchaprint.com/">
+<link rel="alternate" hreflang="x-default" href="https://norchaprint.com/">
 
 <!-- ── social preview (Telegram / WhatsApp / Instagram are the order channels) ── -->
 <meta property="og:type" content="website">
@@ -641,52 +655,52 @@
     <h2 class="section-h reveal reveal-blur" data-en="Common questions" data-am="ተደጋጋሚ ጥያቄዎች">Common questions</h2>
     <div class="faq-list reveal d1">
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="how-fast-can-i-get-my-prints">
         <summary data-en="How fast can I get my prints?" data-am="ህትመቴ ምን ያህል ፈጣን ነው?">How fast can I get my prints?</summary>
         <p data-en="Standard prints, mugs and framed prints are ready the same day if you order before 16:00. Canvases usually need one extra day, and photo books two to three days." data-am="መደበኛ ህትመት፣ ሙግ እና በፍሬም የተዘጋጁ ከ16:00 በፊት ካዘዙ በዚያው ቀን ዝግጁ ናቸው። ካንቫስ አንድ ተጨማሪ ቀን፣ የፎቶ መጽሐፍ ሁለት እስከ ሶስት ቀን ይወስዳል።">Standard prints, mugs and framed prints are ready the same day if you order before 16:00. Canvases usually need one extra day, and photo books two to three days.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="do-you-deliver">
         <summary data-en="Do you deliver?" data-am="ያደርሳሉ?">Do you deliver?</summary>
         <p data-en="Yes. Delivery is free in Bole and the surrounding areas. Elsewhere in Addis we deliver for a small fee — just ask when you order." data-am="አዎ። በቦሌ እና አካባቢው ማድረስ ነፃ ነው። በአዲስ አበባ ውስጥ ሌላ ቦታ በትንሽ ክፍያ እናደርሳለን፤ ሲያዙ ይጠይቁን።">Yes. Delivery is free in Bole and the surrounding areas. Elsewhere in Addis we deliver for a small fee — just ask when you order.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="where-are-you-and-when-are-you-open">
         <summary data-en="Where are you, and when are you open?" data-am="የሚገኙት የት ነው? የስራ ሰዓታችሁስ?">Where are you, and when are you open?</summary>
         <p data-en="Bole, Addis Ababa. Monday to Saturday 8:30 – 19:00, Sunday 10:00 – 17:00. Call us and we will send you the exact location." data-am="ቦሌ፣ አዲስ አበባ። ሰኞ እስከ ቅዳሜ 8:30 – 19:00፣ እሁድ 10:00 – 17:00። ይደውሉልን፣ ትክክለኛውን አድራሻ እንልክልዎታለን።">Bole, Addis Ababa. Monday to Saturday 8:30 – 19:00, Sunday 10:00 – 17:00. Call us and we will send you the exact location.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="what-photo-quality-do-i-need">
         <summary data-en="What photo quality do I need?" data-am="ምን ያህል ጥራት ያለው ፎቶ ያስፈልጋል?">What photo quality do I need?</summary>
         <p data-en="At least 1500 pixels on the long edge for a 10 × 15 cm print, and more for bigger sizes. Send the original file, and send it as a Document so it is not compressed." data-am="ለ10 × 15 ሳ.ሜ ህትመት ቢያንስ 1500 ፒክሰል፣ ለትልቅ መጠን ከዚያ በላይ ያስፈልጋል። ዋናውን ፋይል እንደ ሰነድ ይላኩ።">At least 1500 pixels on the long edge for a 10 × 15 cm print, and more for bigger sizes. Send the original file, and send it as a Document so it is not compressed.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="which-file-types-work">
         <summary data-en="Which file types work?" data-am="የትኞቹ ፋይሎች ይሰራሉ?">Which file types work?</summary>
         <p data-en="JPG, PNG and iPhone HEIC. If your photo is already printed and old, bring it in — we can print from a phone photo of it, or from a scan." data-am="JPG፣ PNG እና HEIC። ፎቶው ቀድሞ የታተመና ያረጀ ከሆነ ይዘው ይምጡ፤ በስልክ ፎቶ ወይም በስካን ማተም እንችላለን።">JPG, PNG and iPhone HEIC. If your photo is already printed and old, bring it in — we can print from a phone photo of it, or from a scan.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="how-do-i-pay">
         <summary data-en="How do I pay?" data-am="እንዴት እከፍላለሁ?">How do I pay?</summary>
         <p data-en="Telebirr, bank transfer, or cash at the studio." data-am="በቴሌብር፣ በባንክ ማስተላለፊያ ወይም በስቱዲዮ ጥሬ ገንዘብ።">Telebirr, bank transfer, or cash at the studio.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="can-i-see-it-before-you-print">
         <summary data-en="Can I see it before you print?" data-am="ከህትመት በፊት ማየት እችላለሁ?">Can I see it before you print?</summary>
         <p data-en="Yes. Send your photos and we will confirm the size and price first, and show you a preview if you want one." data-am="አዎ። ፎቶዎችዎን ይላኩ፤ መጠኑንና ዋጋውን በመጀመሪያ እናረጋግጣለን፤ ከፈለጉ ቅድመ-እይታ እናሳያለን።">Yes. Send your photos and we will confirm the size and price first, and show you a preview if you want one.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="do-you-keep-my-photos">
         <summary data-en="Do you keep my photos?" data-am="ፎቶዎቼን ያስቀምጣሉ?">Do you keep my photos?</summary>
         <p data-en="We use your photos only to print your order. If you want them deleted after you pick up, just tell us and we will." data-am="ፎቶዎችዎን ለህትመት ብቻ እንጠቀምባቸዋለን። ከወሰዱ በኋላ እንዲሰረዙ ከፈለጉ ይንገሩን፣ እናጠፋቸዋለን።">We use your photos only to print your order. If you want them deleted after you pick up, just tell us and we will.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="what-if-something-is-wrong-with-my-print">
         <summary data-en="What if something is wrong with my print?" data-am="ህትመቱ ትክክል ካልሆነ?">What if something is wrong with my print?</summary>
         <p data-en="If it is our mistake, we reprint it at no cost. Bring it back and we will fix it." data-am="የእኛ ችግር ከሆነ በነጻ እንደገና እናትመዋለን። ይዘው ይምጡ፣ እናስተካክለዋለን።">If it is our mistake, we reprint it at no cost. Bring it back and we will fix it.</p>
       </details>
 
-      <details class="faq reveal reveal-scale">
+      <details class="faq reveal reveal-scale" id="do-you-do-passport-photos">
         <summary data-en="Do you do passport photos?" data-am="የፓስፖርት ፎቶ ታደርጋላችሁ?">Do you do passport photos?</summary>
         <p data-en="Yes — passport and visa photos, printed to the size the form requires." data-am="አዎ፣ የፓስፖርት እና የቪዛ ፎቶዎችን በሚፈለገው መጠን እናትማለን።">Yes — passport and visa photos, printed to the size the form requires.</p>
       </details>
@@ -810,5 +824,94 @@
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How fast can I get my prints?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard prints, mugs and framed prints are ready the same day if you order before 16:00. Canvases usually need one extra day, and photo books two to three days."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you deliver?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Delivery is free in Bole and the surrounding areas. Elsewhere in Addis we deliver for a small fee — just ask when you order."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where are you, and when are you open?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Bole, Addis Ababa. Monday to Saturday 8:30 – 19:00, Sunday 10:00 – 17:00. Call us and we will send you the exact location."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What photo quality do I need?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At least 1500 pixels on the long edge for a 10 × 15 cm print, and more for bigger sizes. Send the original file, and send it as a Document so it is not compressed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which file types work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JPG, PNG and iPhone HEIC. If your photo is already printed and old, bring it in — we can print from a phone photo of it, or from a scan."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I pay?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Telebirr, bank transfer, or cash at the studio."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I see it before you print?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Send your photos and we will confirm the size and price first, and show you a preview if you want one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you keep my photos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We use your photos only to print your order. If you want them deleted after you pick up, just tell us and we will."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if something is wrong with my print?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If it is our mistake, we reprint it at no cost. Bring it back and we will fix it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you do passport photos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — passport and visa photos, printed to the size the form requires."
+      }
+    }
+  ]
+}
+</script>
 </body>
 </html>
