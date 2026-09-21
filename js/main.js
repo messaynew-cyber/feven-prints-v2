@@ -37,8 +37,6 @@
       applyLang(this.getAttribute("data-lang"));
     });
   }
-  applyLang(current);
-
   /* ── holiday deadline strip ─────────────────────────
      Content comes from js/norcha-holidays.js, which computes the next
      Ethiopian printing occasion and the real order-by date. This block
@@ -95,7 +93,11 @@
     txt.appendChild(a); txt.appendChild(b);
     el.hidden = false;
   }
+
+  applyLang(current);
   renderHoliday(current);
+
+
 
 
   /* ── nav: scroll border + mobile menu ───────────── */
