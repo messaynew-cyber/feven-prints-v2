@@ -11,11 +11,56 @@
 
 ---
 
+
+---
+
+## PROGRESS — updated 2026-09-22
+
+**7 of 22 shipped and live on norchaprint.com.**
+
+| ID | Item | State | Commit |
+|---|---|---|---|
+| T-00 | price data file | ✅ shipped | `b237716` |
+| T-01 | holiday deadline engine | ✅ shipped | `b237716` |
+| T-02 | volume pricing + live quote | ✅ shipped | `9dafaf1` |
+| T-09 | delivery estimator | ✅ shipped | `7187e1c` |
+| T-14 | hreflang | ✅ shipped | `eeaefda` |
+| T-17 | FAQ anchors + schema | ✅ shipped | `eeaefda` |
+| T-19 | Amharic font subset (−76.5%) | ✅ shipped | `676d904` |
+| T-18 | gift vouchers | ⬜ next | — |
+| T-20 | counter mode / staff sheet | ⬜ | — |
+| T-21 | WhatsApp catalogue message | ⬜ | — |
+| T-10 | draft orders + reorder | ⬜ | — |
+| T-11 | quote requests (weddings) | ⬜ | — |
+| T-12 | order reference reply | ⬜ | — |
+| T-13 | returns policy | ⛔ blocked [F-4] | — |
+| T-03 | public price list | ⛔ blocked [F-1] | — |
+| T-04 | 6 product pages (0 → 6 indexable URLs) | ⛔ blocked [F-1] | — |
+| T-05 | greeting cards | ⛔ blocked [F-1] | — |
+| T-06 | wall materials | ⛔ blocked [F-1,F-3] | — |
+| T-07 | calendar range | ⛔ blocked [F-1] | — |
+| T-08 | textiles + small goods | ⛔ blocked [F-3] | — |
+| T-15 | social proof slot | ⛔ blocked [F-6] | — |
+| T-16 | Google Business Profile + map pin | ⛔ blocked [F-2] | — |
+
+**Also shipped outside the plan:** 404.html, sitemap.xml, robots, scroll-target fix,
+the blank-page regression hotfix, and the `domtest.js`/`livetest.js` guard.
+
+**Two rules learned the hard way, now in STATE.md:**
+1. `node --check` proves a file *parses*, not that it *works*. A hoisting bug is valid
+   JavaScript that throws at runtime — it shipped a blank page twice. Run
+   `node livetest.js` after any deploy touching `js/` or `index.html`.
+2. Deleting a file from the repo does **not** remove it from Cloudflare. Add a
+   `_redirects` tombstone and allow ~4 hours for the edge cache to release the old copy.
+   Verify with a cache-buster before concluding anything is broken.
+
+---
+
 ## PHASE 0 — FOUNDATION (do before anything else)
 
 ### T-00 · Armenian... no: **the work queue itself**
 - [x] Audit pass 1-9 shipped (`fb809fd`) — 404, sitemap, entities, lazy, tap targets
-- [ ] `hreflang` pairs — EN/AM declared as one page in two languages
+- [x] `hreflang` pairs — EN/AM declared as one page in two languages
 - [ ] Split prices into a **data file** so every later feature reads one source
 
 ---
