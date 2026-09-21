@@ -143,11 +143,31 @@
     return true;
   }
 
+  /* Date formatting in both languages. Kept here as well as in the delivery
+     module because this is the DATE module — counter.html loads only this
+     file and still needs to print a readable date. Duplicating four lines of
+     month names is cheaper than making every consumer load a second file. */
+  var DAY_NAMES = {
+    en: ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    am: ["እሑድ","ሰኞ","ማክሰኞ","ረቡዕ","ሐሙስ","ዓርብ","ቅዳሜ"]
+  };
+  var MONTHS = {
+    en: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    am: ["ጃንዩ","ፌብሩ","ማርች","ኤፕሪ","ሜይ","ጁን","ጁላይ","ኦገስ","ሴፕቴ","ኦክቶ","ኖቬም","ዲሴም"]
+  };
+  function fmt(d, lang) {
+    var L = (lang === "am") ? "am" : "en";
+    return DAY_NAMES[L][d.getDay()] + " " + d.getDate() + " " + MONTHS[L][d.getMonth()];
+  }
+
   root.NorchaHolidays = {
     list: upcoming,
     current: current,
     render: render,
     fasika: fasika,
+    fmt: fmt,
+    DAY_NAMES: DAY_NAMES,
+    MONTHS: MONTHS,
     MAX_LEAD: MAX_LEAD
   };
 })(typeof window !== "undefined" ? window : this);

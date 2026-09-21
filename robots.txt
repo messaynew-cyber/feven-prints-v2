@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /styleguide.html
 Disallow: /404.html
+Disallow: /counter.html
 
 Sitemap: https://norchaprint.com/sitemap.xml

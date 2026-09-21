@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Norcha Print — counter sheet</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F8F4EE">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='6' fill='%230E5C41'/%3E%3Crect x='8' y='8' width='16' height='16' rx='3' fill='%23FAFBFA'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* ── counter sheet ──────────────────────────────────────────────────
+     This page is for the SHOP, not a customer. Someone stands at the
+     counter with a phone in one hand and a customer in front of them, so:
+     big type, thin rows, no decoration, and it prints to one A4 sheet.
+     Prices come from js/norcha-data.js so this can never disagree with
+     what the website quotes. */
+  body { background: var(--paper); }
+  .cs-wrap { max-width: 900px; margin: 0 auto; padding: 22px 18px 60px; }
+  .cs-head { display: flex; align-items: baseline; justify-content: space-between;
+             gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  .cs-title { font-family: var(--display); font-size: clamp(24px, 6vw, 34px);
+              font-weight: 640; margin: 0; color: var(--ink); letter-spacing: -.015em; }
+  .cs-brand { font-family: 'Noto Sans Ethiopic', var(--body); color: var(--gold); font-size: 15px; }
+  .cs-sub { color: var(--text-soft); font-size: 14px; margin: 0 0 22px; }
+  .cs-warn { border-left: 3px solid var(--gold);
+             background: color-mix(in srgb, var(--gold-rule) 32%, transparent);
+             padding: 11px 14px; border-radius: 0 8px 8px 0;
+             font-size: 13px; line-height: 1.55; color: var(--ink); margin-bottom: 24px; }
+  .cs-holiday { background: var(--pine-soft); border: 1px solid var(--gold-rule);
+                border-radius: 11px; padding: 13px 16px; margin-bottom: 24px;
+                font-size: 15px; color: var(--ink); }
+  .cs-holiday b { font-weight: 720; }
+  .cs-tools { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
+  .cs-group { margin-bottom: 30px; break-inside: avoid; }
+  .cs-group h2 { font-family: var(--display); font-size: 21px; font-weight: 620;
+                 margin: 0 0 4px; color: var(--ink); letter-spacing: -.01em; }
+  .cs-lead { font-size: 12.5px; color: var(--text-mute); margin: 0 0 10px;
+             text-transform: uppercase; letter-spacing: .06em; font-weight: 650; }
+  table.cs { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+  table.cs th { text-align: left; font-size: 11.5px; text-transform: uppercase;
+                letter-spacing: .07em; color: var(--text-mute); font-weight: 700;
+                padding: 0 10px 7px 0; border-bottom: 1px solid var(--line-strong); }
+  table.cs td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule-soft);
+                color: var(--ink); }
+  table.cs td.num { text-align: right; font-variant-numeric: tabular-nums;
+                    font-weight: 680; white-space: nowrap; padding-right: 0; }
+  .cs-tiers { font-size: 13.5px; color: var(--text-soft); margin: 9px 0 0; line-height: 1.6; }
+  .cs-tiers b { color: var(--ink); }
+  .cs-foot { margin-top: 34px; padding-top: 16px; border-top: 1px solid var(--line-strong);
+             font-size: 12.5px; color: var(--text-mute); line-height: 1.6; }
+
+  @media print {
+    :root { --paper: #fff; --ink: #000; --text-soft: #333; --text-mute: #555; }
+    body { background: #fff; }
+    .cs-tools { display: none !important; }
+    .cs-warn { background: none; }
+    .cs-wrap { padding: 0; max-width: none; }
+    .cs-group { margin-bottom: 18px; }
+    table.cs { font-size: 12.5px; }
+    table.cs td { padding: 5px 8px 5px 0; }
+    a { color: #000 !important; text-decoration: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="cs-wrap">
+
+  <div class="cs-head">
+    <h1 class="cs-title">Counter sheet</h1>
+    <span class="cs-brand">ኖርቻ ፕሪንት</span>
+  </div>
+  <p class="cs-sub" id="csMeta"></p>
+
+  <div class="cs-warn" id="csTemp" hidden>
+    <b>These prices are not confirmed.</b> They are the figures currently on
+    the website and are marked temporary there. Update
+    <code>js/norcha-data.js</code> once the shop confirms them, and this sheet
+    and the website will change together.
+  </div>
+
+  <div class="cs-holiday" id="csHoliday" hidden></div>
+
+  <div class="cs-tools">
+    <button class="btn btn-primary" type="button" onclick="window.print()">Print this sheet</button>
+    <a class="btn btn-pill" href="/">Back to the site</a>
+  </div>
+
+  <div id="csBody"></div>
+
+  <div class="cs-foot">
+    <p><b>Sources of truth.</b> Prices, sizes and production lead times all
+       come from <code>js/norcha-data.js</code>. Volume discounts come from the
+       same file. If a number on this sheet looks wrong, the file is wrong —
+       fix it there, not here.</p>
+    <p id="csBuilt"></p>
+  </div>
+
+</div>
+
+<script src="js/norcha-data.js"></script>
+<script src="js/norcha-holidays.js"></script>
+<script>
+(function () {
+  "use strict";
+  if (typeof NorchaData === "undefined") return;
+
+  var D = NorchaData, H = (typeof NorchaHolidays !== "undefined") ? NorchaHolidays : null;
+  var body = document.getElementById("csBody");
+
+  /* Lead times in plain words, because "2" means nothing at a counter. */
+  var LEAD = {
+    0: "Ready the same day (orders before 16:00)",
+    1: "Ready the next working day",
+    2: "Ready in 2 to 3 working days"
+  };
+
+  var TIER_LABEL = {
+    photos: "Standard prints (per size, same size and finish)",
+    wall:   "Canvas, framed prints and calendars",
+    books:  "Photo books",
+    gifts:  "Photo mugs and small gifts"
+  };
+
+  var famNames = {
+    prints: "Standard prints",
+    canvas: "Canvas prints",
+    books: "Photo books",
+    frames: "Framed prints",
+    calendars: "Wall calendars",
+    mugs: "Photo mugs"
+  };
+
+  /* build a group per product family */
+  Object.keys(D.products).forEach(function (key) {
+    var p = D.products[key];
+    var g = document.createElement("div");
+    g.className = "cs-group";
+
+    var h = document.createElement("h2");
+    h.textContent = famNames[key] || p.label.en;
+    g.appendChild(h);
+
+    var lead = document.createElement("p");
+    lead.className = "cs-lead";
+    lead.textContent = LEAD[p.lead] || (p.lead + " working days");
+    g.appendChild(lead);
+
+    var t = document.createElement("table");
+    t.className = "cs";
+    var thead = document.createElement("thead");
+    thead.innerHTML = "<tr><th>Size / option</th><th style='text-align:right'>Price</th></tr>";
+    t.appendChild(thead);
+
+    var tb = document.createElement("tbody");
+    p.sizes.forEach(function (s) {
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td"); td1.textContent = s.label;
+      var td2 = document.createElement("td"); td2.className = "num";
+      td2.textContent = D.money(s.price);
+      tr.appendChild(td1); tr.appendChild(td2);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    g.appendChild(t);
+
+    /* the volume ladder for this family */
+    var tiers = D.tiers[p.tier];
+    if (tiers && tiers.length > 1) {
+      var tl = document.createElement("p");
+      tl.className = "cs-tiers";
+      var bits = tiers.filter(function (x) { return x.min > 1; }).map(function (x) {
+        return "<b>" + x.min + " or more</b> \u2192 \u2212" + x.pct + "%";
+      });
+      tl.innerHTML = "<b>Discounts:</b> " + bits.join("  \u00b7  ");
+      g.appendChild(tl);
+    }
+    body.appendChild(g);
+  });
+
+  /* the tier overview, so whoever is at the counter can see the whole ladder */
+  var tg = document.createElement("div");
+  tg.className = "cs-group";
+  var th = document.createElement("h2"); th.textContent = "Volume discounts at a glance";
+  tg.appendChild(th);
+  var tt = document.createElement("table"); tt.className = "cs";
+  tt.innerHTML = "<thead><tr><th>Group</th><th style='text-align:right'>Ladder</th></tr></thead>";
+  var ttb = document.createElement("tbody");
+  Object.keys(TIER_LABEL).forEach(function (k) {
+    var tr = document.createElement("tr");
+    var a = document.createElement("td"); a.textContent = TIER_LABEL[k];
+    var b = document.createElement("td"); b.className = "num";
+    b.style.fontWeight = "500";
+    b.style.whiteSpace = "normal";
+    b.textContent = D.tiers[k].filter(function (x) { return x.min > 1; })
+      .map(function (x) { return x.min + "+ \u2212" + x.pct + "%"; }).join("  \u00b7  ");
+    tr.appendChild(a); tr.appendChild(b);
+    ttb.appendChild(tr);
+  });
+  tt.appendChild(ttb);
+  tg.appendChild(tt);
+  body.appendChild(tg);
+
+  /* the holiday deadline, if one is near — this is the single most useful
+     line on the sheet, because it changes what you tell a customer today */
+  if (H) {
+    var hol = H.current(new Date(), 120);
+    var hb = document.getElementById("csHoliday");
+    if (hol) {
+      /* Defensive: if fmt is unavailable for any reason, still print a
+         usable date rather than throwing and blanking the whole sheet. */
+      var fmtDate = (typeof H.fmt === "function")
+        ? function (d) { return H.fmt(d, "en"); }
+        : function (d) { return d.toDateString(); };
+      var ord = fmtDate(hol.orderBy);
+      hb.innerHTML = "<b>" + hol.en + "</b> is in " + hol.days + " days " +
+                     "(" + fmtDate(hol.date) + "). " +
+                     (hol.daysToOrder > 0
+                       ? "Last day to order for it is <b>" + ord + "</b>."
+                       : "<b>The order deadline has passed.</b> Tell customers honestly that same-day is no longer guaranteed.");
+      hb.hidden = false;
+    }
+  }
+
+  /* header meta */
+  var now = new Date();
+  document.getElementById("csMeta").textContent =
+    D.shop.city + "  \u00b7  " + D.shop.phone + "  \u00b7  " + D.shop.hours;
+
+  document.getElementById("csBuilt").textContent =
+    "Generated " + now.toDateString() + " at " + now.toTimeString().slice(0,5) +
+    ". Screen built for the counter; print for one A4 sheet.";
+
+  var tw = document.getElementById("csTemp");
+  if (D.shop.pricesAreTemporary) tw.hidden = false;
+})();
+</script>
+</body>
+</html>

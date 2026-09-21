@@ -24,11 +24,15 @@
 /* v5: norcha-voucher.js added to the shell (T-18) plus the voucher section.
    Voucher issuing and checking are entirely on-device, so they must work
    offline — a shop with no signal still has to be able to check a code. */
-const CACHE = "fevens-v5";
+/* v6: counter.html added (T-20). It is staff-only and excluded from search,
+   but it must still be cached — the whole point is that it works at the
+   counter when the signal does not. */
+const CACHE = "fevens-v6";
 
 const SHELL = [
   "./",
   "./index.html",
+  "./counter.html",
   "./css/style.css",
   "./js/norcha-data.js",
   "./js/norcha-holidays.js",
