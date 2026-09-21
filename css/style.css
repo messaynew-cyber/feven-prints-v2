@@ -895,3 +895,47 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ═══════════ HOLIDAY DEADLINE STRIP ═══════════
+   Sits directly under the nav. Uses the pine accent, NOT the tricolour —
+   the one-ceremonial-tricolour rule (DESIGN.md §2) still holds: this is a
+   functional notice, not ornament. Gold is used only for the icon, as a
+   signal light, not as a background. */
+.holiday-strip {
+  background: linear-gradient(180deg, var(--pine-soft) 0%, color-mix(in srgb, var(--pine-soft) 55%, var(--paper)) 100%);
+  border-bottom: 1px solid var(--gold-rule);
+  color: var(--ink);
+}
+[data-theme="dark"] .holiday-strip {
+  background: linear-gradient(180deg, var(--pine-soft) 0%, color-mix(in srgb, var(--pine-soft) 60%, var(--paper)) 100%);
+  border-bottom-color: var(--gold-rule);
+}
+.hs-in {
+  max-width: 1180px; margin: 0 auto;
+  padding: 11px 24px;
+  display: flex; align-items: center; gap: 11px;
+  font-size: 14.5px; line-height: 1.4;
+}
+.hs-icon { display: grid; place-items: center; color: var(--gold); flex: 0 0 auto; }
+[data-theme="dark"] .hs-icon { color: var(--gold); }
+.hs-text { flex: 1 1 auto; min-width: 0; }
+.hs-text .hd-msg { font-weight: 680; letter-spacing: -0.005em; }
+.hs-text .hd-sub { color: var(--text-soft); }
+.hs-cta {
+  flex: 0 0 auto;
+  font-weight: 700; font-size: 13.5px;
+  padding: 8px 16px; border-radius: 999px;
+  background: var(--pine); color: var(--btn-fg);
+  text-decoration: none; white-space: nowrap;
+  min-height: 36px; display: inline-flex; align-items: center;
+  transition: background 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hs-cta:hover { background: var(--pine-deep); transform: translateY(-1px); }
+}
+@media (max-width: 720px) {
+  .hs-in { padding: 10px 18px; gap: 9px; font-size: 13.5px; flex-wrap: wrap; }
+  .hs-text { flex: 1 1 100%; order: 2; }
+  .hs-cta { order: 3; margin-left: 27px; }
+  .hs-icon { order: 1; }
+}

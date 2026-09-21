@@ -21,6 +21,7 @@
       phs[p].setAttribute("placeholder", phs[p].getAttribute(lang === "am" ? "data-am-ph" : "data-en-ph"));
     }
     if (typeof renderHistory === "function") renderHistory();
+    if (typeof renderHoliday === "function") renderHoliday(lang);
     var segs = document.querySelectorAll(".seg");
     for (var s = 0; s < segs.length; s++) {
       var on = segs[s].getAttribute("data-lang") === lang;
@@ -37,6 +38,65 @@
     });
   }
   applyLang(current);
+
+  /* ── holiday deadline strip ─────────────────────────
+     Content comes from js/norcha-holidays.js, which computes the next
+     Ethiopian printing occasion and the real order-by date. This block
+     renders it, fully in both languages. If the script is missing or no
+     holiday is near, the strip stays hidden — never invents urgency. */
+  var HOLIDAY_COPY = {
+    en: {
+      within:  function (n, d) { return n + ": order within " + d + " days"; },
+      sub:     "to be ready before the holiday",
+      last:    function (n) { return n + ": last day to order is tomorrow"; },
+      lastSub: "photo books may need longer",
+      today:   function (n) { return "Today is the last day to order for " + n; },
+      todaySub:"message us before we close",
+      late:    function (n) { return "Same-day pickup is no longer guaranteed for " + n; },
+      lateSub: "message us and we will tell you honestly"
+    },
+    am: {
+      within:  function (n, d) { return n + "፦ በ" + d + " ቀናት ውስጥ ያዙ"; },
+      sub:     "በበዓሉ በፊት እንዲዘጋጅ",
+      last:    function (n) { return n + "፦ የመጨረሻው የትዕዛዝ ቀን ነገ ነው"; },
+      lastSub: "የፎቶ መጽሐፍ ተጨማሪ ጊዜ ሊፈልግ ይችላል",
+      today:   function (n) { return "ለ" + n + " ዛሬ የመጨረሻው የትዕዛዝ ቀን ነው"; },
+      todaySub:"ከመዘጋታችን በፊት ያግኙን",
+      late:    function (n) { return "ለ" + n + " በዚያው ቀን ማድረስ አይረጋገጥም"; },
+      lateSub: "ያግኙን፤ በእውነት እንነግርዎታለን"
+    }
+  };
+
+  function renderHoliday(lang) {
+    var el = document.getElementById("holidayStrip");
+    var txt = document.getElementById("holidayText");
+    if (!el || !txt || typeof NorchaHolidays === "undefined") {
+      if (el) el.hidden = true;
+      return;
+    }
+    var h = NorchaHolidays.current(new Date());
+    if (!h) { el.hidden = true; return; }
+
+    var L = (lang === "am") ? HOLIDAY_COPY.am : HOLIDAY_COPY.en;
+    var name = (lang === "am") ? h.am : h.en;
+    var d = h.daysToOrder;
+    var msg, sub;
+
+    if (d > 1)            { msg = L.within(name, d); sub = L.sub; }
+    else if (d === 1)     { msg = L.last(name);       sub = L.lastSub; }
+    else if (d === 0)     { msg = L.today(name);      sub = L.todaySub; }
+    else                  { msg = L.late(name);       sub = L.lateSub; }
+
+    txt.textContent = "";
+    var a = document.createElement("span");
+    a.className = "hd-msg"; a.textContent = msg;
+    var b = document.createElement("span");
+    b.className = "hd-sub"; b.textContent = " \u2014 " + sub;
+    txt.appendChild(a); txt.appendChild(b);
+    el.hidden = false;
+  }
+  renderHoliday(current);
+
 
   /* ── nav: scroll border + mobile menu ───────────── */
   var nav = document.getElementById("nav");

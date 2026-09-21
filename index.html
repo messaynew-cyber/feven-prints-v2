@@ -151,6 +151,24 @@
   </div>
 </header>
 
+<!-- =========== HOLIDAY DEADLINE STRIP ===========
+     Ifolor runs one hardcoded line ("last order dates for Christmas").
+     Ethiopia has a ladder of printing occasions, so this computes the next
+     one, counts it down, and accounts for real production lead time.
+     It hides itself when nothing is near - an always-on countdown is noise.
+     Content written by js/norcha-holidays.js -->
+<div class="holiday-strip" id="holidayStrip" hidden aria-live="polite">
+  <div class="hs-in">
+    <span class="hs-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+    </span>
+    <span class="hs-text" id="holidayText"></span>
+    <a class="hs-cta" href="#order" data-en="Order now" data-am="አሁን ይዘዙ">Order now</a>
+  </div>
+</div>
+
+
+
 <main id="top">
 
 <div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>
@@ -764,6 +782,8 @@
   </div>
 </footer>
 
+<script src="js/norcha-data.js"></script>
+<script src="js/norcha-holidays.js"></script>
 <script src="js/main.js"></script>
 <button class="to-top" id="toTop" type="button" aria-label="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
