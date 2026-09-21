@@ -4,7 +4,7 @@
 > is not verified it is marked **UNVERIFIED**. Update this file in the same commit as the change it
 > describes — a session that does not update `STATE.md` did not happen.
 >
-> Last updated: **2026-09-21** by `[adwa]` · handover to `[tobia]`.
+> Last updated: **2026-09-21** by `[tobia]` · handover to `[tobia]`.
 
 **Read first:** `TOBIA-START-HERE.md` (how to work here) → this file (what is true) → `DESIGN.md` (the canon).
 
@@ -70,7 +70,7 @@ match the domain, which is why older strings still say the old name in places.)
 | P-04 | Gallery section | ✅ resolved — it is now "See it on the wall" (a **scale display**: 3 hung prints at 3 real sizes with plaques). Re-check when real photos arrive (it could become a genuine gallery then). |
 | P-05 | Analytics + Search Console + **Google Business Profile** | **OPEN** — nothing measures anything today. GBP is the single best free discovery win for a Bole shop (maps, hours, phone, photos, reviews). |
 | P-06 | `.gitignore` + `README` + `LICENSE` | ✅ done 2026-09-21 (LICENSE still open — needs a decision: this is client work) |
-| P-07 | 🔴 **Every unknown URL returns the homepage with HTTP 200** | **OPEN — measured 2026-09-21.** `/definitely-missing-xyz123.txt` returns byte-identical `index.html` at status **200**, so a broken link shows the homepage instead of a 404 and search engines can index duplicates. A static `404.html` at the repo root makes Cloudflare Pages serve a real 404. **Small, safe, and fully verifiable — a good first task.** |
+| P-07 | ~~🔴 **Every unknown URL returns the homepage with HTTP 200**~~ **FIXED 2026-09-21** | ✅ done (fb809fd) — `404.html` added. Re-measured live: `/definitely-missing-xyz123.txt` → **404** (3361 B), `/404.html` → 200, `/styleguide.html` → **404**, `/DESIGN.md` → **404**. Unknown paths no longer return the homepage and the internal docs are no longer reachable. |
 
 ### T1 — were actively costing orders
 | ID | Item | State |
@@ -97,6 +97,29 @@ ifolor. Do not start them unprompted.
 | B-04 | Real email address (only if she wants one listed) |
 | B-05 | Social handles — re-add the footer block when URLs exist |
 | B-06 | Refund policy + delivery zones/fees (unblocks T1-07, T1-05 detail) |
+
+
+### T0 — audit fix pass, 2026-09-21 (`fb809fd`)
+
+Everything below was **measured against the live site** before and after, not inferred from the source.
+
+| Item | Before | After |
+|---|---|---|
+| Unknown paths | 200 + byte-identical homepage (60221 B) | **404** (3361 B) |
+| `styleguide.html` | 200, `max-age=0` — a billable Function hit per crawl | **404** |
+| Internal docs (`DESIGN.md`, `STATE.md`, `TOBIA-START-HERE.md`) | 200, publicly readable | **404** |
+| `sitemap.xml` | did not exist | live, `application/xml`, referenced from `robots.txt` |
+| Raw entities in text nodes | 7 (`&middot;` `&ndash;` `&mdash;` rendered literally) | **0** |
+| Hero slides 2–3 | eager, on the critical path | `loading="lazy"`; only slide 1 eager |
+| `.seg` tap target | ~26 × 22 px | **44 × 44 px** min |
+| `.seg` label contrast | `--text-faint` 2.93:1 (fails) | `--text-mute` 3.48:1 |
+| Telegram buttons | 2 buttons labelled "Telegram" pointing at `t.me/+<phone>` — **never worked** | **removed** (no verified handle yet, B-05) |
+| Maps link | `?q=Bole+Addis+Ababa` — unroutable district | maps/search deep link |
+| `theme-color` | hardcoded cream | `id` + `msapplication-TileColor` added |
+
+**Correction to an earlier claim:** an audit note said the dark-mode `theme-color` sync was missing. It was **not** — it already existed at `main.js:254`. The meta tag simply had no `id`. Recorded here so the mistake is not repeated.
+
+**Copy change:** two strings promised Telegram. Since there is no verified handle, the copy now says WhatsApp only. When Feven supplies a handle (B-05), restore both the buttons and the strings.
 
 ## 5. HOW TO UPDATE THIS FILE
 
