@@ -123,6 +123,10 @@ Then read **§10 "Do not"** in `DESIGN.md`. It is short, and every line of it co
   needs its own replacement pass, or half the ordering messages carry the old name.
 - **Amharic headings can silently fall through to `system-ui`.** `'Noto Sans Ethiopic'` must stay in the
   `--display` stack — without it Amharic text renders in the wrong face at the wrong metrics.
+- 🔴 **Every unknown URL returns the homepage with HTTP 200.** Measured 2026-09-21:
+  `/definitely-missing-xyz123.txt` returns byte-identical `index.html` instead of a 404. So **`curl -o /dev/null -w "%{http_code}"`
+  telling you 200 does NOT mean a file is published** — which is exactly how I nearly mistook this handoff pack for a leak.
+  To check whether a path is *really* served, **compare the body**, never the status code. Fix is `P-07` (add `404.html`).
 - **`content-visibility: auto` is deliberately NOT used** (scroll jumps on a 14,000 px page). Do not add it
   back as a "performance win".
 

@@ -69,7 +69,8 @@ match the domain, which is why older strings still say the old name in places.)
 | P-03 | Higher-res masters (≥1200 px) | only if the images are replaced |
 | P-04 | Gallery section | ✅ resolved — it is now "See it on the wall" (a **scale display**: 3 hung prints at 3 real sizes with plaques). Re-check when real photos arrive (it could become a genuine gallery then). |
 | P-05 | Analytics + Search Console + **Google Business Profile** | **OPEN** — nothing measures anything today. GBP is the single best free discovery win for a Bole shop (maps, hours, phone, photos, reviews). |
-| P-06 | `.gitignore` + `README` + `LICENSE` | ✅ done 2026-09-21 |
+| P-06 | `.gitignore` + `README` + `LICENSE` | ✅ done 2026-09-21 (LICENSE still open — needs a decision: this is client work) |
+| P-07 | 🔴 **Every unknown URL returns the homepage with HTTP 200** | **OPEN — measured 2026-09-21.** `/definitely-missing-xyz123.txt` returns byte-identical `index.html` at status **200**, so a broken link shows the homepage instead of a 404 and search engines can index duplicates. A static `404.html` at the repo root makes Cloudflare Pages serve a real 404. **Small, safe, and fully verifiable — a good first task.** |
 
 ### T1 — were actively costing orders
 | ID | Item | State |
