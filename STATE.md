@@ -264,6 +264,73 @@ send to a customer.
 JSON-LD blocks valid (`LocalBusiness` + `FAQPage` with 10 questions), three
 hreflang tags, ten anchored FAQ items, sitemap alternates present.
 
+
+### T-19 — SHIPPED 2026-09-22 (`676d904` + `6b3bb9f`)
+
+**The Amharic font was the single largest thing on the page.** 193.7 KB for
+a face that renders 148 distinct characters. Now 45.5 KB — **76.5% smaller**,
+**19.4% off the whole above-the-fold load**, ~**3 seconds saved per cold
+visit** on 3G.
+
+| | before | after |
+|---|---|---|
+| Ethiopic face | 193.7 KB | **45.5 KB** |
+| above-the-fold total | ~764 KB | **616 KB** |
+
+Built with `woff2_decompress` → `fontTools.subset` → `woff2_compress`
+(no compilation on-device). 167 glyphs kept: the 148 characters the site
+uses, plus Ethiopic punctuation/numerals (U+1350–136F) that today's copy
+doesn't use yet — included so a future edit cannot silently fall back.
+
+**Verified before shipping**, because a broken Amharic font would be
+invisible to me and blindingly obvious to Feven:
+- every Amharic codepoint in the source is present — **0 missing**
+- all 167 glyphs have **identical advance widths** to the original
+- both faces rendered and compared: 98.3% pixel-identical
+
+The 1.7% residual is **stripped hinting, not missing glyphs** — column 131
+*gained* 53px of ink while column 128 *lost* 48px, which is a horizontal
+shift. A dropped character would delete ink with nothing gained. OCR reads
+both renders as the same text.
+
+`sw.js` cache bumped to **v3** — without it the first load after deploy
+serves the old stylesheet, which points at a font we no longer ship. The
+new `norcha-*.js` files and the slim font are now in the precache shell.
+
+---
+
+### 🔴 THE GHOST ASSET PROBLEM — found by verifying instead of trusting
+
+Deleting a file from the repo **does not remove it from Cloudflare Pages**.
+`fonts/noto-ethiopic.woff2` was deleted, every reference to it deleted, gone
+from `git ls-files` and from the deployed bundle — and it was **still served
+at HTTP 200, 198,324 bytes**, byte-identical (sha256 `ca2b45a5…`) to the
+version in git history.
+
+**Diagnosis, measured in three steps:**
+1. The fresh deployment URL (`a8590140.norcha-print.pages.dev`) returns
+   **404** for it — so the deployment is correct.
+2. The custom domain returns **200**.
+3. The custom domain **with a cache-buster** (`?cb=…`) returns **404**,
+   `cf-cache-status: BYPASS`.
+
+So it was never a config or deploy problem — it is purely the **edge cache**
+holding a stale copy under `cache-control: public, max-age=14400`.
+
+**Scope:** only assets Cloudflare previously *served* ghost like this.
+`/styleguide.html`, `/DESIGN.md`, `/README.md` return 404 correctly — they
+were never published.
+
+**Fix:** `_redirects` with a `410 Gone` tombstone (410, not 404 — Gone is
+permanent and deliberate; this file did exist). Already deployed and
+verified working on the fresh URL. The stale edge copy simply has to age
+out over its 4-hour TTL.
+
+> **Rule for this repo: after removing a public file, add a `_redirects`
+> tombstone AND expect up to 4 hours before the old copy stops being served
+> on the custom domain. Verify with a cache-buster before concluding
+> anything is broken.**
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
