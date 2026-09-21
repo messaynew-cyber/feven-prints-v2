@@ -44,6 +44,9 @@ var FAMILY_BY_LABEL = {
     if (typeof renderHoliday === "function") renderHoliday(lang);
     if (typeof renderQuote === "function") renderQuote();
     if (typeof renderDelivery === "function") renderDelivery();
+    /* voucher copy is inside closures, so re-check whatever is on screen */
+    var vci = document.getElementById("vcInput");
+    if (vci && vci.value.trim()) vci.dispatchEvent(new Event("input"));
     var segs = document.querySelectorAll(".seg");
     for (var s = 0; s < segs.length; s++) {
       var on = segs[s].getAttribute("data-lang") === lang;
@@ -199,6 +202,149 @@ var FAMILY_BY_LABEL = {
 
 
 
+
+  /* ── gift vouchers (T-18) ────────────────────────────
+     Two jobs in one section, because there are two different people:
+     the buyer needs a code to give away, the shop needs to check one.
+     Both run entirely on this device — there is no server to ask. */
+  var VOUCHER_COPY = {
+    en: {
+      choose: "Choose an amount first.",
+      made:   "Voucher made. Write the code on a card.",
+      copied: "Copied.",
+      check:  function (v) { return "Valid voucher \u2014 <span class='vc-big'>" + v + " ETB</span>. Accept it and note the code as redeemed."; },
+      bad:    "That code is not right. Check for a mistyped letter or number.",
+      unknown:"That does not look like one of our vouchers.",
+      send:   function (code, amt) {
+        return "Hello Norcha Print - I would like to buy a gift voucher.\n\nCode: " + code +
+               "\nValue: " + amt + " ETB";
+      }
+    },
+    am: {
+      choose: "መጀመሪያ መጠን ይምረጡ።",
+      made:   "ቫውቸሩ ተዘጋጅቷል። ኮዱን በካርድ ላይ ይጻፉ።",
+      copied: "ተቀድቷል።",
+      check:  function (v) { return "ትክክለኛ ቫውቸር \u2014 <span class='vc-big'>" + v + " ብር</span>። ተቀብለው ኮዱን እንደተከፈለ ይመዝግቡ።"; },
+      bad:    "ያ ኮድ ትክክል አይደለም። የተሳሳተ ፊደል ወይም ቁጥር ካለ ይመልከቱ።",
+      unknown:"ይህ የእኛ ቫውቸር ይመስል አይደለም።",
+      send:   function (code, amt) {
+        return "ሰላም ኖርቻ ፕሪንት - የስጦታ ቫውቸር መግዛት እፈልጋለሁ።\n\nኮድ: " + code +
+               "\nዋጋ: " + amt + " ብር";
+      }
+    }
+  };
+
+  function voucherLang() {
+    return (document.documentElement.lang === "am") ? "am" : "en";
+  }
+
+  (function initVouchers() {
+    var denomWrap = document.getElementById("vcDenoms");
+    if (!denomWrap || typeof NorchaVoucher === "undefined") return;
+
+    var selected = null;
+    var lastIssued = null;
+
+    /* build the amount buttons from the data module, so the shop's actual
+       denominations live in one place rather than being written twice */
+    NorchaVoucher.DENOMINATIONS.forEach(function (v) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "vc-denom";
+      b.setAttribute("aria-pressed", "false");
+      b.setAttribute("data-value", String(v));
+      b.textContent = v + " ETB";
+      b.addEventListener("click", function () {
+        selected = v;
+        var all = denomWrap.querySelectorAll(".vc-denom");
+        for (var i = 0; i < all.length; i++) {
+          all[i].setAttribute("aria-pressed", all[i] === b ? "true" : "false");
+        }
+      });
+      denomWrap.appendChild(b);
+    });
+
+    var makeBtn = document.getElementById("vcMake");
+    var out     = document.getElementById("vcOut");
+    var codeEl  = document.getElementById("vcCode");
+    var recEl   = document.getElementById("vcRecord");
+
+    if (makeBtn) {
+      makeBtn.addEventListener("click", function () {
+        var L = VOUCHER_COPY[voucherLang()];
+        if (!selected) {
+          out.hidden = false;
+          codeEl.textContent = "";
+          recEl.textContent = L.choose;
+          recEl.hidden = false;
+          return;
+        }
+        lastIssued = NorchaVoucher.issue(selected);
+        codeEl.textContent = lastIssued.code;
+        recEl.textContent = lastIssued.record + "  (keep this record)";
+        recEl.hidden = false;
+        out.hidden = false;
+      });
+    }
+
+    var copyBtn = document.getElementById("vcCopy");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function () {
+        if (!lastIssued) return;
+        var done = function () {
+          var t = copyBtn.textContent;
+          copyBtn.textContent = VOUCHER_COPY[voucherLang()].copied;
+          setTimeout(function () { copyBtn.textContent = t; }, 1400);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(lastIssued.code).then(done, done);
+        } else {
+          /* older Android WebViews: select the text so the user can copy */
+          var r = document.createRange();
+          r.selectNodeContents(codeEl);
+          var s = window.getSelection();
+          if (s) { s.removeAllRanges(); s.addRange(r); }
+        }
+      });
+    }
+
+    var sendBtn = document.getElementById("vcSend");
+    if (sendBtn) {
+      sendBtn.addEventListener("click", function () {
+        if (!lastIssued) return;
+        var L = VOUCHER_COPY[voucherLang()];
+        var msg = L.send(lastIssued.code, lastIssued.value);
+        window.open("https://wa.me/" + NorchaData.shop.wa + "?text=" + encodeURIComponent(msg),
+                    "_blank", "noopener");
+      });
+    }
+
+    /* the checker — live, so a typo is obvious while they type */
+    var input  = document.getElementById("vcInput");
+    var result = document.getElementById("vcResult");
+    if (input && result) {
+      var check = function () {
+        var raw = input.value.trim();
+        result.className = "vc-result";
+        if (!raw) { result.textContent = ""; return; }
+
+        var L = VOUCHER_COPY[voucherLang()];
+        var p = NorchaVoucher.parse(raw);
+        if (p === null) {
+          result.classList.add("vc-bad");
+          result.textContent = L.unknown;
+        } else if (p.valid) {
+          result.classList.add("vc-ok");
+          result.innerHTML = L.check(p.value);
+        } else {
+          result.classList.add("vc-bad");
+          result.textContent = L.bad;
+        }
+      };
+      input.addEventListener("input", check);
+      input.addEventListener("change", check);
+    }
+  })();
 
   /* ── FAQ deep links (T-17) ──────────────────────────
      Each answer has a stable id now, but a plain id is only half a feature:

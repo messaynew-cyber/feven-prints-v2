@@ -21,7 +21,10 @@
 /* v4: norcha-delivery.js added to the shell (T-09). The order form now
    depends on it, so an offline visitor filling the form would otherwise
    lose the delivery estimate entirely. */
-const CACHE = "fevens-v4";
+/* v5: norcha-voucher.js added to the shell (T-18) plus the voucher section.
+   Voucher issuing and checking are entirely on-device, so they must work
+   offline — a shop with no signal still has to be able to check a code. */
+const CACHE = "fevens-v5";
 
 const SHELL = [
   "./",
@@ -30,6 +33,7 @@ const SHELL = [
   "./js/norcha-data.js",
   "./js/norcha-holidays.js",
   "./js/norcha-delivery.js",
+  "./js/norcha-voucher.js",
   "./js/main.js",
   "./manifest.webmanifest",
   "./fonts/noto-ethiopic-slim.woff2",

@@ -131,7 +131,8 @@
       <a href="#products" data-en="Products" data-am="ምርቶች">Products</a>
       <a href="#how" data-en="How it works" data-am="አሰራሩ">How it works</a>
       <a href="#send" data-en="Send photos" data-am="ፎቶ ይላኩ">Send photos</a>
-      <a href="#order" data-en="Order" data-am="ትዕዛዝ">Order</a>
+      <a href="#order" data-en="Order" data-am="ትዕዛዝ" data-am-nav>Order</a>
+            <a href="#vouchers" data-en="Gift vouchers" data-am="የስጦታ ቫውቸር">Gift vouchers</a>
       <a href="#visit" data-en="Visit" data-am="አድራሻ">Visit</a>
     </nav>
     <div class="nav-cta">
@@ -643,6 +644,63 @@
   </div>
 </section>
 
+<!-- ═══════════ GIFT VOUCHERS (T-18) ═══════════
+     Ifolor sells digital/PDF vouchers because it has a payment processor.
+     Norcha takes Telebirr, bank transfer or cash. So a voucher here cannot
+     be a checkout product — it has to work when the buyer is standing at
+     the counter or messaging on WhatsApp, with no card involved anywhere.
+
+     Two panels, because there are two different people using this:
+       - the BUYER, who needs a code to give someone
+       - the SHOP, who needs to check a code someone hands over
+     Both are here so neither needs a separate app or a server. -->
+<section class="section section-tint" id="vouchers">
+  <div class="wrap">
+    <div class="eyebrow reveal" aria-hidden="true">ስጦታ</div>
+    <h2 class="section-h reveal reveal-blur" data-en="Gift vouchers" data-am="የስጦታ ቫውቸሮች">Gift vouchers</h2>
+    <p class="order-sub reveal" data-en="Buy a voucher at the studio or over WhatsApp, pay the usual way, and give someone the code. They bring it in and choose their own prints." data-am="ቫውቸር በስቱዲዮ ወይም በዋትስአፕ ይግዙ፣ እንደተለመደው ይክፈሉ፣ ኮዱን ለሌላ ሰው ይስጡ። እሱም መጥቶ የራሱን ህትመቶች ይመርጣል።">Buy a voucher at the studio or over WhatsApp, pay the usual way, and give someone the code. They bring it in and choose their own prints.</p>
+
+    <div class="voucher-grid">
+
+      <!-- ISSUE: for the shop / for a buyer who is with us -->
+      <div class="voucher-card reveal reveal-scale">
+        <h3 data-en="Make a voucher" data-am="ቫውቸር ያዘጋጁ">Make a voucher</h3>
+        <p class="vc-sub" data-en="Choose an amount. This makes a code you can write on a card." data-am="መጠን ይምረጡ። በካርድ ላይ የሚጻፍ ኮድ ይፈጥራል።">Choose an amount. This makes a code you can write on a card.</p>
+
+        <div class="vc-denoms" id="vcDenoms" role="group" aria-label="Voucher amount"></div>
+
+        <button class="btn btn-primary vc-go" type="button" id="vcMake"
+                data-en="Make the code" data-am="ኮዱን ፍጠር">Make the code</button>
+
+        <div class="vc-out" id="vcOut" hidden aria-live="polite">
+          <p class="vc-code-label" data-en="Voucher code" data-am="የቫውቸር ኮድ">Voucher code</p>
+          <p class="vc-code" id="vcCode"></p>
+          <p class="vc-note" data-en="Write this on the card. Keep the record below." data-am="ይህን በካርዱ ላይ ይጻፉ። ከታች ያለውን መዝገብ ያስቀምጡ።">Write this on the card. Keep the record below.</p>
+          <div class="vc-actions">
+            <button class="btn btn-pill" type="button" id="vcCopy" data-en="Copy code" data-am="ኮዱን ቅዳ">Copy code</button>
+            <button class="btn btn-pill" type="button" id="vcSend" data-en="Send on WhatsApp" data-am="በዋትስአፕ ላክ">Send on WhatsApp</button>
+          </div>
+          <p class="vc-record" id="vcRecord"></p>
+        </div>
+      </div>
+
+      <!-- CHECK: for the shop, when someone hands over a code -->
+      <div class="voucher-card reveal reveal-scale">
+        <h3 data-en="Check a voucher" data-am="ቫውቸር ያረጋግጡ">Check a voucher</h3>
+        <p class="vc-sub" data-en="Type the code someone gives you. A made-up or mistyped code will not pass." data-am="የተሰጠዎትን ኮድ ይጻፉ። የተፈጠረ ወይም በስህተት የተጻፈ ኮድ አያልፍም።">Type the code someone gives you. A made-up or mistyped code will not pass.</p>
+
+        <label class="vc-label" for="vcInput" data-en="Voucher code" data-am="የቫውቸር ኮድ">Voucher code</label>
+        <input id="vcInput" type="text" inputmode="text" autocomplete="off"
+               spellcheck="false" placeholder="NP-XXXX-0000-XXX">
+        <p class="vc-result" id="vcResult" aria-live="polite"></p>
+      </div>
+
+    </div>
+
+    <p class="voucher-caveat" data-en="Each code can only be used once. We keep a record of every voucher we honour — if you are not sure, ask us before you accept it." data-am="እያንዳንዱ ኮድ አንድ ጊዜ ብቻ ይሠራል። የምንከፍለውን ቫውቸር ሁሉ እንመዘግባለን — እርግጠኛ ካልሆኑ ከመቀበልዎ በፊት ይጠይቁን።">Each code can only be used once. We keep a record of every voucher we honour — if you are not sure, ask us before you accept it.</p>
+  </div>
+</section>
+
 <!-- ═══════════ FAQ (T1-04 + T1-05: questions, turnaround, delivery) ═══════════ -->
 <!-- [FEVEN] These answers state policy that only Feven can confirm. Please check:
      · turnaround by product (same day / canvases +1 day / photo books 2-3 days)
@@ -827,6 +885,7 @@
 <script src="js/norcha-data.js"></script>
 <script src="js/norcha-holidays.js"></script>
 <script src="js/norcha-delivery.js"></script>
+<script src="js/norcha-voucher.js"></script>
 <script src="js/main.js"></script>
 <button class="to-top" id="toTop" type="button" aria-label="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
