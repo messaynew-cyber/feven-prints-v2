@@ -121,6 +121,31 @@ Everything below was **measured against the live site** before and after, not in
 
 **Copy change:** two strings promised Telegram. Since there is no verified handle, the copy now says WhatsApp only. When Feven supplies a handle (B-05), restore both the buttons and the strings.
 
+
+### T-00 / T-01 — SHIPPED 2026-09-21 (`b237716`)
+
+| Item | State |
+|---|---|
+| **T-00** price data file | ✅ `js/norcha-data.js` — all 22 price points, 6 product families, production lead times, volume-tier definitions, and a `quote()` that owns the arithmetic. All prices still flagged **TEMPORARY**. |
+| **T-01** holiday deadline engine | ✅ `js/norcha-holidays.js` + strip under the nav. Computes the next Ethiopian occasion, converts it to a real order-by date per product lead time, steps back over Sundays. Four honest states; **hides itself** when nothing is within 75 days. Fully bilingual. |
+
+**Why this is not a copy of Ifolor's Christmas line.** Ifolor has one gift
+holiday. Ethiopia has a ladder — Meskel, Enkutatash, Genna, Timket, Fasika,
+Mother's Day, graduation — and every one sends families to a print shop in
+the same week. So the deadline is computed, not hardcoded, and it is
+per-product: a canvas needs 1 production day, a photo book 3.
+
+**A bug found and fixed during this pass:** the first version translated
+only the holiday name, so with the site in Amharic the sentence still read
+"order within 2 days" in English. Full-sentence translation now lives in
+`HOLIDAY_COPY` in `main.js`.
+
+**Not done, deliberately:** the strip does not invent urgency. Once the
+deadline passes it stops counting down and says same-day is no longer
+guaranteed. A banner that cries wolf is a banner nobody reads.
+
+`TODO.md` holds the full 22-item plan this came from.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
