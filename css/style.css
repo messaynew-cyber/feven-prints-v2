@@ -1000,3 +1000,19 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
 }
 [data-theme="dark"] .qty-hint { color: var(--pine-deep); }
 .qty-hint .qh-strong { text-decoration: underline; text-underline-offset: 2px; }
+
+/* ═══════════ DELIVERY ESTIMATE (T-09) ═══════════
+   Sits directly under the "Needed by" date field. Two states: a calm
+   confirmation, and a caution when the requested date cannot be met.
+   The caution is deliberately not red — this is information, not an
+   error. The customer has done nothing wrong. */
+.deliv-note {
+  margin: 9px 0 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+.deliv-note .dn-strong { font-weight: 680; color: var(--ink); }
+.deliv-note.dn-caution .dn-strong { color: var(--red); }
+.deliv-note.dn-ok .dn-strong { color: var(--pine); }
+[data-theme="dark"] .deliv-note.dn-ok .dn-strong { color: var(--pine-deep); }

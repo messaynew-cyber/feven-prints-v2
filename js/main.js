@@ -2,6 +2,26 @@
 (function () {
   "use strict";
 
+  /* Shared helpers, defined FIRST so every function below can use them.
+     Three separate bugs were caused by defining a renderer before the
+     helper it needed — JavaScript hoists `var` as undefined, so the call
+     throws and takes the whole page down with it. Keeping helpers at the
+     top removes the entire class of problem. */
+var FAMILY_BY_LABEL = {
+    "Canvas print":     "canvas",
+    "Photo book":       "books",
+    "Wall calendar":    "calendars",
+    "Photo mug":        "mugs",
+    "Framed print":     "frames",
+    "Standard prints":  "prints"
+    /* "Something else" is deliberately absent — a custom job has no price. */
+  };
+
+  var val = function (id) {
+    var e = document.getElementById(id);
+    return e && e.value ? e.value.trim() : "";
+  };
+
   /* ── i18n: EN / AM ─────────────────────────────── */
   var LANG_KEY = "fevens-lang";
   var current = "en";
@@ -23,6 +43,7 @@
     if (typeof renderHistory === "function") renderHistory();
     if (typeof renderHoliday === "function") renderHoliday(lang);
     if (typeof renderQuote === "function") renderQuote();
+    if (typeof renderDelivery === "function") renderDelivery();
     var segs = document.querySelectorAll(".seg");
     for (var s = 0; s < segs.length; s++) {
       var on = segs[s].getAttribute("data-lang") === lang;
@@ -94,6 +115,84 @@
     txt.appendChild(a); txt.appendChild(b);
     el.hidden = false;
   }
+
+  /* ── delivery estimate (T-09) ────────────────────────
+     Uses NorchaDelivery + NorchaData. Reads the product to get the real
+     production lead time, then answers two questions honestly:
+       "when would this be ready?" and "can you actually do my date?" */
+  var DELIV_COPY = {
+    en: {
+      readyFrom:  function (d) { return "Order now and it is ready <b>" + d + "</b>."; },
+      pick:       "Pick a date and we will tell you if we can make it.",
+      ok:         function (d) { return "Yes \u2014 <b>" + d + "</b> works."; },
+      okSlack:    function (d, s) { return "Yes \u2014 <b>" + d + "</b> works, with " + s + " day" + (s === 1 ? "" : "s") + " to spare."; },
+      past:       "That date has already passed \u2014 pick one from today onwards.",
+      sunday:     "We are closed on Sundays. Pick another day and it is fine.",
+      tooSoon:    function (d, n) { return "We cannot make <b>" + d + "</b>. The earliest is <b>" + n + "</b> \u2014 message us and we will see what is possible."; },
+      tooSoonShort: function (n) { return "That is " + n + " working day" + (n === 1 ? "" : "s") + " sooner than we can manage."; }
+    },
+    am: {
+      readyFrom:  function (d) { return "አሁን ካዘዙ <b>" + d + "</b> ዝግጁ ይሆናል።"; },
+      pick:       "ቀን ይምረጡ፤ ማዘጋጀት እንደምንችል እንነግርዎታለን።",
+      ok:         function (d) { return "አዎ \u2014 <b>" + d + "</b> ይሠራል።"; },
+      okSlack:    function (d, s) { return "አዎ \u2014 <b>" + d + "</b> ይሠራል፤ " + s + " ተጨማሪ ቀን አለ።"; },
+      past:       "ያ ቀን አልፏል \u2014 ከዛሬ ጀምሮ ቀን ይምረጡ።",
+      sunday:     "እሁድ እንዘጋለን። ሌላ ቀን ይምረጡ።",
+      tooSoon:    function (d, n) { return "<b>" + d + "</b> ማዘጋጀት አንችልም። የመጀመሪያው <b>" + n + "</b> ነው \u2014 ያግኙን።"; },
+      tooSoonShort: function (n) { return "ከምንችለው በ" + n + " የሥራ ቀን ያነሰ ነው።"; }
+    }
+  };
+
+  function renderDelivery() {
+    var el = document.getElementById("delivNote");
+    if (!el) return;
+    if (typeof NorchaDelivery === "undefined" || typeof NorchaData === "undefined") {
+      el.hidden = true; return;
+    }
+    var lang = (document.documentElement.lang === "am") ? "am" : "en";
+    var L = DELIV_COPY[lang];
+
+    var label = val("of-product");
+    var family = FAMILY_BY_LABEL[label];
+    if (!family) { el.hidden = true; return; }
+
+    var lead = NorchaData.products[family].lead;
+    var cutoff = NorchaData.shop.cutoffHour;
+    var raw = val("of-date");
+    var requested = raw ? new Date(raw + "T12:00:00") : null;
+
+    var now = new Date();
+    var r = NorchaDelivery.assess(now, requested, lead, { cutoffHour: cutoff });
+    var fmtReady = NorchaDelivery.fmt(r.ready, lang);
+
+    el.classList.remove("dn-ok", "dn-caution");
+
+    if (!requested) {
+      el.innerHTML = L.readyFrom(fmtReady) + " " + L.pick;
+      el.hidden = false;
+      return;
+    }
+
+    if (r.ok && r.reason === undefined) {
+      var fmtWant = NorchaDelivery.fmt(r.want, lang);
+      el.classList.add("dn-ok");
+      el.innerHTML = (r.slack && r.slack > 0) ? L.okSlack(fmtWant, r.slack) : L.ok(fmtWant);
+      el.hidden = false;
+      return;
+    }
+
+    el.classList.add("dn-caution");
+    if (r.reason === "past") {
+      el.innerHTML = L.past;
+    } else if (r.reason === "sunday") {
+      el.innerHTML = L.sunday;
+    } else {
+      el.innerHTML = L.tooSoon(NorchaDelivery.fmt(r.want, lang), fmtReady) +
+        " <span class='dn-sub'>" + L.tooSoonShort(r.short) + "</span>";
+    }
+    el.hidden = false;
+  }
+
 
   applyLang(current);
   renderHoliday(current);
@@ -209,15 +308,7 @@
      The form's <select> values are human labels ("Canvas print"), while the
      data file is keyed by family ("canvas"). This table is the bridge. If a
      product is missing here the box simply stays hidden — it never guesses. */
-  var FAMILY_BY_LABEL = {
-    "Canvas print":     "canvas",
-    "Photo book":       "books",
-    "Wall calendar":    "calendars",
-    "Photo mug":        "mugs",
-    "Framed print":     "frames",
-    "Standard prints":  "prints"
-    /* "Something else" is deliberately absent — a custom job has no price. */
-  };
+  
 
   /* The form's size is free text, so match it loosely against the data keys.
      Everything is normalised to remove spaces, multiplication signs and the
@@ -358,13 +449,14 @@
       var onEdit = function (e) {
         var id = e && e.target && e.target.id;
         if (id === "of-product" || id === "of-size" || id === "of-qty") renderQuote();
+        if (id === "of-product" || id === "of-date") renderDelivery();
       };
       form.addEventListener("input", onEdit);
       form.addEventListener("change", onEdit);
       renderQuote();
+      renderDelivery();
     })();
     var lang = function () { return document.documentElement.lang === "am" ? "am" : "en"; };
-    var val = function (id) { var e = document.getElementById(id); return e && e.value ? e.value.trim() : ""; };
     var setErr = function (id, key) {
       var err = document.getElementById("of-err-" + id);
       var input = document.getElementById("of-" + id);

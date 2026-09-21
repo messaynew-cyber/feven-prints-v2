@@ -18,7 +18,10 @@
    the new norcha-*.js files were added to the shell. Without this bump the
    first load after the deploy serves the OLD stylesheet, which points at a
    font that is no longer the one we ship. */
-const CACHE = "fevens-v3";
+/* v4: norcha-delivery.js added to the shell (T-09). The order form now
+   depends on it, so an offline visitor filling the form would otherwise
+   lose the delivery estimate entirely. */
+const CACHE = "fevens-v4";
 
 const SHELL = [
   "./",
@@ -26,6 +29,7 @@ const SHELL = [
   "./css/style.css",
   "./js/norcha-data.js",
   "./js/norcha-holidays.js",
+  "./js/norcha-delivery.js",
   "./js/main.js",
   "./manifest.webmanifest",
   "./fonts/noto-ethiopic-slim.woff2",

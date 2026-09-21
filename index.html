@@ -585,6 +585,13 @@
       <div class="field field-half">
         <label for="of-date" data-en="Needed by (optional)" data-am="የሚፈልጉበት ቀን (አማራጭ)">Needed by (optional)</label>
         <input id="of-date" name="date" type="date">
+          <!-- ── delivery promise (T-09) ───────────────────────────
+               Written by js/norcha-delivery.js. It knows the product's
+               production lead time, which day it is, and that the shop
+               shuts on Sunday — so it can say when the order is actually
+               ready, and whether a date the customer asks for is possible.
+               It says no rather than round in the customer's favour. -->
+          <p class="deliv-note" id="delivNote" aria-live="polite"></p>
       </div>
 
       <div class="field">
@@ -819,6 +826,7 @@
 
 <script src="js/norcha-data.js"></script>
 <script src="js/norcha-holidays.js"></script>
+<script src="js/norcha-delivery.js"></script>
 <script src="js/main.js"></script>
 <button class="to-top" id="toTop" type="button" aria-label="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
