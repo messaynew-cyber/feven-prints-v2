@@ -13,3 +13,10 @@ node_modules/
 # Local scratch
 *.log
 *.tmp
+err.txt
+out.txt
+domout.txt
+
+# jsdom is a dev-only test dependency; node_modules is not deployed
+package.json
+package-lock.json

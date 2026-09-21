@@ -1,7 +1,0 @@
-=== RESULT ===
-errors: none
-reveal elements: 61  ->  .in shown: 61  still hidden: 0
-holidayStrip hidden attr: false
-holidayText content: "Meskel: order within 2 days — to be ready before the holiday"
-NorchaData present: object
-NorchaHolidays present: object
