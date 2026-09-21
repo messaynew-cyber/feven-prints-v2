@@ -1,0 +1,15 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Cloudflare / Wrangler local state — never commit deploy artifacts or account ids
+.wrangler/
+dist/
+node_modules/
+
+# Local scratch
+*.log
+*.tmp
