@@ -331,6 +331,75 @@ out over its 4-hour TTL.
 > on the custom domain. Verify with a cache-buster before concluding
 > anything is broken.**
 
+
+### T-09 — SHIPPED 2026-09-22 (`7187e1c`)
+
+**A real date, not a static number.** Ifolor puts "6-9 working days" on every
+product page — it does not know what day it is, whether the shop is open,
+which product the buyer chose, or whether a holiday is about to close the
+calendar.
+
+This computes from the actual state of the world:
+- today + the product's **real production lead time** (prints 0, canvas 1,
+  photo books 2 — from `norcha-data.js`)
+- **skipping Sundays**, because the shop is shut
+- respecting the **16:00 cut-off** — ordering at 17:00 does not still get
+  "same day"
+- and if the customer names a date, **whether that date is achievable**
+
+**It says no.** That is the feature. A promise the shop cannot keep costs
+more than a slower one it can:
+
+| customer picks | what they see |
+|---|---|
+| (nothing) | "Order now and it is ready **Wednesday 23 Sep**." |
+| a workable date | "Yes — **Friday 25 Sep** works, with 2 days to spare." |
+| a past date | "That date has already passed — pick one from today onwards." |
+| a Sunday | "We are closed on Sundays. Pick another day and it is fine." |
+| an impossible date | "We cannot make **Tuesday 22 Sep**. The earliest is **Thursday 24 Sep** — message us and we will see what is possible. That is 2 working days sooner than we can manage." |
+| "Something else" | (nothing — no price, no lead, so no promise) |
+
+---
+
+### 🔴 ROOT CAUSE FIXED: the boot-order bug, third and final instance
+
+Three times, a renderer called from `applyLang()` during boot threw because
+a helper or data table was defined **further down the file**. `var` hoists
+as `undefined`, the first property read throws, and the whole page dies —
+that is the blank-page regression, twice, from one line of ordering.
+
+This time the **cause** was fixed, not the instance. `main.js` now defines
+everything in dependency order, with `applyLang` **last**:
+
+```
+line 10   FAMILY_BY_LABEL      (shared lookup)
+line 20   val()                (shared helper)
+line 67   HOLIDAY_COPY + renderHoliday
+line 123  DELIV_COPY   + renderDelivery
+line 197  applyLang(current)   ← boot happens here, once
+line 359  renderQuote, normaliseSize, findSizeKey …
+```
+
+Anything called at boot is now **necessarily** defined before it is called.
+This class of bug cannot recur without deliberately reordering the file.
+
+---
+
+### 🧪 A bug in my own test, worth recording
+
+The first version of the delivery test built dates with `toISOString()`,
+which converts to **UTC**. Addis is **UTC+3**, so before 03:00 local it
+returns **yesterday**. A perfectly valid same-day order looked like a past
+date, and I spent three tool calls hunting a bug in the app that was
+**never there**.
+
+> **Rule: build test dates in LOCAL time.** `toISOString().slice(0,10)` is
+> wrong for anything date-sensitive east of Greenwich before 03:00.
+
+Verified in a real DOM: **20 cases across both languages** — same-day,
+tomorrow, past dates, Sundays, impossible deadlines, and a product with no
+price data (correctly renders nothing).
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
