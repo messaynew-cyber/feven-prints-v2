@@ -16,7 +16,7 @@
 
 ## PROGRESS — updated 2026-09-22
 
-**7 of 22 shipped and live on norchaprint.com.**
+**8 of 22 shipped and live on norchaprint.com.**
 
 | ID | Item | State | Commit |
 |---|---|---|---|
@@ -27,8 +27,8 @@
 | T-14 | hreflang | ✅ shipped | `eeaefda` |
 | T-17 | FAQ anchors + schema | ✅ shipped | `eeaefda` |
 | T-19 | Amharic font subset (−76.5%) | ✅ shipped | `676d904` |
-| T-18 | gift vouchers | ⬜ next | — |
-| T-20 | counter mode / staff sheet | ⬜ | — |
+| T-18 | gift vouchers (offline codes) | ✅ shipped | `3826be0` |
+| T-20 | counter mode / staff sheet | ⬜ next | — |
 | T-21 | WhatsApp catalogue message | ⬜ | — |
 | T-10 | draft orders + reorder | ⬜ | — |
 | T-11 | quote requests (weddings) | ⬜ | — |

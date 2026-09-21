@@ -400,6 +400,44 @@ Verified in a real DOM: **20 cases across both languages** — same-day,
 tomorrow, past dates, Sundays, impossible deadlines, and a product with no
 price data (correctly renders nothing).
 
+
+### T-18 — SHIPPED 2026-09-22 (`3826be0`)
+
+**Gift vouchers that work without a payment processor.** Ifolor sells digital
+and PDF vouchers because it has a checkout. Norcha takes Telebirr, bank
+transfer or cash — so a voucher here cannot be a checkout product.
+
+A voucher is bought in person or over WhatsApp, paid the usual way, issued as
+a **code** (`NP-XXXX-0000-XXX`), and redeemed at the counter. No server.
+
+**The check characters are the point.** They make a code safe to accept over
+WhatsApp: a mistyped or invented code fails immediately, before anything is
+handed over.
+
+**Honest limit, stated on the page:** a code with no server behind it cannot
+prove it has not already been used. Feven keeps a record of redeemed codes —
+so issuing a voucher also prints a one-line redemption record to keep. The
+caveat under the panel says this plainly. A system that pretended to prevent
+double-spending would be lying.
+
+**Two panels, two different people:** the buyer needs a code to give away,
+the shop needs to check one. Both run entirely on-device, so the shop can
+check a voucher with no signal.
+
+**Two real bugs found by testing the cryptography:**
+1. **Retyping.** The no-dash path was **100% broken** — it assumed a fixed
+   13 chars, but the value block changes length (500 vs 5000). Rewritten to
+   re-insert dashes structurally from the ends. It now also strips anything
+   that is not a letter, digit or dash, so `np 4f2k 2500 e64` resolves.
+2. **Weak check.** Two check chars gave a **1-in-1,140** false-accept rate on
+   random input — too high when the thing accepted is money. Raised to three:
+   measured **7 in 300,000**, about 1 in 42,857.
+
+Verified: 3,000 issued vouchers round-trip with **zero failures** across
+exact, lowercase, no-dash, spaced and mixed formats. Tampering a real 500 ETB
+code into 5000 is rejected. `sw.js` bumped to **v5** — voucher checking must
+work offline.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
