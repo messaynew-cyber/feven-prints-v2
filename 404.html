@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page not found | Norcha Print</title>
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#F8F4EE">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='26' height='26' rx='6' fill='%230E5C41'/%3E%3Crect x='8' y='8' width='16' height='16' rx='3' fill='%23FAFBFA'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+  .nf { min-height: 72vh; display: grid; place-items: center; text-align: center; padding: 56px 22px 72px; }
+  .nf-in { max-width: 46ch; }
+  .nf-num { font-family: var(--display); font-size: clamp(60px, 19vw, 122px); line-height: .9;
+            color: var(--pine); margin: 0 0 10px; letter-spacing: -.02em; }
+  .nf-am { font-family: 'Noto Sans Ethiopic', var(--body); color: var(--gold);
+           font-size: 15px; margin: 0 0 18px; }
+  .nf h1 { font-family: var(--display); font-size: clamp(26px, 7vw, 38px);
+           line-height: 1.15; margin: 0 0 14px; color: var(--ink); font-weight: 600; }
+  .nf p { color: var(--text-soft); line-height: 1.6; margin: 0 0 26px; }
+  .nf-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .nf-tibeb { height: 11px; background-image:
+      linear-gradient(180deg, rgba(255,255,255,.30) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,.13) 100%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.09) 0 1px, rgba(0,0,0,.05) 1px 3px),
+      linear-gradient(180deg, #17532F 0 33.4%, #B8912F 33.4% 66.7%, #7E211C 66.7% 100%);
+      background-size: auto, 7px 7px, auto; }
+  [data-theme="dark"] .nf-tibeb { background-image:
+      linear-gradient(180deg, rgba(255,255,255,.20) 0%, rgba(255,255,255,0) 42%, rgba(0,0,0,.22) 100%),
+      repeating-linear-gradient(115deg, rgba(255,255,255,.07) 0 1px, rgba(0,0,0,.08) 1px 3px),
+      linear-gradient(180deg, #2C7A4B 0 33.4%, #D4AF4A 33.4% 66.7%, #A63229 66.7% 100%); }
+</style>
+</head>
+<body>
+<div class="nf-tibeb"></div>
+<main class="nf">
+  <div class="nf-in">
+    <p class="nf-num">404</p>
+    <p class="nf-am">ገጹ አልተገኘም</p>
+    <h1>That page isn't here</h1>
+    <p>The link may be old, or the address may have a typo. Everything we print,
+       the prices and the order form are all on the main page.</p>
+    <div class="nf-actions">
+      <a class="btn btn-primary" href="/">Back to Norcha Print</a>
+      <a class="btn btn-pill" href="/#order">Place an order</a>
+    </div>
+  </div>
+</main>
+<div class="nf-tibeb"></div>
+<script>
+  (function () {
+    try {
+      var saved = localStorage.getItem("fevens-theme");
+      var os = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", saved || os);
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>

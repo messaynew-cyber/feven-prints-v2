@@ -1,3 +1,6 @@
 User-agent: *
-Disallow: /styleguide.html
 Allow: /
+Disallow: /styleguide.html
+Disallow: /404.html
+
+Sitemap: https://norchaprint.com/sitemap.xml
