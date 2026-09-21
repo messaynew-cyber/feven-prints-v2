@@ -545,6 +545,27 @@
       <div class="field field-half">
         <label for="of-qty" data-en="How many?" data-am="ብዛት?">How many?</label>
         <input id="of-qty" name="qty" type="number" min="1" max="500" step="1" value="1" inputmode="numeric">
+          <!-- ── live price + volume tier (T-02) ──────────────────
+               Anything above 1 unit gets a discount. The numbers come from
+               js/norcha-data.js so the form, the price list and the product
+               pages can never disagree. The tier note explains WHY the
+               price dropped, which is what actually pushes the quantity up. -->
+          <p class="qty-hint" id="qtyTier" hidden></p>
+          <div class="quote-box" id="quoteBox" hidden aria-live="polite">
+            <div class="qb-row">
+              <span class="qb-label" id="qbUnitLabel" data-en="Unit price" data-am="የአንድ ዋጋ">Unit price</span>
+              <span class="qb-val" id="qbUnit"></span>
+            </div>
+            <div class="qb-row qb-save" id="qbSaveRow" hidden>
+              <span class="qb-label" id="qbSaveLabel" data-en="Volume discount" data-am="የብዛት ቅናሽ">Volume discount</span>
+              <span class="qb-val qb-save-val" id="qbSave"></span>
+            </div>
+            <div class="qb-row qb-total">
+              <span class="qb-label" data-en="Estimated total" data-am="ግምታዊ ጠቅላላ">Estimated total</span>
+              <span class="qb-val" id="qbTotal"></span>
+            </div>
+            <p class="qb-note" id="qbNote"></p>
+          </div>
       </div>
 
       <div class="field field-half">

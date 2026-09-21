@@ -22,6 +22,7 @@
     }
     if (typeof renderHistory === "function") renderHistory();
     if (typeof renderHoliday === "function") renderHoliday(lang);
+    if (typeof renderQuote === "function") renderQuote();
     var segs = document.querySelectorAll(".seg");
     for (var s = 0; s < segs.length; s++) {
       var on = segs[s].getAttribute("data-lang") === lang;
@@ -153,7 +154,168 @@
     phone:   { en: "Please add a phone number we can reach you on.", am: "እባክዎ የስልክ ቁጥርዎን ያስገቡ።" }
   };
   var form = document.getElementById("orderForm");
+
+  /* ── live quote + volume tiers (T-02) ────────────────
+     Prices live in js/norcha-data.js so this box, the price list and the
+     product pages can never disagree. This only renders what quote() returns.
+
+     The form's <select> values are human labels ("Canvas print"), while the
+     data file is keyed by family ("canvas"). This table is the bridge. If a
+     product is missing here the box simply stays hidden — it never guesses. */
+  var FAMILY_BY_LABEL = {
+    "Canvas print":     "canvas",
+    "Photo book":       "books",
+    "Wall calendar":    "calendars",
+    "Photo mug":        "mugs",
+    "Framed print":     "frames",
+    "Standard prints":  "prints"
+    /* "Something else" is deliberately absent — a custom job has no price. */
+  };
+
+  /* The form's size is free text, so match it loosely against the data keys.
+     Everything is normalised to remove spaces, multiplication signs and the
+     difference between "A4" and "A4 (21 × 30 cm)". */
+  function normaliseSize(s) {
+    return String(s || "")
+      .toLowerCase()
+      .replace(/[×x*]/g, "x")
+      .replace(/\(.*?\)/g, "")      /* drop the parenthetical */
+      .replace(/\s+/g, "")
+      .replace(/፣/g, ",");
+  }
+
+  function findSizeKey(family, rawSize) {
+    if (!rawSize || typeof NorchaData === "undefined") return null;
+    var want = normaliseSize(rawSize);
+    if (!want) return null;
+    var sizes = NorchaData.products[family].sizes;
+    /* exact first */
+    for (var i = 0; i < sizes.length; i++) {
+      if (normaliseSize(sizes[i].label) === want) return sizes[i].key;
+    }
+    /* then a loose contains, either direction */
+    for (var k = 0; k < sizes.length; k++) {
+      var have = normaliseSize(sizes[k].label);
+      if (have && (have.indexOf(want) !== -1 || want.indexOf(have) !== -1)) return sizes[k].key;
+    }
+    return null;
+  }
+
+  var QUOTE_LANG = {
+    en: {
+      note: "Estimate only — we confirm the final price on WhatsApp.",
+      hint: function (next, pct) {
+        return "Order " + next + " or more and get " + pct + "% off.";
+      },
+      hintHave: function (pct) { return pct + "% off applied."; },
+      save: function (pct) { return "\u2212" + pct + "%"; }
+    },
+    am: {
+      note: "ግምት ብቻ ነው \u2014 የመጨረሻውን ዋጋ በዋትስአፕ እናረጋግጣለን።",
+      hint: function (next, pct) {
+        return next + " ወይም ከዚያ በላይ ካዘዙ " + pct + "% ቅናሽ ያገኛሉ።";
+      },
+      hintHave: function (pct) { return pct + "% ቅናሽ ተተግብሯል።"; },
+      save: function (pct) { return "\u2212" + pct + "%"; }
+    }
+  };
+
+  function renderQuote() {
+    var box = document.getElementById("quoteBox");
+    var hintEl = document.getElementById("qtyTier");
+    if (!box || typeof NorchaData === "undefined") return;
+    /* val() is defined further down this file. Guard so an early call (from
+       applyLang during boot, before that definition runs) cannot throw and
+       take the whole page down with it. */
+    if (typeof val !== "function") return;
+
+    var label = val("of-product");
+    var family = FAMILY_BY_LABEL[label];
+    var qty = parseInt(val("of-qty"), 10) || 0;
+
+    if (!family || qty < 1) {
+      box.hidden = true;
+      if (hintEl) hintEl.hidden = true;
+      return;
+    }
+
+    var rawSize = val("of-size");
+    var key = findSizeKey(family, rawSize);
+
+    /* Mugs, and photo books when only the format is given, have no size to
+       match — the buyer leaves the field blank and we price the first/only
+       variant. If they DID type something and it matches nothing, we show
+       nothing rather than guess. */
+    if (!key && !rawSize) {
+      key = NorchaData.products[family].sizes[0].key;
+    }
+
+    if (!key) {
+      /* The family is priced but this exact size is not known — most likely
+         "Something else" text, or a custom dimension. Say so, honestly,
+         instead of inventing a number. */
+      box.hidden = true;
+      if (hintEl) {
+        var L0 = (lang() === "am") ? QUOTE_LANG.am : QUOTE_LANG.en;
+        hintEl.textContent = "";
+        hintEl.hidden = true;
+      }
+      return;
+    }
+
+    var q = NorchaData.quote(family, key, qty);
+    var L = (lang() === "am") ? QUOTE_LANG.am : QUOTE_LANG.en;
+
+    document.getElementById("qbUnit").textContent = NorchaData.money(q.unit);
+    document.getElementById("qbTotal").textContent = NorchaData.money(q.total);
+
+    var saveRow = document.getElementById("qbSaveRow");
+    var saveEl = document.getElementById("qbSave");
+    if (q.pct > 0) {
+      saveRow.hidden = false;
+      saveEl.textContent = L.save(q.pct) + "  (" + NorchaData.money(q.discount) + ")";
+    } else {
+      /* Clear the text as well as hiding the row. A hidden element that still
+         holds the previous product's discount is a trap the moment anything
+         changes visibility rules or a reader announces the subtree. */
+      saveRow.hidden = true;
+      saveEl.textContent = "";
+    }
+    document.getElementById("qbNote").textContent = L.note;
+    box.hidden = false;
+
+    /* The nudge: show what the NEXT tier would give, so the buyer can decide
+       to add a few more. This is the whole point of volume pricing. */
+    if (hintEl) {
+      var list = NorchaData.tiers[NorchaData.products[family].tier] || [];
+      var nextTier = null;
+      for (var t = 0; t < list.length; t++) {
+        if (list[t].min > qty) { nextTier = list[t]; break; }
+      }
+      if (nextTier) {
+        hintEl.textContent = L.hint(nextTier.min, nextTier.pct);
+        hintEl.hidden = false;
+      } else if (q.pct > 0) {
+        hintEl.textContent = L.hintHave(q.pct);
+        hintEl.hidden = false;
+      } else {
+        hintEl.hidden = true;
+      }
+    }
+  }
+
   if (form) {
+    /* recompute the quote whenever anything relevant changes */
+    (function () {
+      var fired = 0;
+      var onEdit = function (e) {
+        var id = e && e.target && e.target.id;
+        if (id === "of-product" || id === "of-size" || id === "of-qty") renderQuote();
+      };
+      form.addEventListener("input", onEdit);
+      form.addEventListener("change", onEdit);
+      renderQuote();
+    })();
     var lang = function () { return document.documentElement.lang === "am" ? "am" : "en"; };
     var val = function (id) { var e = document.getElementById(id); return e && e.value ? e.value.trim() : ""; };
     var setErr = function (id, key) {
@@ -185,6 +347,28 @@
       L.push((am ? "ምርት: " : "Product: ") + val("of-product"));
       if (val("of-size")) L.push((am ? "መጠን: " : "Size: ") + val("of-size"));
       L.push((am ? "ብዛት: " : "Quantity: ") + (val("of-qty") || "1"));
+
+      /* Carry the estimate into the message. Without this, Feven has to
+         re-price every order by hand and the whole feature is decoration.
+         It is labelled as an estimate so nobody treats it as final. */
+      var qlabel = val("of-product");
+      var qfam = FAMILY_BY_LABEL[qlabel];
+      var qty = parseInt(val("of-qty"), 10) || 0;
+      if (qfam && qty >= 1 && typeof NorchaData !== "undefined") {
+        var qsize = val("of-size");
+        var qkey = findSizeKey(qfam, qsize);
+        if (!qkey && !qsize) qkey = NorchaData.products[qfam].sizes[0].key;
+        if (qkey) {
+          var est = NorchaData.quote(qfam, qkey, qty);
+          var line = NorchaData.money(est.total);
+          if (est.pct > 0) {
+            line += (am ? "  (የብዛት ቅናሽ " : "  (volume discount ") +
+                    NorchaData.money(est.discount) + ", -" + est.pct + "%)";
+          }
+          L.push((am ? "ግምታዊ ዋጋ: " : "Estimated price: ") + line);
+        }
+      }
+
       if (val("of-date")) L.push((am ? "የሚፈልጉበት ቀን: " : "Needed by: ") + val("of-date"));
       if (val("of-notes")) L.push((am ? "ተጨማሪ: " : "Notes: ") + val("of-notes"));
       L.push("");

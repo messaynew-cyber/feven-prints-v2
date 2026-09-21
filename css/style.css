@@ -939,3 +939,45 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
   .hs-cta { order: 3; margin-left: 27px; }
   .hs-icon { order: 1; }
 }
+
+/* ═══════════ LIVE QUOTE + VOLUME TIER (T-02) ═══════════
+   Shows the running total as the buyer types. Deliberately quiet: this is
+   an estimate beside a WhatsApp handoff, not a checkout. It never claims
+   to be a final price — the note says a person confirms it. */
+.quote-box {
+  margin-top: 14px;
+  padding: 15px 17px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--paper-2);
+  font-size: 14.5px;
+}
+[data-theme="dark"] .quote-box { background: var(--surface-hover); }
+.qb-row { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 3px 0; }
+.qb-label { color: var(--text-soft); }
+.qb-val { font-weight: 660; font-variant-numeric: tabular-nums; color: var(--ink); }
+.qb-save-val { color: var(--pine); }
+[data-theme="dark"] .qb-save-val { color: var(--pine-deep); }
+.qb-total {
+  margin-top: 7px; padding-top: 9px;
+  border-top: 1px solid var(--line-strong);
+}
+.qb-total .qb-label { color: var(--ink); font-weight: 640; }
+.qb-total .qb-val { font-size: 18px; font-weight: 750; color: var(--pine-deep); }
+[data-theme="dark"] .qb-total .qb-val { color: var(--pine); }
+
+.qb-note {
+  margin: 9px 0 0;
+  font-size: 12.5px; line-height: 1.5;
+  color: var(--text-mute);
+}
+
+/* The tier nudge under the quantity field. */
+.qty-hint {
+  margin: 8px 0 0;
+  font-size: 13px; line-height: 1.5;
+  color: var(--pine);
+  font-weight: 600;
+}
+[data-theme="dark"] .qty-hint { color: var(--pine-deep); }
+.qty-hint .qh-strong { text-decoration: underline; text-underline-offset: 2px; }
