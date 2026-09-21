@@ -1,0 +1,20 @@
+# Cloudflare Pages redirects.
+#
+# WHY THIS FILE EXISTS
+# Deleting a file from the repo does NOT remove it from Cloudflare Pages.
+# An asset that was served by an earlier deployment stays reachable at its
+# old URL, with HTTP 200, no matter how many times it is deleted afterwards.
+# Caught on 2026-09-22: fonts/noto-ethiopic.woff2 was removed and every
+# reference to it deleted, and it was STILL being served — 198,324 bytes,
+# byte-identical to the version in git history.
+#
+# It is not a correctness problem for visitors (style.css points at the new
+# 45.5 KB subset, so no browser asks for the old one) but it is a real one:
+# 198 KB of dead weight publicly served and crawlable forever, and a stale
+# font is exactly the kind of thing that resurfaces when someone copies the
+# old URL out of a cached stylesheet.
+#
+# The tombstone makes the removal real. `410 Gone` is the correct answer —
+# it is permanent and deliberate, unlike 404 which means "never existed".
+
+/fonts/noto-ethiopic.woff2    /404.html   410
