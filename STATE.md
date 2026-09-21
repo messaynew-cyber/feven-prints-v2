@@ -146,6 +146,47 @@ guaranteed. A banner that cries wolf is a banner nobody reads.
 
 `TODO.md` holds the full 22-item plan this came from.
 
+
+### 🔴 REGRESSION + HOTFIX 2026-09-22 (`101ba3a`)
+
+**The live site rendered blank.** A screenshot showed a cream band where the
+products, pricing and order form should be, then the footer. The Architect
+caught it before any customer did.
+
+**What was actually happening.** The HTML was fine — all 61 `.reveal`
+elements were served. But `style.css` has `.reveal { opacity: 0 }`, and the
+`.in` class that fades them in is added by `main.js`. So when `main.js`
+dies, the page does not look broken. It looks **empty**.
+
+`main.js` was dying on its first statement:
+
+```
+line 40:  applyLang(current);          <- calls renderHoliday
+line 47:  var HOLIDAY_COPY = { ... };  <- declared AFTER the call
+```
+
+`var` hoisting made `HOLIDAY_COPY` undefined, `renderHoliday` read
+`HOLIDAY_COPY.am`, and threw. That one throw killed every line after it,
+including the `IntersectionObserver` that reveals the page.
+
+**Reproduced before touching anything** (jsdom, real HTML, real script
+order):
+- before: 61 reveals, **0** visible, 1 thrown error
+- after:  61 reveals, **61** visible, no errors
+
+**Root cause of the mistake:** the holiday code was checked with
+`node --check`, which only proves a file is *parseable*. It cannot catch a
+hoisting bug, because the file is valid — it throws at runtime. Green syntax
+was treated as green behaviour. It is not.
+
+**The guard, now committed:** `domtest.js`. It loads the real page in a real
+DOM, runs the three real scripts in the real order, and fails loudly if any
+error is thrown **or** if any `.reveal` element is still hidden.
+`livetest.js` does the same against the deployed URL.
+
+> **Run `node livetest.js` after any deploy that touches `js/` or
+> `index.html`.** A blank page passes every other check we have.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
