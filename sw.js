@@ -14,14 +14,21 @@
 /* Bump CACHE on every deploy that changes css/js: the shell is precached and
    assets are stale-while-revalidate, so without a bump the first load after a
    deploy serves the OLD stylesheet. */
-const CACHE = "fevens-v2";
+/* v3: the Amharic face was replaced with a 76% smaller subset (T-19) and
+   the new norcha-*.js files were added to the shell. Without this bump the
+   first load after the deploy serves the OLD stylesheet, which points at a
+   font that is no longer the one we ship. */
+const CACHE = "fevens-v3";
 
 const SHELL = [
   "./",
   "./index.html",
   "./css/style.css",
+  "./js/norcha-data.js",
+  "./js/norcha-holidays.js",
   "./js/main.js",
   "./manifest.webmanifest",
+  "./fonts/noto-ethiopic-slim.woff2",
   "./img/icons/icon-192.png",
   "./img/icons/icon-512.png",
   "./img/canvas.webp",
