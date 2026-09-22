@@ -469,6 +469,57 @@ call site falls back to `toDateString()` — so a missing helper degrades to an
 ugly date instead of an empty page. Same failure class as the blank-page
 regression, but this time it **fails safe**.
 
+
+### T-21 — SHIPPED 2026-09-22 (`61c7c9d`)
+
+**"What do you print?" — answered in one tap.** The most asked question this
+shop gets was being typed out by hand every time. Now the whole catalogue —
+every product, size, price, volume ladder, and how to send photos properly —
+goes out as one WhatsApp message, in either language.
+
+**Generated, not typed.** Built from `norcha-data.js`, so a price change
+updates the website, the counter sheet *and* this message together. A test
+verifies every price string in the message exists in the data file:
+**22 checked, 0 unknown.**
+
+Plain text on purpose — WhatsApp has no markdown, so `*asterisks*` are the
+only emphasis, and a test confirms they are balanced (an odd count would leave
+a stray asterisk visible to the customer).
+
+---
+
+### 🔴 A PRICING CONFLICT I INTRODUCED IN T-02, FOUND NOW
+
+Mugs carried **both** pack pricing in `sizes` (1 / 2 / 4 at 350 / 650 / 1200)
+**and** a percentage ladder from the `gifts` tier. So "2 mugs" had two
+different prices depending on how the order was entered:
+
+```
+via the 2-pack SKU x1   = 650 ETB
+via the 1-mug SKU x2    = 644 ETB   ← 350 × 2 less 8%
+```
+
+**Two prices for one order** — exactly what a counter argument is made of.
+
+Fixed by giving mugs their own **flat** ladder, so pack pricing applies and no
+percentage stacks on top. Now: **650 either way.** Genuinely per-unit small
+goods keep the `gifts` ladder, now correctly separate.
+
+The second answer being **700** rather than 644 is the honest outcome — the
+pack price *is* the deal, and inventing a second discount on top of it was the
+bug, not the fix.
+
+> **Lesson: when a product already prices by quantity (packs, bundles, tiers
+> in the SKU itself), do NOT also apply a percentage ladder to it.** Pick one
+> mechanism per product family. Two discount mechanisms on the same product
+> will always disagree eventually.
+
+Also fixed: the catalogue builder called `this.money()` inside a nested
+`forEach`, where `this` is no longer `NorchaData` — captured the formatter in
+a local first. Prices in the message now carry thousands separators
+(1,600 ETB, not 1600 ETB): a message a customer reads should not look like a
+spreadsheet cell.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.

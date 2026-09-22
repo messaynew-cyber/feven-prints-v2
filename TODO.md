@@ -16,7 +16,7 @@
 
 ## PROGRESS — updated 2026-09-22
 
-**9 of 22 shipped and live on norchaprint.com.**
+**10 of 22 shipped and live on norchaprint.com.**
 
 | ID | Item | State | Commit |
 |---|---|---|---|
@@ -29,8 +29,8 @@
 | T-19 | Amharic font subset (−76.5%) | ✅ shipped | `676d904` |
 | T-18 | gift vouchers (offline codes) | ✅ shipped | `3826be0` |
 | T-20 | counter sheet (/counter.html) | ✅ shipped | `6af1de1` |
-| T-21 | WhatsApp catalogue message | ⬜ next | — |
-| T-10 | draft orders + reorder | ⬜ | — |
+| T-21 | one-tap price catalogue | ✅ shipped | `61c7c9d` |
+| T-10 | draft orders + reorder | ⬜ next | — |
 | T-11 | quote requests (weddings) | ⬜ | — |
 | T-12 | order reference reply | ⬜ | — |
 | T-13 | returns policy | ⛔ blocked [F-4] | — |
