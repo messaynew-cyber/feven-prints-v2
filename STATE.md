@@ -438,6 +438,37 @@ exact, lowercase, no-dash, spaced and mixed formats. Tampering a real 500 ETB
 code into 5000 is rejected. `sw.js` bumped to **v5** — voucher checking must
 work offline.
 
+
+### T-20 — SHIPPED 2026-09-22 (`6af1de1`)
+
+**The shop's own view.** The website is for a customer at home; `/counter.html`
+is for the customer standing in front of Feven. Big type, thin rows, no
+decoration, prints to one A4 sheet.
+
+Shows every product, size and price, the lead time in plain words ("ready the
+same day, orders before 16:00"), the full volume ladder per group, and — the
+most useful line on the sheet — **the next Ethiopian holiday deadline with
+the real order-by date**.
+
+**Verified it cannot drift:** a test walks every price cell and compares it to
+`js/norcha-data.js`. **22 cells, 0 mismatches.** The sheet and the site cannot
+disagree because they read the same file. That is why T-00 exists.
+
+It also states plainly at the top that the prices are **not yet confirmed** —
+the same temporary flag the website carries. Nobody should quote off this
+sheet believing it is final.
+
+Staff-only: `noindex`, disallowed in robots.txt, and a deliberately quiet
+footer link rather than a nav item.
+
+**Bug found by testing:** the sheet called `H.fmt()`, which did not exist —
+date formatting lived on `NorchaDelivery` and counter.html only loads
+`norcha-holidays`. It threw and **blanked the whole sheet**. Fixed twice over:
+`fmt()` now exists on `NorchaHolidays` too (this is the date module), and the
+call site falls back to `toDateString()` — so a missing helper degrades to an
+ugly date instead of an empty page. Same failure class as the blank-page
+regression, but this time it **fails safe**.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
