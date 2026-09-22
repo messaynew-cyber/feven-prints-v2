@@ -1,23 +1,16 @@
-# TOBIA — START HERE · Norcha Print website
+# TOBIA — START HERE · Norcha Print
 
-**Picking this up cold?** Read this file, then `STATE.md`, then `DESIGN.md`. Ten minutes and you will know
-more about this site than the session that handed it to you did.
-
-You are working on a **live client website**: **https://norchaprint.com** (and `www`). Norcha Print is a
-print shop in Bole, Addis Ababa. The client is Feven — the Architect's sister. Real customers order through
-it over WhatsApp, and the WhatsApp path is the *only* way the shop sells online.
-
-🔴 **Every push to `main` is a real deploy to a real business.**
-
-| | |
-|---|---|
-| repo | `messaynew-cyber/feven-prints-v2` · branch `main` · **PUBLIC** |
-| live | https://norchaprint.com · https://www.norchaprint.com |
-| host | Cloudflare Pages, project `norcha-print` |
-| site files | **the repo root** — `index.html` is the entire site (one long page), plus `css/` `js/` `img/` `fonts/` `sw.js` `manifest.webmanifest` `robots.txt` |
-| Adwa's clone | `~/.openclaw/workspace/feven-prints/` (Termux, on this phone) |
+> ## ⚠️ THIS FILE IS NOW HISTORICAL
+>
+> It was written before the 2026-09-22 upgrade session. It is still accurate
+> about the repo, the deploy and the working method — but the plan it refers to
+> has moved on.
+>
+> **Read `CONTINUE-HERE.md` first, then `STATE.md`, then `TODO.md`.**
+> Come back here for the background detail and the hard-won traps.
 
 ---
+
 
 ## 1. You can push this yourself — VERIFIED, not assumed
 

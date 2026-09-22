@@ -4,9 +4,49 @@
 > is not verified it is marked **UNVERIFIED**. Update this file in the same commit as the change it
 > describes — a session that does not update `STATE.md` did not happen.
 >
-> Last updated: **2026-09-21** by `[tobia]` · handover to `[tobia]`.
+> Last updated: **2026-09-22** by `[tobia]` · handover to `[tobia]`.
 
-**Read first:** `TOBIA-START-HERE.md` (how to work here) → this file (what is true) → `DESIGN.md` (the canon).
+**Read first:** `CONTINUE-HERE.md` (where things stand, how to work here) → this file (what is true) → `TODO.md` (the plan) → `DESIGN.md` (the design canon).
+
+---
+
+## 0. SESSION SUMMARY — 2026-09-22 (overnight, `[tobia]`)
+
+**13 of 22 planned upgrades shipped and verified live.** The site went from a
+static page to a working order desk: live pricing, holiday-aware deadlines,
+honest delivery promises, offline vouchers, a staff price sheet and one-tap
+WhatsApp everything.
+
+| Phase | Shipped |
+|---|---|
+| audit | 404.html · sitemap.xml · 64 raw entities fixed · lazy hero slides · 44px tap targets |
+| T-00 | `js/norcha-data.js` — 22 prices, lead times, tiers, `quote()`, `catalogue()` |
+| T-01 | Ethiopian holiday deadline engine |
+| T-02 | volume pricing + live quote in the order form |
+| T-09 | delivery estimator — real date, names the reason when it says no |
+| T-10 | reorder — one-tap form refill |
+| T-11 | event / bulk quote requests |
+| T-12 | order reference reply |
+| T-14 | hreflang (en / am / x-default), in the page and the sitemap |
+| T-17 | 10 FAQ deep links + `FAQPage` schema |
+| T-18 | gift vouchers — offline codes, issue + verify |
+| T-19 | Amharic font subset — **193.7 KB → 45.5 KB** |
+| T-20 | counter sheet `/counter.html` |
+| T-21 | one-tap WhatsApp price catalogue |
+
+**Measured outcomes:** page **19.4% lighter** (~3s faster per cold visit on 3G);
+**22 prices** provably consistent across site, counter sheet and messages;
+**0 → 1** staff-only page; **1 → 10** anchored FAQ answers.
+
+**Everything buildable without the client is done.** The remaining 9 items all
+need input from Feven — see §4 and `TODO.md`.
+
+### Where to read next
+
+- **`CONTINUE-HERE.md`** — how to work here, what is blocked, the traps
+- **`TODO.md`** — the plan and the progress table
+- **`SESSION-2026-09-22.md`** — the mistakes made this session, written down
+  so they are not repeated
 
 ---
 
