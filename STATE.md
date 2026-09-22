@@ -520,6 +520,48 @@ a local first. Prices in the message now carry thousands separators
 (1,600 ETB, not 1600 ETB): a message a customer reads should not look like a
 spreadsheet cell.
 
+
+### T-10 + T-11 + T-12 — SHIPPED 2026-09-22 (`fa364e9`)
+
+**Every remaining item I can build without Feven's prices.** 13 of 22 now live.
+
+**T-10 · Reorder.** Ethiopian print buying is repetitive — the same church,
+the same office, the same school every year. The history only ever offered
+"send again" (the identical message). Now "Order again" **refills the form**.
+
+This required storing the **structured fields**, not just the finished
+WhatsApp text. Refilling from a human-readable string means re-parsing prose,
+which breaks the moment anyone rewords a label. Each record now carries
+product, size, quantity, notes and date alongside the message.
+
+**Deliberately not refilled: name and phone.** Those belong to whoever is
+ordering now, who may not be the person who ordered last time. Verified.
+
+**T-11 · Event quotes.** A 500-print wedding job deserves a different path
+than a mug. Structured enquiry → WhatsApp. It **does not promise a price** —
+when the number depends on the job, quoting one in a chat is a lie. It
+promises a reply. Only "what should we print?" is required, because demanding
+more fields loses the enquiry.
+
+**T-12 · Ask about this order.** No server means no honest order tracking.
+What exists is the reference the form already generates — so one tap quotes it
+back. The honest version of "order status" for a shop on WhatsApp.
+
+---
+
+### 🔴 BUG FIXED — and our own notes predicted it
+
+Every order message opened with **"Hello Feven's Prints"**. The site was
+renamed to Norcha Print on 17 Sep, but the order greeting kept the old name.
+`TOBIA-START-HERE.md` warns about exactly this: *"the brand name appears inside
+the WhatsApp links; a rename needs its own replacement pass."* It never got
+one. Corrected in both languages.
+
+**Deliberately unchanged:** the localStorage keys (`fevens-lang`,
+`fevens-orders`, `fevens-theme`). Renaming them would silently discard every
+returning customer's saved language, theme and order history — a worse outcome
+than a stale key name nobody sees.
+
 ## 5. HOW TO UPDATE THIS FILE
 
 - One row per item, with its **commit hash** when shipped. IDs are stable — never renumber them.
