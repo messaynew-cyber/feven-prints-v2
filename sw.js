@@ -29,7 +29,9 @@
    counter when the signal does not. */
 /* v7: norcha-data.js changed (mug pricing fix + catalogue generator). It is
    precached, so without this bump a returning visitor keeps the old prices. */
-const CACHE = "fevens-v7";
+/* v8: reorder, quote requests and the order-reference reply (T-10/11/12),
+   plus the order-message brand name corrected to Norcha Print. */
+const CACHE = "fevens-v8";
 
 const SHELL = [
   "./",

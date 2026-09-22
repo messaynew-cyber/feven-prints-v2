@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   Feven's Prints — Photo Print Studio, Addis Ababa
+   Norcha Print — Photo Print Studio, Addis Ababa
    Emil craft + Taste discipline. Vanilla. Light theme locked.
    ── Palette (warm-paper override, articulated) ─────────────
    A print shop sells paper. Warm lustre-white surfaces echo the
@@ -1126,3 +1126,67 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
   margin: 0; font-size: 14.5px; line-height: 1.55;
   color: var(--text-soft); max-width: 46ch;
 }
+
+/* ═══════════ ORDER HISTORY: REORDER (T-10) ═══════════ */
+.oh-actions { margin-top: 14px; }
+#orderHistoryList li {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+  padding: 11px 0; border-bottom: 1px solid var(--rule-soft);
+}
+#orderHistoryList li:last-child { border-bottom: 0; }
+.oh-meta { font-size: 13.5px; color: var(--text-soft); line-height: 1.5; }
+.oh-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.oh-send, .oh-reorder {
+  font: inherit; font-size: 13px; font-weight: 660;
+  padding: 8px 14px; min-height: 38px;
+  border-radius: 999px; cursor: pointer;
+  display: inline-flex; align-items: center;
+  text-decoration: none; white-space: nowrap;
+}
+.oh-reorder {
+  background: var(--pine); color: var(--btn-fg); border: 1px solid var(--pine);
+}
+@media (hover: hover) and (pointer: fine) {
+  .oh-reorder:hover { background: var(--pine-deep); }
+}
+.oh-send {
+  background: none; color: var(--ink); border: 1px solid var(--line-strong);
+}
+@media (hover: hover) and (pointer: fine) {
+  .oh-send:hover { border-color: var(--pine); }
+}
+/* the draft strip, shown when a form has been saved */
+.draft-strip {
+  margin-top: 14px; padding: 13px 16px;
+  border: 1px dashed var(--gold-rule); border-radius: 11px;
+  background: color-mix(in srgb, var(--gold-rule) 22%, transparent);
+  font-size: 13.5px; color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+}
+.draft-strip button {
+  font: inherit; font-size: 13px; font-weight: 660; cursor: pointer;
+  padding: 7px 14px; min-height: 36px; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: var(--white); color: var(--ink);
+}
+
+/* ═══════════ QUOTE REQUEST (T-11) ═══════════ */
+.quote-req {
+  margin-top: 30px; padding: 24px 22px 26px;
+  border: 1px solid var(--line-strong); border-radius: 16px;
+  background: var(--white);
+}
+[data-theme="dark"] .quote-req { background: var(--paper-2); }
+.quote-req h3 {
+  font-family: var(--display); font-size: 22px; font-weight: 620;
+  margin: 0 0 7px; letter-spacing: -.012em; color: var(--ink);
+}
+.qr-sub { margin: 0 0 20px; font-size: 14.5px; line-height: 1.6; color: var(--text-soft); }
+.qr-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 16px; margin-bottom: 18px;
+}
+@media (max-width: 720px) { .qr-grid { grid-template-columns: 1fr; } }
+.qr-note { margin: 0 0 16px; font-size: 13.5px; line-height: 1.55; color: var(--text-mute); }
+.qr-note.qr-warn { color: var(--red); font-weight: 620; }

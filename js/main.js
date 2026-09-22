@@ -1,4 +1,4 @@
-/* Feven's Prints — language toggle, nav, reveals */
+/* Norcha Print — language toggle, nav, reveals, order flow */
 (function () {
   "use strict";
 
@@ -346,6 +346,106 @@ var FAMILY_BY_LABEL = {
     }
   })();
 
+  /* ── quote request + order reference reply (T-11, T-12) ──
+     T-11: a 500-print wedding job deserves a different path than a mug.
+     This builds a STRUCTURED enquiry so Feven gets the information she
+     needs to price it, instead of someone guessing what to write.
+
+     It deliberately does not promise a price. When the number depends on
+     the job, promising one in a chat would be a lie.
+
+     T-12: the shop has no server, so there is no honest way to track an
+     order. What there IS, is the reference the form already generates —
+     so the customer gets a one-tap way to quote it back. That is the
+     honest version of "order status" for a shop that runs on WhatsApp. */
+  var QUOTE_COPY = {
+    en: {
+      needWhat: "Tell us what should be printed.",
+      msg: function (f) {
+        var L = ["Hello Norcha Print - I would like a quote."];
+        L.push("");
+        L.push("For: " + f.type);
+        if (f.qty) L.push("How many: about " + f.qty);
+        if (f.what) L.push("What: " + f.what);
+        if (f.date) L.push("Needed by: " + f.date);
+        L.push("");
+        L.push("Please send me a price and a schedule.");
+        return L.join("\n");
+      }
+    },
+    am: {
+      needWhat: "ምን እንደሚታተም ይንገሩን።",
+      msg: function (f) {
+        var L = ["ሰላም ኖርቻ ፕሪንት - የዋጋ ጥያቄ አለኝ።"];
+        L.push("");
+        L.push("ለ: " + f.type);
+        if (f.qty) L.push("ብዛት: በግምት " + f.qty);
+        if (f.what) L.push("ምን: " + f.what);
+        if (f.date) L.push("የሚፈልጉበት ቀን: " + f.date);
+        L.push("");
+        L.push("እባክዎ ዋጋና መርሃግብር ይላኩልኝ።");
+        return L.join("\n");
+      }
+    }
+  };
+
+  (function initQuoteReq() {
+    var send = document.getElementById("qrSend");
+    if (!send || typeof NorchaData === "undefined") return;
+    var note = document.getElementById("qrNote");
+
+    function g(id) {
+      var e = document.getElementById(id);
+      return e && e.value ? e.value.trim() : "";
+    }
+
+    send.addEventListener("click", function () {
+      var lang = (document.documentElement.lang === "am") ? "am" : "en";
+      var L = QUOTE_COPY[lang];
+      var what = g("qr-what");
+
+      /* The only required field is what they want printed. Asking more is
+         fine; forcing more loses the enquiry. */
+      if (!what) {
+        if (note) { note.className = "qr-note qr-warn"; note.textContent = L.needWhat; }
+        var w = document.getElementById("qr-what");
+        if (w) w.focus();
+        return;
+      }
+
+      var msg = L.msg({
+        type: g("qr-type") || "Other",
+        qty:  g("qr-qty"),
+        what: what,
+        date: g("qr-date")
+      });
+      window.open("https://wa.me/" + NorchaData.shop.wa + "?text=" +
+                  encodeURIComponent(msg), "_blank", "noopener");
+    });
+  })();
+
+  /* T-12: reply with an order reference. Finds the most recent reference
+     this device generated and opens a chat quoting it. */
+  (function initRefReply() {
+    var btn = document.getElementById("refReply");
+    if (!btn || typeof NorchaData === "undefined") return;
+    btn.addEventListener("click", function () {
+      var lang = (document.documentElement.lang === "am") ? "am" : "en";
+      var refs = [];
+      try { refs = JSON.parse(localStorage.getItem(ORDER_KEY) || "[]"); } catch (e) {}
+      var ref = (refs && refs[0] && refs[0].ref) ? refs[0].ref : "";
+      var msg = ref
+        ? (lang === "am"
+            ? "ሰላም ኖርቻ ፕሪንት - ስለ ትዕዛዜ ማወቅ እፈልጋለሁ።\n\nማጣቀሻ: " + ref
+            : "Hello Norcha Print - I would like to check on my order.\n\nReference: " + ref)
+        : (lang === "am"
+            ? "ሰላም ኖርቻ ፕሪንት - ስለ ትዕዛዜ ማወቅ እፈልጋለሁ።"
+            : "Hello Norcha Print - I would like to check on my order.");
+      window.open("https://wa.me/" + NorchaData.shop.wa + "?text=" +
+                  encodeURIComponent(msg), "_blank", "noopener");
+    });
+  })();
+
   /* ── one-tap catalogue (T-21) ────────────────────────
      Builds the whole "what do you print?" answer from the price data and
      opens WhatsApp with it. Generated, not typed, so it can never quote a
@@ -636,12 +736,12 @@ var FAMILY_BY_LABEL = {
       try { var raw = localStorage.getItem(ORDER_KEY); return raw ? JSON.parse(raw) : []; } catch (e) { return []; }
     };
     var writeStore = function (list) {
-      try { localStorage.setItem(ORDER_KEY, JSON.stringify(list.slice(0, 5))); } catch (e) {}
+      try { localStorage.setItem(ORDER_KEY, JSON.stringify(list.slice(0, 8))); } catch (e) {}
     };
     var buildMessage = function (ref) {
       var am = lang() === "am";
       var L = [];
-      L.push(am ? "ሰላም የፌቨን ህትመቶች — አዲስ ትዕዛዝ" : "Hello Feven's Prints - new order");
+      L.push(am ? "ሰላም ኖርቻ ፕሪንት — አዲስ ትዕዛዝ" : "Hello Norcha Print - new order");
       if (ref) L.push((am ? "ማጣቀሻ: " : "Reference: ") + ref);
       L.push("");
       L.push((am ? "ምርት: " : "Product: ") + val("of-product"));
@@ -683,24 +783,73 @@ var FAMILY_BY_LABEL = {
       var list = readStore();
       if (!list.length) { box.hidden = true; return; }
       box.hidden = false;
-      var am = lang() === "am";
+      var am = (document.documentElement.lang === "am");
       ul.textContent = "";
       for (var i = 0; i < list.length; i++) {
         var o = list[i];
         var li = document.createElement("li");
+
         var meta = document.createElement("span");
         meta.className = "oh-meta";
         meta.textContent = o.ref + " · " + o.when + " · " + o.summary;
+
+        var btns = document.createElement("span");
+        btns.className = "oh-btns";
+
+        /* T-10: reorder. Ethiopian print buying is repetitive — the same
+           church, office or school every year. One tap refills the form
+           rather than making them type the whole thing again. */
+        if (o.form) {
+          var rb = document.createElement("button");
+          rb.type = "button";
+          rb.className = "oh-reorder";
+          rb.textContent = am ? "እንደገና ዘዝ" : "Order again";
+          rb.addEventListener("click", (function (rec) {
+            return function () { refill(rec); };
+          })(o));
+          btns.appendChild(rb);
+        }
+
         var a = document.createElement("a");
         a.className = "oh-send";
         a.href = ORDER_WA + encodeURIComponent(o.msg || "");
         a.target = "_blank";
         a.rel = "noopener";
-        a.textContent = am ? "እንደገና ላክ" : "Send again";
+        a.textContent = am ? "ላክ" : "Send";
+        btns.appendChild(a);
+
         li.appendChild(meta);
-        li.appendChild(a);
+        li.appendChild(btns);
         ul.appendChild(li);
       }
+    };
+
+    /* Refill the order form from a stored record, then scroll the customer
+       to it. Reordering is only useful if it lands them somewhere they can
+       finish the job. */
+    var refill = function (rec) {
+      if (!rec || !rec.form) return;
+      var f = rec.form;
+      setVal("of-product", f.product);
+      setVal("of-size", f.size);
+      setVal("of-qty", f.qty);
+      setVal("of-notes", f.notes);
+      /* deliberately NOT the name or phone — those belong to the person
+         placing the order now, who may not be the same person */
+      if (typeof renderQuote === "function") renderQuote();
+      if (typeof renderDelivery === "function") renderDelivery();
+      var form = document.getElementById("orderForm");
+      if (form && form.scrollIntoView) {
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    };
+
+    var setVal = function (id, v) {
+      var e = document.getElementById(id);
+      if (!e || v === undefined || v === null) return;
+      e.value = v;
+      e.dispatchEvent(new Event("input", { bubbles: true }));
+      e.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
     form.addEventListener("submit", function (e) {
@@ -728,7 +877,18 @@ var FAMILY_BY_LABEL = {
         ref: ref,
         when: new Date().toLocaleDateString(),
         summary: val("of-product") + (val("of-qty") ? " × " + val("of-qty") : ""),
-        msg: msg
+        msg: msg,
+        /* T-10: keep the STRUCTURED fields too, not just the finished
+           message. Without these, "order again" has nothing to refill from
+           and would have to re-parse a human-readable string — which breaks
+           the moment the wording changes. */
+        form: {
+          product: val("of-product"),
+          size:    val("of-size"),
+          qty:     val("of-qty"),
+          notes:   val("of-notes"),
+          date:    val("of-date")
+        }
       });
       writeStore(list);
       renderHistory();

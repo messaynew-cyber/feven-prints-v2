@@ -642,15 +642,69 @@
       <textarea id="orderText" rows="9" readonly aria-label="Your order"></textarea>
       <div class="order-done-row">
         <button class="btn btn-pill" type="button" id="orderCopy" data-en="Copy order" data-am="ትዕዛዙን ቅዳ">Copy order</button>
+        <!-- T-12: the honest version of "order status" for a shop with no
+             server. It does not claim to track anything — it just quotes the
+             reference back to us in one tap, which is exactly what Feven
+             needs to look the order up. -->
+        <button class="btn btn-pill" type="button" id="refReply"
+                data-en="Ask about this order" data-am="ስለዚህ ትዕዛዝ ጠይቅ">Ask about this order</button>
         <p class="field-hint" data-en="If WhatsApp did not open, copy this and send it to +358 44 2715477." data-am="ዋትስአፕ ካልተከፈተ ይህን ቅድና በ +358 44 2715477 ይላኩ።">If WhatsApp did not open, copy this and send it to +358 44 2715477.</p>
       </div>
     </div>
 
-    <div class="order-history" id="orderHistory" hidden>
+        <!-- ── T-11: quote requests ────────────────────────────────
+         A 500-print wedding job deserves a different path than a mug. This
+         is that path: a structured enquiry instead of making someone guess
+         what to write in a chat. It does NOT promise a price — it promises
+         a reply, which is the honest thing when the number depends on the
+         job. -->
+    <div class="quote-req" id="quoteReq">
+      <h3 data-en="Wedding, event or bulk job?" data-am="ሰርግ፣ ዝግጅት ወይም በከፍተኛ ብዛት?">Wedding, event or bulk job?</h3>
+      <p class="qr-sub" data-en="Tell us what the job is and we will come back to you with a real price and a schedule." data-am="ሥራው ምን እንደሆነ ይንገሩን፤ ትክክለኛ ዋጋና መርሃግብር ይዘን እንመለሳለን።">Tell us what the job is and we will come back to you with a real price and a schedule.</p>
+
+      <div class="qr-grid">
+        <div class="field">
+          <label for="qr-type" data-en="What is it for?" data-am="ለምንድን ነው?">What is it for?</label>
+          <select id="qr-type">
+            <option value="Wedding" data-en="Wedding" data-am="ሰርግ">Wedding</option>
+            <option value="Funeral or memorial" data-en="Funeral or memorial" data-am="ቀብር ወይም መታሰቢያ">Funeral or memorial</option>
+            <option value="Church or religious event" data-en="Church or religious event" data-am="ቤተ ክርስቲያን ወይም ሃይማኖታዊ ዝግጅት">Church or religious event</option>
+            <option value="Graduation" data-en="Graduation" data-am="ምረቃ">Graduation</option>
+            <option value="Office or business" data-en="Office or business" data-am="ቢሮ ወይም ንግድ">Office or business</option>
+            <option value="Other" data-en="Something else" data-am="ሌላ">Something else</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="qr-qty" data-en="Roughly how many?" data-am="በግምት ስንት?">Roughly how many?</label>
+          <input id="qr-qty" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 300">
+        </div>
+        <div class="field">
+          <label for="qr-date" data-en="Needed by" data-am="የሚፈልጉበት ቀን">Needed by</label>
+          <input id="qr-date" type="date">
+        </div>
+        <div class="field">
+          <label for="qr-what" data-en="What should we print?" data-am="ምን እናትም?">What should we print?</label>
+          <input id="qr-what" type="text" placeholder="e.g. 300 prints 15 x 21">
+        </div>
+      </div>
+
+      <p class="qr-note" id="qrNote" aria-live="polite"></p>
+      <button class="btn btn-primary" type="button" id="qrSend" data-en="Ask for a quote on WhatsApp" data-am="በዋትስአፕ ዋጋ ጠይቁ">Ask for a quote on WhatsApp</button>
+    </div>
+
+<div class="order-history" id="orderHistory" hidden>
       <h3 data-en="Your recent orders on this device" data-am="በዚህ መሳሪያ ላይ ያሉ የቅርብ ጊዜ ትዕዛዞች">Your recent orders on this device</h3>
       <p class="field-hint" data-en="Saved in this browser only — nothing is sent to our server." data-am="በዚህ አሳሽ ውስጥ ብቻ ተቀምጧል።">Saved in this browser only — nothing is sent to our server.</p>
+      <!-- ── T-10: draft + reorder ───────────────────────────────
+           Returning customers are the cheapest revenue there is, and
+           Ethiopian print buying is repetitive: the same church, the same
+           office, the same school every year. So the history is not just a
+           record — every entry can be re-ordered in one tap, and a
+           half-filled form can be saved before the photos are ready. -->
       <ul id="orderHistoryList"></ul>
-      <button class="btn btn-pill" type="button" id="orderHistoryClear" data-en="Clear" data-am="አጥፋ">Clear</button>
+      <div class="oh-actions">
+        <button class="btn btn-pill" type="button" id="orderHistoryClear" data-en="Clear history" data-am="ታሪኩን አጥፋ">Clear history</button>
+      </div>
     </div>
   </div>
 </section>
