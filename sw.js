@@ -27,7 +27,9 @@
 /* v6: counter.html added (T-20). It is staff-only and excluded from search,
    but it must still be cached — the whole point is that it works at the
    counter when the signal does not. */
-const CACHE = "fevens-v6";
+/* v7: norcha-data.js changed (mug pricing fix + catalogue generator). It is
+   precached, so without this bump a returning visitor keeps the old prices. */
+const CACHE = "fevens-v7";
 
 const SHELL = [
   "./",

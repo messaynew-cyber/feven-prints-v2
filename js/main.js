@@ -346,6 +346,21 @@ var FAMILY_BY_LABEL = {
     }
   })();
 
+  /* ── one-tap catalogue (T-21) ────────────────────────
+     Builds the whole "what do you print?" answer from the price data and
+     opens WhatsApp with it. Generated, not typed, so it can never quote a
+     price the website does not. */
+  (function initCatalogue() {
+    var btn = document.getElementById("catSend");
+    if (!btn || typeof NorchaData === "undefined") return;
+    btn.addEventListener("click", function () {
+      var lang = (document.documentElement.lang === "am") ? "am" : "en";
+      var text = NorchaData.catalogue(lang);
+      window.open("https://wa.me/" + NorchaData.shop.wa + "?text=" +
+                  encodeURIComponent(text), "_blank", "noopener");
+    });
+  })();
+
   /* ── FAQ deep links (T-17) ──────────────────────────
      Each answer has a stable id now, but a plain id is only half a feature:
      the link has to OPEN the answer and the address bar has to reflect which

@@ -87,7 +87,13 @@
     mugs: {
       label: { en: "Photo mugs", am: "የፎቶ ሙግ" },
       lead: 0,
-      tier: "gifts",
+      /* 🔴 tier: "mugs" is DELIBERATELY its own ladder — a flat one.
+         Mugs already carry pack pricing in `sizes` (1 / 2 / 4 at 350 / 650 /
+         1200). Applying a percentage ladder on top of that double-discounts:
+         "2 mugs" came out as 650 via the 2-pack and 644 via 350×2 −8%. Two
+         prices for one order. So mugs use pack prices ONLY, and the tier
+         below is a flat no-discount ladder that makes that explicit. */
+      tier: "mugs",
       sizes: [
         { key: "mug-1", label: "1 mug",   price: 350 },
         { key: "mug-2", label: "2 mugs",  price: 650 },
@@ -119,7 +125,13 @@
       { min: 2, pct: 8 },
       { min: 5, pct: 15 }
     ],
-    gifts: [                              // mugs and small goods
+    /* Mugs price by the pack, not by a percentage — see the note on
+       `mugs` above. A flat ladder keeps quote() honest for them and leaves
+       this key free for genuinely small goods that are NOT pack-priced. */
+    mugs: [
+      { min: 1, pct: 0 }
+    ],
+    gifts: [                              // small goods that price per unit
       { min: 1, pct: 0 },
       { min: 2, pct: 8 },
       { min: 4, pct: 15 },
@@ -131,6 +143,65 @@
     shop: SHOP,
     products: PRODUCTS,
     tiers: TIERS,
+
+
+    /* ── WhatsApp catalogue (T-21) ────────────────────────────────
+       "What do you print?" is the single most common question this shop
+       gets, and it is currently answered by typing it out again every
+       time. This builds the whole answer as one message that can be sent
+       with one tap, in either language.
+
+       It is generated from the same data as everything else, so a price
+       change updates the website, the counter sheet AND this message at
+       once. Nothing to keep in sync by hand.
+
+       Deliberately written as plain text: WhatsApp has no markdown, so
+       *asterisks* are the only emphasis, and they only work either side
+       of a whole word with no spaces inside. */
+    catalogue: function (lang) {
+      var am = (lang === "am");
+      /* capture the formatter: inside the nested forEach callbacks below,
+         `this` is no longer the NorchaData object. */
+      var money = this.money;
+      var names = {
+        prints:   { en: "Standard prints", am: "መደበኛ ህትመት" },
+        canvas:   { en: "Canvas prints",   am: "የካንቫስ ህትመት" },
+        books:    { en: "Photo books",     am: "የፎቶ መጽሐፍ" },
+        frames:   { en: "Framed prints",   am: "የተከፈፈ ህትመት" },
+        calendars:{ en: "Wall calendars",  am: "የግድግዳ የቀን መቁጠሪያ" },
+        mugs:     { en: "Photo mugs",      am: "የፎቶ ሙግ" }
+      };
+
+      var L = [];
+      L.push(am ? "*ኖርቻ ፕሪንት — ምን እናትማለን*" : "*Norcha Print — what we print*");
+      L.push("");
+      L.push(am ? "ዋጋዎች ከተ.ብ. ተጨማሪ ናቸው።" : "All prices in ETB.");
+      L.push("");
+
+      Object.keys(this.products).forEach(function (key) {
+        var p = this.products[key];
+        L.push("*" + (names[key] ? names[key][am ? "am" : "en"] : p.label.en) + "*");
+        p.sizes.forEach(function (s) {
+          L.push("  " + s.label + " — " + money(s.price));
+        });
+        var tiers = this.tiers[p.tier].filter(function (t) { return t.min > 1; });
+        if (tiers.length) {
+          L.push("  " + (am ? "ቅናሽ" : "Discount") + ": " +
+            tiers.map(function (t) { return t.min + "+ -" + t.pct + "%"; }).join(", "));
+        }
+        L.push("");
+      }, this);
+
+      L.push(am ? "*ማዘዝ*" : "*To order*");
+      L.push(am ? "ፎቶዎችዎን እንደ ሰነድ ይላኩ (እንደ ፎቶ አይደለም) — ጥራቱ እንዲጠበቅ።"
+                : "Send your photos as a Document, not a Photo — that keeps full quality.");
+      L.push(am ? "መጠን እና ብዛት ይንገሩን።" : "Tell us the size and how many.");
+      L.push("");
+      L.push(this.shop.phone + " · " + this.shop.city);
+      L.push(this.shop.hours);
+
+      return L.join("\n");
+    },
 
     /* price for one unit of a specific size */
     priceOf: function (family, key) {
