@@ -18,3 +18,8 @@
 # it is permanent and deliberate, unlike 404 which means "never existed".
 
 /fonts/noto-ethiopic.woff2    /404.html   410
+
+# The single generic share card was replaced by one card per page (build-og-cards.sh).
+# Deleting it from the repo does NOT remove it from Cloudflare — the same lesson the
+# font taught on 2026-09-22. Tombstone it so the removal is real.
+/img/og-card.jpg    /404.html   410
