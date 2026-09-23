@@ -16,7 +16,7 @@
 
 ## PROGRESS — updated 2026-09-22
 
-**13 of 22 shipped and live on norchaprint.com.**
+**15 of 22 shipped and live on norchaprint.com.**
 
 | ID | Item | State | Commit |
 |---|---|---|---|
@@ -34,8 +34,8 @@
 | T-11 | event/bulk quote requests | ✅ shipped | `fa364e9` |
 | T-12 | order reference reply | ✅ shipped | `fa364e9` |
 | T-13 | returns policy | ⛔ blocked [F-4] | — |
-| T-03 | public price list | ⛔ blocked [F-1] | — |
-| T-04 | 6 product pages (0 → 6 indexable URLs) | ⛔ blocked [F-1] | — |
+| T-03 | public price list | 🟡 **partial** — the six product pages carry the full list; a single `/prices` page still waits on real prices | `2ca083e` |
+| T-04 | 6 product pages (0 → 6 indexable URLs) | ✅ **shipped** (1 → 7 URLs) | `2ca083e` |
 | T-05 | greeting cards | ⛔ blocked [F-1] | — |
 | T-06 | wall materials | ⛔ blocked [F-1,F-3] | — |
 | T-07 | calendar range | ⛔ blocked [F-1] | — |
@@ -44,7 +44,8 @@
 | T-16 | Google Business Profile + map pin | ⛔ blocked [F-2] | — |
 
 **Also shipped outside the plan:** 404.html, sitemap.xml, robots, scroll-target fix,
-the blank-page regression hotfix, and the `domtest.js`/`livetest.js` guard.
+the blank-page regression hotfix, the `domtest.js`/`livetest.js` guard, the six product pages (`build-pages.js`
++ `pagetest.js`), and the responsive-image pass (`build-images.sh`).
 
 **Two rules learned the hard way, now in STATE.md:**
 1. `node --check` proves a file *parses*, not that it *works*. A hoisting bug is valid

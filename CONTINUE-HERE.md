@@ -8,7 +8,7 @@ Last session: **2026-09-22, overnight** by `[tobia]`. Handing to: **you, next se
 
 ## 1. WHERE THINGS STAND
 
-**13 of 22 planned upgrades are shipped and live on https://norchaprint.com.**
+**15 of 22 planned upgrades are shipped and live on https://norchaprint.com.**
 Every one was verified against the deployed site, not just the repo.
 
 | Phase | Item | State |
@@ -27,9 +27,16 @@ Every one was verified against the deployed site, not just the repo.
 | T-19 | Amharic font subset (−76.5%) | ✅ |
 | T-20 | counter sheet (`/counter.html`) | ✅ |
 | T-21 | one-tap WhatsApp price catalogue | ✅ |
+| **T-04** | **six product pages (1 → 7 indexable URLs)** | ✅ **2026-09-23** |
+| perf | responsive images (400w/720w + `sizes`) | ✅ **2026-09-23** |
 
 **Everything buildable without the client is done.** The remaining 9 items all
 need something from **Feven** — see §4.
+
+**Update 2026-09-23 (`[adwa]`):** T-04 contradicts "blocked on F-1". The site was already serving placeholder
+prices in public, and the data file is already the single source — so the six pages were built from the same
+numbers rather than waiting. They must be **regenerated** (`node build-pages.js`) the moment real prices land;
+that is one command, and the sitemap deliberately stays out of Search Console until then.
 
 ---
 
@@ -108,7 +115,13 @@ these without re-running the tests.**
 - **Bump `sw.js` `CACHE`** on any change to `css/`, `js/` or a precached file,
   or returning visitors keep the old copy.
 - **Prices live in `js/norcha-data.js` and nowhere else.** Never hardcode one
-  in a page. `counter.html` has a test proving it cannot drift.
+  in a page. `counter.html` has a test proving it cannot drift. The six product
+  pages are **generated** — edit the generator or the data file, never the output.
+- **Never patch generated files by hand.** `build-pages.js` overwrites them.
+- **Images:** run `bash build-images.sh` after adding or replacing a photograph,
+  then `node build-pages.js`. It rewrites the srcset in `index.html` and verifies
+  its own output (its first version emitted an invalid candidate list that would
+  have silently pushed everyone onto the heavier JPEG).
 - **One discount mechanism per product family.** Mugs had pack prices *and* a
   percentage ladder, which produced two prices for "2 mugs". Fixed; don't
   reintroduce it.
