@@ -31,7 +31,7 @@
    precached, so without this bump a returning visitor keeps the old prices. */
 /* v8: reorder, quote requests and the order-reference reply (T-10/11/12),
    plus the order-message brand name corrected to Norcha Print. */
-const CACHE = "fevens-v10";
+const CACHE = "fevens-v11";
 
 const SHELL = [
   "./",
@@ -43,6 +43,7 @@ const SHELL = [
   "./js/norcha-delivery.js",
   "./js/norcha-voucher.js",
   "./js/main.js",
+  "./js/norcha-upload.js",
   "./manifest.webmanifest",
   "./fonts/noto-ethiopic-slim.woff2",
   "./img/icons/icon-192.png",

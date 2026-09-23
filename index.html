@@ -521,6 +521,65 @@
         </ul>
       </aside>
     </div>
+      <!-- ── photo upload ─────────────────────────────────────────
+           🔴 HIDDEN until the server confirms it can actually accept a file
+           (GET /api/upload, see js/norcha-upload.js). A visible upload box
+           that silently fails is worse than no box at all: the customer
+           believes their photographs are in and finds out later that they are
+           not. Until the R2 binding exists this stays hidden and the WhatsApp
+           steps above remain the entire flow — the page is never worse than
+           it was before this feature existed.
+           [FEVEN] New Amharic strings — please proofread: ወይም ከዚህ ይጫኑ ·
+           ፎቶዎችን ይምረጡ · ወደ ስቱዲዮ ላኩ · ፎቶዎችዎ ደርሰዋል · በዋትስአፕ ይቀጥሉ -->
+      <div class="upload-card reveal" id="uploadCard" hidden>
+        <h3 id="upTitle" data-en="Or upload them here" data-am="ወይም ከዚህ ይጫኑ">Or upload them here</h3>
+        <p class="upload-sub" id="upSub" data-en="The same originals, straight from your phone, and you keep the chat." data-am="ዋናዎቹ ፋይሎች ከስልክዎ በቀጥታ።">The same originals, straight from your phone, and you keep the chat.</p>
+        <form id="uploadForm" novalidate>
+          <div class="upload-grid">
+            <div class="field">
+              <label for="upName" id="upNameL" data-en="Your name" data-am="ስምዎ">Your name</label>
+              <input id="upName" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="upPhone" id="upPhoneL" data-en="Phone" data-am="ስልክ">Phone</label>
+              <input id="upPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required>
+            </div>
+            <div class="field">
+              <label for="upProduct" id="upProductL" data-en="What is it for?" data-am="ለምንድን ነው?">What is it for?</label>
+              <select id="upProduct" name="product"><option value="" data-en="Not sure yet" data-am="እርግጠኛ አልሆንኩም">Not sure yet</option></select>
+            </div>
+            <div class="field">
+              <label for="upSize" id="upSizeL" data-en="Size, if you know it" data-am="መጠን (ካወቁ)">Size, if you know it</label>
+              <input id="upSize" name="size" type="text" placeholder="30 × 40 cm">
+            </div>
+            <div class="field">
+              <label for="upQty" id="upQtyL" data-en="How many" data-am="ብዛት">How many</label>
+              <input id="upQty" name="qty" type="number" min="1" step="1" inputmode="numeric" placeholder="1">
+            </div>
+            <div class="field">
+              <label for="upNote" id="upNoteL" data-en="Anything else? (optional)" data-am="ተጨማሪ መረጃ (አማራጭ)">Anything else? (optional)</label>
+              <textarea id="upNote" name="note" rows="2" placeholder="Paper, finish, framing…"></textarea>
+            </div>
+          </div>
+          <div class="upload-files">
+            <input id="upFiles" name="photos" type="file" accept="image/*" multiple>
+            <label class="btn btn-outline" for="upFiles" id="upFilesL" data-en="Choose photos" data-am="ፎቶዎችን ይምረጡ">Choose photos</label>
+            <span class="upload-list" id="upFileList" aria-live="polite"></span>
+            <span class="upload-pct" id="upPct" hidden></span>
+          </div>
+          <input class="hp" id="upWebsite" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="upload-state" id="upState" hidden aria-live="polite"></p>
+          <button class="btn btn-primary" id="upSend" type="submit" data-en="Send to the studio" data-am="ወደ ስቱዲዮ ላኩ">Send to the studio</button>
+          <p class="upload-privacy" id="upPrivacy" data-en="Your photos go straight to the studio. We use them only to print your order, and delete them 30 days after you collect it." data-am="ፎቶዎችዎ በቀጥታ ወደ ስቱዲዮ ይሄዳሉ። ለህትመት ብቻ እንጠቀማለን፤ ትዕዛዙን ከወሰዱ ከ30 ቀን በኋላ እናጠፋለን።">Your photos go straight to the studio. We use them only to print your order, and delete them 30 days after you collect it.</p>
+        </form>
+        <div class="upload-done" id="upDone" hidden>
+          <h4 id="upDoneTitle" data-en="Your photos arrived" data-am="ፎቶዎችዎ ደርሰዋል">Your photos arrived</h4>
+          <p class="upload-code" id="upCode"></p>
+          <p id="upDoneBody" data-en="Quote this reference on WhatsApp and we will pick it up from there." data-am="ይህን ቁጥር በዋትስአፕ ይንገሩን።">Quote this reference on WhatsApp and we will pick it up from there.</p>
+          <a class="btn btn-primary" id="upDoneCta" href="#order" data-en="Continue on WhatsApp" data-am="በዋትስአፕ ይቀጥሉ">Continue on WhatsApp</a>
+          <button class="btn btn-outline" id="upAgain" type="button" data-en="Send another batch" data-am="ተጨማሪ ላኩ">Send another batch</button>
+        </div>
+      </div>
     <div class="channel-row reveal d2">
       <a class="btn btn-primary" href="https://wa.me/358442715477?text=Hello%20Norcha%20Print%20-%20I%27d%20like%20to%20print%20some%20photos." target="_blank" rel="noopener">WhatsApp</a>
       <a class="btn btn-pill" href="tel:+358442715477">+358 44 2715477</a>
@@ -973,6 +1032,7 @@
 <script src="js/norcha-delivery.js"></script>
 <script src="js/norcha-voucher.js"></script>
 <script src="js/main.js"></script>
+<script src="js/norcha-upload.js"></script>
 <button class="to-top" id="toTop" type="button" aria-label="Back to top">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
