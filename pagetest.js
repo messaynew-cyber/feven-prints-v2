@@ -187,6 +187,25 @@ for (const [file, slug] of PAGES) {
       ready.toISOString().slice(0, 10));
   }
 
+  /* 7b. the FAQ shown and the FAQ declared to Google must be the same list.
+     A page whose schema promises answers the page does not show is a small lie
+     that search engines notice. */
+  const shown = [...d.querySelectorAll("details.faq[id]")].map(x => x.id);
+  const declared = [];
+  blocks.forEach(b => {
+    try {
+      const o = JSON.parse(b.textContent);
+      if (o["@type"] === "FAQPage") (o.mainEntity || []).forEach(q => declared.push(q.name));
+    } catch (e) {}
+  });
+  const answered = [...d.querySelectorAll("details.faq[id] > p")].map(x => x.textContent.trim());
+  check(file, "FAQ answers are not empty", answered.length > 0 && answered.every(a => a.length > 10), answered.length + " answers");
+  check(file, "every FAQ answer is in the schema", declared.length === shown.length,
+    shown.length + " shown vs " + declared.length + " declared");
+  check(file, "FAQ has product-specific entries", shown.length >= 6, shown.length + " questions");
+  const amFaq = [...d.querySelectorAll("details.faq[id] > p")].filter(x => !x.hasAttribute("data-am")).length;
+  check(file, "FAQ answers are bilingual", amFaq === 0, amFaq + " without Amharic");
+
   /* 8. markup balance. jsdom silently tolerates a stray </div> and the
      browser just moves the structure around, so a broken close tag can look
      fine in every other check here — it shifted the price block on top of the

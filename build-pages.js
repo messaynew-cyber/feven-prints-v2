@@ -638,9 +638,74 @@ function tierTable(p) {
   ].join("\n");
 }
 
-function faqBlock(p) {
-  var items = p.faq.map(function (k) {
+/* ── per-product FAQ (ifolor answers these per family; we had one shared set) ──
+   Every answer here is one of two things, and nothing else:
+     (a) arithmetic on js/norcha-data.js — sizes, prices, lead times; or
+     (b) copy already approved on the site.
+   A product page is exactly where someone invents a claim about a machine the
+   shop does not own, so the rule for this function is: if it cannot be derived
+   or quoted, it does not go in.
+
+   New Amharic in here is on the [FEVEN] proofread list. The size lists and
+   prices are numbers and units, so they are language-neutral by construction. */
+function pickPixels(label) {
+  /* "80 × 120 cm" → the pixels a 300 dpi print of that size needs. Pure
+     arithmetic, so it cannot be wrong about a photo we have not seen. */
+  var m = String(label).match(/(\d+(?:\.\d+)?)\s*×\s*(\d+(?:\.\d+)?)/);
+  if (!m) return null;
+  var px = function (cm) { return Math.round(cm / 2.54 * 300 / 50) * 50; };
+  return { w: px(parseFloat(m[1])), h: px(parseFloat(m[2])) };
+}
+function productFaqs(p) {
+  var fam = D.products[p.family];
+  var sizes = fam.sizes.map(function (x) { return x.label; }).join(" · ");
+  var prices = fam.sizes.map(function (x) { return x.price; });
+  var low = Math.min.apply(null, prices), high = Math.max.apply(null, prices);
+  var big = fam.sizes[fam.sizes.length - 1];
+  var px = pickPixels(big.label);
+  var lead = fam.lead === 0
+    ? ["the same day, if you order before " + D.shop.cutoffHour + ":00",
+       "በዚያው ቀን፣ ከ" + D.shop.cutoffHour + ":00 በፊት ካዘዙ"]
+    : ["in " + fam.lead + "–" + (fam.lead + 1) + " working days",
+       "በ" + fam.lead + "–" + (fam.lead + 1) + " የስራ ቀን"];
+  var tiers = (D.tiers[fam.tier] || []).filter(function (t) { return t.min > 1; });
+
+  var list = [
+    { id: "sizes-" + p.slug,
+      q: ["Which sizes do " + p.name[0].toLowerCase() + " come in?", "የሚገኙት መጠኖች ምን ናቸው?"],
+      a: [sizes + ".", sizes + "።"] },
+    { id: "price-" + p.slug,
+      q: ["How much does it cost?", "ዋጋው ስንት ነው?"],
+      a: ["From " + D.money(low) + " to " + D.money(high) + ", depending on size." +
+          (tiers.length ? " More than one gets a discount: " +
+            tiers.map(function (t) { return t.min + "+ items, " + t.pct + "% off"; }).join("; ") + "." : "") +
+          " Prices depend on paper and finish — we confirm the exact price when you order.",
+          "ከ" + moneyAm(low) + " እስከ " + moneyAm(high) + "፣ እንደ መጠኑ። ዋጋው እንደ ወረቀቱና አጨራረሱ ይለያያል፤ ሲያዙ እናረጋግጣለን።"] },
+    { id: "turnaround-" + p.slug,
+      q: ["How long does it take?", "ምን ያህል ጊዜ ይወስዳል?"],
+      a: [p.name[0] + " are ready " + lead[0] + ".", p.name[1] + " " + lead[1] + " ዝግጁ ይሆናሉ።"] }
+  ];
+  if (px) {
+    list.push({ id: "resolution-" + p.slug,
+      q: ["What size photo file do I need for the largest one?", "ለትልቁ መጠን ምን ያህል ፋይል ያስፈልጋል?"],
+      a: ["For " + big.label + " at 300 dpi you would need about " + px.w.toLocaleString("en-US") +
+          " × " + px.h.toLocaleString("en-US") + " pixels, which no phone camera makes — that is normal for large prints. " +
+          "Send the biggest original you have, as a Document rather than a Photo, and we will tell you honestly " +
+          "how it will look at that size before we print it.",
+          "ለ" + big.label + " በ300 dpi ወደ " + px.w.toLocaleString("en-US") + " × " + px.h.toLocaleString("en-US") +
+          " ፒክሰል ያስፈልጋል። የሚገኘውን ትልቁን ዋና ፋይል እንደ ሰነድ ይላኩ፤ ከማተም በፊት እንዴት እንደሚመስል በእውነት እንነግርዎታለን።"] });
+  }
+  /* then the approved site answers, so the product page still carries the
+     things every customer needs: files, payment, delivery/handling */
+  p.faq.filter(function (k) { return k !== "how-fast-can-i-get-my-prints"; }).slice(0, 3).forEach(function (k) {
     var f = FAQ_POOL[k];
+    list.push({ id: f.id, q: f.q, a: f.a });
+  });
+  return list;
+}
+
+function faqBlock(p) {
+  var items = productFaqs(p).map(function (f) {
     return [
       '      <details class="faq reveal reveal-scale" id="' + f.id + '">',
       '        <summary data-en="' + attr(f.q[0]) + '" data-am="' + attr(f.q[1]) + '">' + esc(f.q[0]) + '</summary>',
@@ -652,7 +717,7 @@ function faqBlock(p) {
     '<section class="section section-tint" id="faq">',
     '  <div class="wrap">',
     '    <p class="am-eye">ጥያቄዎች</p>',
-    '    <h2 class="section-h reveal reveal-blur" data-en="Common questions" data-am="ተደጋጋሚ ጥያቄዎች">Common questions</h2>',
+    '    <h2 class="section-h reveal reveal-blur" data-en="' + attr(p.name[0] + " — questions") + '" data-am="ጥያቄዎች">' + esc(p.name[0] + " — questions") + '</h2>',
     '    <div class="faq-list reveal d1">',
     items,
     '    </div>',
@@ -720,9 +785,9 @@ function faqSchema(p) {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "inLanguage": "en",
-    "mainEntity": p.faq.map(function (k) {
-      return { "@type": "Question", "name": FAQ_POOL[k].q[0],
-               "acceptedAnswer": { "@type": "Answer", "text": FAQ_POOL[k].a[0] } };
+    "mainEntity": productFaqs(p).map(function (f) {
+      return { "@type": "Question", "name": f.q[0],
+               "acceptedAnswer": { "@type": "Answer", "text": f.a[0] } };
     })
   };
 }

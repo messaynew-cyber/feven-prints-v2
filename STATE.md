@@ -162,6 +162,17 @@ says nothing about what happens to them has not earned the pictures.
   with no assertion on the replacement), so the guard existed and was never called. Both fixed, and the guard is
   now positive-controlled: reintroducing the bug fails the build with exit 1.
 
+### T-FAQ — per-product questions ✅ **SHIPPED 2026-09-23**
+Each product page now answers its own questions instead of sharing one generic set: **which sizes**, **what it costs**
+(with the volume ladder), **how long it takes** (from the lead time in the data file), and **what file size the
+largest piece needs** — that last one is arithmetic (300 dpi) plus an honest promise: *send the biggest original as
+a Document and we will tell you how it will look at that size before we print it.* Three already-approved site
+answers (files, payment, delivery) fill out the set.
+- **Rule this function follows:** an answer is either derived from `js/norcha-data.js` or quoted from approved copy.
+  A product page is exactly where someone invents a claim about a machine the shop does not own.
+- **The page and the `FAQPage` schema come from ONE function**, so they cannot disagree, and `pagetest.js` now
+  asserts that: shown questions == declared questions, answers non-empty, all bilingual, ≥6 per page.
+
 ### T1 — were actively costing orders
 | ID | Item | State |
 |---|---|---|
