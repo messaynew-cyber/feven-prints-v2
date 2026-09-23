@@ -75,6 +75,12 @@
         if (!d || !d.configured) return;
         card.hidden = false;
         card.setAttribute("data-ready", "1");
+        /* 🔴 .reveal is opacity:0 until main.js's IntersectionObserver adds
+           .in. This card does not exist in the layout at boot (it is hidden
+           until this very moment), so relying on the observer is how a
+           perfectly good form ends up invisible — the exact failure this
+           project has already shipped twice. Reveal it explicitly. */
+        card.classList.add("in");
         buildProductOptions();
       })
       .catch(function () { /* stays hidden */ });

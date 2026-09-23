@@ -1272,3 +1272,8 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
 .upload-done p { font-size: 15px; line-height: 1.6; color: var(--text-soft); }
 .upload-done .btn { margin-right: 10px; margin-top: 6px; }
 @media (max-width: 720px) { .upload-card { padding: 22px 18px 20px; } }
+
+/* the upload card is revealed by js/norcha-upload.js the moment the server
+   confirms it can take a file, so its entrance must not depend on an
+   observer that ran before it existed */
+#uploadCard.in { opacity: 1; transform: none; }
