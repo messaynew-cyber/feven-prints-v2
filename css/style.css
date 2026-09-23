@@ -583,12 +583,22 @@ h1, h2 { font-weight: 560; letter-spacing: -0.008em; }
 .tibeb-wrap.in > .tibeb, .tibeb-wrap.in > .tibeb-div { transform:none; }
 
 /* slimmer woven divider between sections, one colour per section, cycling */
-.tibeb-div { height:12px; background-repeat:repeat-x; background-position:left center; background-size:auto 12px; }
+/* ── the woven section dividers ───────────────────────────────────────
+   These were stroked in the FLAG colours — a saturated green in particular
+   reads as sportswear, not as cloth, and cycling green/gold/red down the page
+   turned the section rhythm into a sequence of coloured rules. They now use
+   the three DYED tones the ceremonial selvedge already uses (deep emerald,
+   antique gold, oxblood), are thinner, and sit slightly translucent, so they
+   read as one woven thread on paper rather than three brands of stripe.
+   The flag itself is still carried, once, by the selvedge — where it is a
+   piece of ceremony rather than a repeating border. */
+.tibeb-div { height:9px; background-repeat:repeat-x; background-position:left center;
+  background-size:auto 9px; opacity:.9; }
 
 
-.tibeb-div.g { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23078930' stroke-width='1.6'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }
-.tibeb-div.y { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23B98A16' stroke-width='1.6'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }
-.tibeb-div.r { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23B3261E' stroke-width='1.6'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }.tibeb-foot { margin-bottom:34px; }
+.tibeb-div.g { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%2317532F' stroke-width='1.25'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }
+.tibeb-div.y { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%23B8912F' stroke-width='1.25'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }
+.tibeb-div.r { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='12' viewBox='0 0 18 12'%3E%3Cg fill='none' stroke='%237E211C' stroke-width='1.25'%3E%3Cpath d='M4.5 1.4l3.2 3.2-3.2 3.2L1.3 4.6z'/%3E%3Cpath d='M13.5 1.4l3.2 3.2-3.2 3.2-3.2-3.2z'/%3E%3C/g%3E%3C/svg%3E"); }.tibeb-foot { margin-bottom:34px; }
 .hero .tibeb-wrap { margin-bottom:26px; }
 /* gold hairline under section headings instead of the neutral rule */
 .section-h { border-bottom-color:var(--gold-rule); }
