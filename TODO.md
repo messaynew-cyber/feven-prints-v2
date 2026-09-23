@@ -16,7 +16,7 @@
 
 ## PROGRESS — updated 2026-09-22
 
-**15 of 22 shipped and live on norchaprint.com.**
+**18 of 22 shipped and live on norchaprint.com** (13 plan items + product pages + price list + upload + trust set).
 
 | ID | Item | State | Commit |
 |---|---|---|---|
@@ -34,6 +34,7 @@
 | T-11 | event/bulk quote requests | ✅ shipped | `fa364e9` |
 | T-12 | order reference reply | ✅ shipped | `fa364e9` |
 | T-13 | returns policy | ⛔ blocked [F-4] | — |
+| T-16 | Google Business Profile + map pin | ⛔ blocked [F-2] — `/contact` now says the address is pending, honestly | — |
 | T-03 | public price list | 🟡 **partial** — the six product pages carry the full list; a single `/prices` page still waits on real prices | `2ca083e` |
 | T-04 | 6 product pages (0 → 6 indexable URLs) | ✅ **shipped** (1 → 7 URLs) | `2ca083e` |
 | T-05 | greeting cards | ⛔ blocked [F-1] | — |

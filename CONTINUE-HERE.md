@@ -8,7 +8,7 @@ Last session: **2026-09-22, overnight** by `[tobia]`. Handing to: **you, next se
 
 ## 1. WHERE THINGS STAND
 
-**15 of 22 planned upgrades are shipped and live on https://norchaprint.com.**
+**18 of 22 planned upgrades are shipped and live on https://norchaprint.com.**
 Every one was verified against the deployed site, not just the repo.
 
 | Phase | Item | State |
@@ -29,6 +29,8 @@ Every one was verified against the deployed site, not just the repo.
 | T-21 | one-tap WhatsApp price catalogue | ✅ |
 | **T-04** | **six product pages (1 → 7 indexable URLs)** | ✅ **2026-09-23** |
 | perf | responsive images (400w/720w + `sizes`) | ✅ **2026-09-23** |
+| upload | photo intake → R2, order codes, Telegram ping | ✅ **2026-09-23** |
+| trust | `/privacy` `/contact` `/about` | ✅ **2026-09-23** |
 
 **Everything buildable without the client is done.** The remaining 9 items all
 need something from **Feven** — see §4.
