@@ -173,6 +173,15 @@ answers (files, payment, delivery) fill out the set.
 - **The page and the `FAQPage` schema come from ONE function**, so they cannot disagree, and `pagetest.js` now
   asserts that: shown questions == declared questions, answers non-empty, all bilingual, ≥6 per page.
 
+### ACCESSIBILITY STATEMENT ✅ **SHIPPED 2026-09-23**
+`/accessibility` — and it is written to be TRUE rather than reassuring: it states what is built in (skip link, focus
+rings, 44px targets, ordered headings, alt text, carousel announcements that never fire on autoplay), the contrast
+numbers **as measured** (14.9 / 16.2 body, and so on), reduced-motion behaviour, and the Ethiopic typeface.
+Then it says what we have **not** done: **no external audit, so no formal WCAG conformance is claimed**, the small
+gold Amharic accents on cream sit near the contrast floor, and the photo upload depends on the browser's own file
+picker. It ends with how to report a failure and the offer to take the order by phone instead — which is how most
+orders happen anyway. A false "WCAG AA compliant" badge would have been the easiest thing in this repo to fake.
+
 ### T1 — were actively costing orders
 | ID | Item | State |
 |---|---|---|

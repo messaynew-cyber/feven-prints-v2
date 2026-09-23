@@ -261,7 +261,7 @@ for (const [file, slug] of PAGES) {
    These are the pages a customer reads when they are deciding whether to
    trust a stranger with their family photographs. A broken one is worse than
    a missing one, so they get the same treatment as the product pages. */
-const TRUST = [["privacy.html", "privacy"], ["contact.html", "contact"], ["about.html", "about"], ["order.html", "order"]];
+const TRUST = [["privacy.html", "privacy"], ["contact.html", "contact"], ["about.html", "about"], ["order.html", "order"], ["accessibility.html", "accessibility"]];
 TRUST.forEach(function (pair) {
   const [file, slug] = pair;
   if (!fs.existsSync(path.join(ROOT, file))) { failures++; console.log("  ✗ " + file + " · MISSING — run build-pages.js"); return; }

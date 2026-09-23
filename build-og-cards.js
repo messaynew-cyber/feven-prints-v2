@@ -91,6 +91,12 @@ const CARDS = [
     url: "norchaprint.com/order"
   },
   {
+    slug: "accessibility", img: null,
+    title: ["Accessibility", "ተደራሽነት"],
+    sub: "What works, what we measured, and how to tell us when it fails.",
+    url: "norchaprint.com/accessibility"
+  },
+  {
     slug: "privacy", img: null,
     title: ["Your photos, handled properly", "ፎቶዎችዎ በአግባቡ"],
     sub: "Private bucket, deleted after 30 days, never sold.",

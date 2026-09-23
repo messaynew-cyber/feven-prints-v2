@@ -364,6 +364,14 @@ TRUST_STRINGS.order = {
   script: "norcha-order.js"
 };
 
+TRUST_STRINGS.accessibility = {
+  slug: "accessibility", file: "accessibility.html",
+  title: ["Accessibility", "ተደራሽነት"],
+  lead: ["What works, what we have measured, and what still needs fixing.",
+         "የሚሰራው፣ የለካነው እና የሚስተካከል ያለው።"],
+  desc: "How accessible the Norcha Print website is: measured contrast, keyboard support, screen-reader behaviour, and how to report a problem."
+};
+
 function privacySections() {
   var R = [
     ["What we collect when you upload photos",
@@ -418,6 +426,52 @@ function orderSections() {
      ["It looks like NOR-ABC123 and appeared on screen when you sent your photos. If you cannot find it, " +
       "message us on WhatsApp with your name and we will look it up for you.",
       "NOR-ABC123 ይመስላል። ካጡት በዋትስአፕ ስምዎን ይላኩልን፣ እኛ እንፈልግልዎታለን።"]]
+  ];
+}
+
+/* An accessibility statement that says what is TRUE. It would be easy to claim
+   WCAG 2.2 AA and be done; we have not had an external audit, so claiming it
+   would be a lie of exactly the kind this project keeps refusing to tell.
+   Instead: what we built, the numbers we actually measured, the known weak
+   spots, and a way to report a problem. */
+function accessibilitySections() {
+  return [
+    ["What we have built in",
+     "ያካተትነው",
+     ["A skip link that appears first when you press Tab. Visible focus rings on every interactive element. " +
+      "Touch targets of at least 44 by 44 pixels. Every photograph has a written description. Headings run in " +
+      "order, so a screen reader can navigate by them. The carousel announces \u201cslide 2 of 3\u201d when you change " +
+      "it by keyboard, swipe or button — but never while it moves on its own.",
+      "የመዝለል ማስፈንጠሪያ፣ የሚታይ የትኩረት ምልክት፣ ቢያንስ 44 ፒክሰል የንክኪ መጠን፣ ለእያንዳንዱ ፎቶ ጽሑፋዊ መግለጫ እና በቅደም ተከተል የተደረደሩ አርዕስት።"]],
+    ["Text you can actually read",
+     "በቀላሉ የሚነበብ ጽሑፍ",
+     ["Body text is at least 4.5 to 1 against its background, measured rather than assumed: 14.9 in the light " +
+      "theme and 16.2 in the dark one. Price tables are 16.1 and 14.8. Buttons are 8.0 and 6.4.",
+      "የጽሑፍ ጥቅስ ጥምርታ ቢያንስ 4.5 ለ1 ነው፤ በብርሃን 14.9፣ በጨለማ 16.2።"]],
+    ["Motion and flashing",
+     "እንቅስቃሴ",
+     ["If your device asks for reduced motion, every animation and transition on this site is switched off and the " +
+      "carousel stops moving by itself. Nothing on this site flashes.",
+      "መሳሪያዎ እንቅስቃሴን እንዲቀንስ ከጠየቀ ሁሉም እንቅስቃሴ ይቆማል። የሚብራ ነገር የለም።"]],
+    ["Amharic and English",
+     "አማርኛና እንግሊዝኛ",
+     ["The site works in both, and the Amharic is set in a proper Ethiopic typeface rather than falling back to " +
+      "whatever the device happens to have. Screen readers are told which language is on screen when you switch.",
+      "ገጹ በሁለቱም ቋንቋ ይሰራል፤ አማርኛው በተገቢው የኢትዮጵያ ፊደል ተቀምጧል።"]],
+    ["What we have NOT done",
+     "ያላደረግነው",
+     ["We have not had an outside accessibility audit, so we do not claim formal conformance with WCAG. We know two " +
+      "weak spots: the small gold Amharic accents on the cream background sit close to the contrast floor, and the " +
+      "photo upload depends on your browser's own file picker, which no website can control. Text at the smallest " +
+      "size is fine, but not generous.",
+      "የውጭ ኦዲት አላደረግንም፤ ስለዚህ መደበኛ ማረጋገጫ አንጠይቅም። ሁለት ድክመቶችን እናውቃለን።"]],
+    ["Tell us when it fails",
+     "ችግር ካገኙ",
+     ["If any part of this site is unusable for you — with a screen reader, with large text, by keyboard, or by voice — " +
+      "message us on WhatsApp or call " + D.shop.phone + ". You do not need to explain what a WCAG guideline is. " +
+      "If we cannot make it work, we will take your order over the phone instead, which is how most of our orders " +
+      "happen anyway.",
+      "የማይሰራ ክፍል ካገኙ በዋትስአፕ ያግኙን ወይም ይደውሉ፦ " + D.shop.phone + "። ትዕዛዙን በስልክም እንወስዳለን።"]]
   ];
 }
 
@@ -604,7 +658,8 @@ function trustPages() {
     [TRUST_STRINGS.privacy, privacySections(), ""],
     [TRUST_STRINGS.contact, contactSections(), ""],
     [TRUST_STRINGS.about, aboutSections(), ""],
-    [TRUST_STRINGS.order, orderSections(), orderLookupHtml()]
+    [TRUST_STRINGS.order, orderSections(), orderLookupHtml()],
+    [TRUST_STRINGS.accessibility, accessibilitySections(), ""]
   ];
   return conf.map(function (pair) {
     var cfg = pair[0];
@@ -1042,7 +1097,7 @@ if (!CHECK) {
     '    <xhtml:link rel="alternate" hreflang="en" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="am" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="x-default" href="' + DOMAIN + '/"/>\n  </url>'];
-  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"], ["order", "0.4", "yearly"]]
+  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"], ["order", "0.4", "yearly"], ["accessibility", "0.3", "yearly"]]
     .concat(PAGES.map(function (p) { return [p.slug, "0.8", "monthly"]; })).forEach(function (row) {
     var u = DOMAIN + "/" + row[0];
     urls.push('<url>\n    <loc>' + u + '</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>' + row[2] + '</changefreq>\n    <priority>' + row[1] + '</priority>\n' +
@@ -1057,7 +1112,7 @@ if (!CHECK) {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
     '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n  ' +
     urls.join("\n  ") + '\n</urlset>\n', "utf8");
-  written.push("sitemap.xml (" + (PAGES.length + 6) + " urls)");
+  written.push("sitemap.xml (" + (PAGES.length + 7) + " urls)");
 }
 
 console.log((CHECK ? "CHECK " : "BUILT ") + PAGES.length + " product pages:");
