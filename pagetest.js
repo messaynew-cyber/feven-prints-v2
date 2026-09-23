@@ -238,10 +238,45 @@ for (const [file, slug] of PAGES) {
   console.log("  · " + file + ": " + cells.length + " prices, " + (errors.length ? errors.length + " ERRORS" : "clean"));
 })();
 
+/* ── the trust set: privacy / contact / about ──────────────────────────
+   These are the pages a customer reads when they are deciding whether to
+   trust a stranger with their family photographs. A broken one is worse than
+   a missing one, so they get the same treatment as the product pages. */
+const TRUST = [["privacy.html", "privacy"], ["contact.html", "contact"], ["about.html", "about"]];
+TRUST.forEach(function (pair) {
+  const [file, slug] = pair;
+  if (!fs.existsSync(path.join(ROOT, file))) { failures++; console.log("  ✗ " + file + " · MISSING — run build-pages.js"); return; }
+  const { dom, errors } = load(file);
+  const d = dom.window.document;
+  check(file, "runtime errors", errors.length === 0, errors.join(" | "));
+  const reveals = d.querySelectorAll(".reveal");
+  let hidden = 0;
+  reveals.forEach(r => { if (!r.classList.contains("in")) hidden++; });
+  check(file, "reveal elements visible", reveals.length > 0 && hidden === 0, hidden + " hidden");
+  check(file, "exactly one h1", d.querySelectorAll("h1").length === 1, String(d.querySelectorAll("h1").length));
+  const canon = d.querySelector('link[rel="canonical"]');
+  check(file, "canonical /" + slug, canon && canon.getAttribute("href") === "https://norchaprint.com/" + slug, canon && canon.getAttribute("href"));
+  const hre = [...d.querySelectorAll('link[rel="alternate"]')].length;
+  check(file, "bilingual hreflang declared", hre === 3, String(hre));
+  const types = [...d.querySelectorAll('script[type="application/ld+json"]')].map(b => { try { return JSON.parse(b.textContent)["@type"]; } catch (e) { check(file, "JSON-LD parses", false, e.message); return "?"; } });
+  check(file, "schema BreadcrumbList", types.indexOf("BreadcrumbList") !== -1, types.join(","));
+  const noAm = [...d.querySelectorAll("[data-en]")].filter(n => !n.hasAttribute("data-am")).length;
+  check(file, "all EN strings have AM", noAm === 0, String(noAm));
+  // a page of prose is only useful if the prose is actually there
+  const paras = d.querySelectorAll(".prose-block p");
+  check(file, "has readable content", paras.length >= 6, String(paras.length) + " paragraphs");
+  const bal = markupBalance(fs.readFileSync(path.join(ROOT, file), "utf8"));
+  check(file, "markup balanced", bal.unclosed.length === 0 && bal.bad.length === 0,
+    (bal.unclosed.join(",") || "-") + " / " + (bal.bad.join(",") || "-"));
+  dom.window.close();
+  console.log("  · " + file + ": " + paras.length + " paragraphs, " + reveals.length + " reveals, " + (errors.length ? errors.length + " ERRORS" : "clean"));
+});
+
 /* the sitemap must advertise every page, or the pages exist for nobody */
 const sm = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 PAGES.forEach(([, slug]) => check("sitemap.xml", "advertises /" + slug, sm.indexOf("https://norchaprint.com/" + slug) !== -1));
 check("sitemap.xml", "advertises /prices", sm.indexOf("https://norchaprint.com/prices") !== -1);
+TRUST.forEach(([, slug]) => check("sitemap.xml", "advertises /" + slug, sm.indexOf("https://norchaprint.com/" + slug) !== -1));
 
 console.log(failures === 0 ? "\nALL PRODUCT PAGES PASS" : "\n" + failures + " FAILURE(S) — DO NOT PUSH");
 process.exit(failures === 0 ? 0 : 1);

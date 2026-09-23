@@ -319,6 +319,222 @@ function renderPrices() {
   return head + "\n" + body;
 }
 
+/* ── 3c. the trust set: privacy, contact, about ──────────────────────────
+   Written because the site now takes names, phone numbers AND photographs.
+   A shop that asks for a customer's pictures and says nothing about what
+   happens to them has not earned the pictures.
+
+   Every claim here is checkable against the code or the live setup:
+   the R2 lifecycle rule really does delete uploads 30 days after they arrive
+   (so the wording says 30 days from sending, not from collection — the
+   difference matters and the old copy got it wrong); there really are no
+   advertising trackers; the order history really is on the customer's device.
+   Nothing here promises a policy the client has not decided — the refund
+   question stays in her column. */
+var TRUST_STRINGS = {
+  privacy: {
+    slug: "privacy", file: "privacy.html",
+    title: ["Privacy", "ግላዊነት"],
+    lead: ["What happens to your photos and your number, in plain language.",
+           "ፎቶዎችዎና ስልክ ቁጥርዎ ምን ይሆናሉ — በቀላል ቋንቋ።"],
+    desc: "What Norcha Print collects when you order or upload photos, where it is kept, how long we keep it, and how to have it deleted."
+  },
+  contact: {
+    slug: "contact", file: "contact.html",
+    title: ["Contact", "አግኙን"],
+    lead: ["Call, message, or send photos — whichever is easiest.",
+           "ይደውሉ፣ ይላኩ ወይም ፎቶ ይላኩ — ለእርስዎ የሚቀለውን ይምረጡ።"],
+    desc: "How to reach Norcha Print in Bole, Addis Ababa: phone, WhatsApp, opening hours, and how to send your photos."
+  },
+  about: {
+    slug: "about", file: "about.html",
+    title: ["The studio", "ስቱዲዮው"],
+    lead: ["A family print studio in Bole, printing the photographs people actually keep.",
+           "በቦሌ የሚገኝ የቤተሰብ ህትመት ስቱዲዮ።"],
+    desc: "Norcha Print is a family-run photo printing studio in Bole, Addis Ababa — prints, canvas, photo books, calendars, frames and mugs."
+  }
+};
+
+function privacySections() {
+  var R = [
+    ["What we collect when you upload photos",
+     "ፎቶ ሲጭኑ የምንሰበስበው",
+     ["The photographs you choose, your name, your phone number, and anything you type in the notes or size fields. " +
+      "Nothing else. We do not ask for an email address and we do not create an account.",
+      "የመረጡት ፎቶዎች፣ ስምዎ፣ ስልክ ቁጥርዎ እና በማስታወሻ ወይም በመጠን ሳጥን የጻፉት። ከዚህ በላይ ምንም አይደለም።"]],
+    ["Where it goes",
+     "የሚቀመጥበት ቦታ",
+     ["Uploaded photos are stored on Cloudflare's servers, in a private bucket that only this studio can read. " +
+      "They are not published, not indexed by search engines, and there is no public link to them.",
+      "የተጫኑ ፎቶዎች በCloudflare ሰርቨር ላይ በግል ቦታ ይቀመጣሉ። ለህዝብ አይታዩም፣ በፍለጋ ሞተሮችም አይገኙም።"]],
+    ["How long we keep them",
+     "ምን ያህል ጊዜ እንይዛቸዋለን",
+     ["Thirty days after you send them, the files are deleted automatically. " +
+      "If you want them gone sooner, call or message us and we will delete them that day — you do not need a reason.",
+      "ከላኩ ከ30 ቀን በኋላ ፋይሎቹ በራስ-ሰር ይሰረዛሉ። ቶሎ እንዲሰረዙ ከፈለጉ ይደውሉልን ወይም ይላኩልን፣ በዚያው ቀን እናጠፋለን።"]],
+    ["What we never do",
+     "ፈጽሞ የማንሰራው",
+     ["We do not sell your photographs or your number. We do not use your photographs to advertise anything. " +
+      "We do not put them in a catalogue, on social media, or in an example for another customer.",
+      "ፎቶዎችዎን ወይም ቁጥርዎን አንሸጥም። ፎቶዎችዎን ለማስታወቂያ አንጠቀምባቸውም። በሶሻል ሚዲያም አናወጣም።"]],
+    ["WhatsApp",
+     "ዋትስአፕ",
+     ["If you send photos on WhatsApp instead, that conversation lives on WhatsApp and is covered by their privacy policy as well as ours. " +
+      "We keep the chat for as long as we need it to print your order.",
+      "በዋትስአፕ ከላኩ ውይይቱ በዋትስአፕ ላይ ይቀመጣል። ለትዕዛዙ የሚያስፈልገንን ያህል እንይዘዋለን።"]],
+    ["On your own device",
+     "በራስዎ መሳሪያ ላይ",
+     ["Your language choice, light or dark theme, and a list of the references you have ordered are saved " +
+      "in your own browser, so the site remembers you. They never leave your phone.",
+      "የቋንቋ ምርጫዎ፣ ገጽታው እና የትዕዛዝ ቁጥሮችዎ በራስዎ አሳሽ ውስጥ ይቀመጣሉ። ከስልክዎ አይወጡም።"]],
+    ["Cookies and tracking",
+     "ኩኪዎችና ᭡ክት ማድረግ",
+     ["There are no advertising cookies and no trackers on this site. We are not currently measuring traffic " +
+      "at all — if that changes, it will be a privacy-friendly count, not a profile of you.",
+      "በዚህ ገጽ ላይ የማስታወቂያ ኩኪዎች ወይም ᭡ክተሮች የሉም። አሁን ጉብኝቶችን አንለካም።"]]
+  ];
+  return R;
+}
+
+function contactSections() {
+  return [
+    ["Call or message",
+     "ይደውሉ ወይም ይላኩ",
+     ["Phone and WhatsApp: " + D.shop.phone + ". This is the fastest way to reach us and the way most orders happen.",
+      "ስልክና ዋትስአፕ፦ " + D.shop.phone + "። በጣም ፈጣኑ መንገድ ይህ ነው።"]],
+    ["Opening hours",
+     "የስራ ሰዓት",
+     [D.shop.hours + ". Same-day printing is possible for most products if you order before " + D.shop.cutoffHour + ":00.",
+      D.shop.hours + "። ከ" + D.shop.cutoffHour + ":00 በፊት ካዘዙ በዚያው ቀን ማተም ይቻላል።"]],
+    ["Where we are",
+     "የምንገኝበት",
+     ["Bole, Addis Ababa. We are a working studio rather than a shopfront on a main road, so ask us for the exact " +
+      "location and we will send it to you on WhatsApp. A map pin is coming once it is confirmed.",
+      "ቦሌ፣ አዲስ አበባ። ትክክለኛውን አድራሻ ስልክ ይጠይቁን፣ በዋትስአፕ እንልክልዎታለን።"]],
+    ["Send your photos",
+     "ፎቶዎችዎን ይላኩ",
+     ["Use the upload box on the home page, or send them on WhatsApp as a Document — not as a Photo, because " +
+      "WhatsApp shrinks photos and a shrunk photo prints soft.",
+      "በዋናው ገጽ ላይ ያለውን መጫኛ ይጠቀሙ፣ ወይም በዋትስአፕ እንደ ሰነድ ይላኩ — እንደ ፎቶ አይደለም።"]]
+  ];
+}
+
+function aboutSections() {
+  return [
+    ["What we do",
+     "የምናደርገው",
+     ["We print photographs: standard prints, gallery-wrapped canvas, photo books, wall calendars, framed prints " +
+      "and photo mugs. Most orders are ready the same day if they come in before " + D.shop.cutoffHour + ":00.",
+      "ፎቶዎችን እናትማለን፦ መደበኛ ህትመት፣ ካንቫስ፣ የፎቶ መጽሐፍ፣ የግድግዳ የቀን መቁጠሪያ፣ በፍሬም የተዘጋጁ እና ሙግ።"]],
+    ["Who we are",
+     "እኛ ማን ነን",
+     ["A family-run studio in Bole. The person who answers your message is the person who prints your order — " +
+      "which is why we care whether the colours came out right.",
+      "በቦሌ የሚገኝ የቤተሰብ ስቱዲዮ። መልእክትዎን የሚመልሰው ሰው ትዕዛዙን የሚያትም ሰው ነው።"]],
+    ["Two languages, on purpose",
+     "ሁለት ቋንቋ፣ በሆን ተብሎ",
+     ["This site works in English and Amharic, and the Amharic is not an afterthought bolted on at the end. " +
+      "Most printing in Addis happens in Amharic — it should be as good as the English.",
+      "ይህ ገጽ በእንግሊዝኛና በአማርኛ ይሰራል። አማርኛው በኋላ ላይ የተጨመረ አይደለም።"]],
+    ["If something is wrong",
+     "ስህተት ካለ",
+     ["If the mistake is ours, we reprint it at no cost — that is already the answer in our FAQ and it is the answer here. " +
+      "Bring it back and tell us what happened.",
+      "ስህተቱ የእኛ ከሆነ በነፃ እንደግመዋለን። ይዘው ይምጡና ይንገሩን።"]]
+  ];
+}
+
+function renderStaticPage(cfg, sections, schemas) {
+  var url = DOMAIN + "/" + cfg.slug;
+  var body = [
+    '<!DOCTYPE html>', '<html lang="en" data-lang-default="en">', '<head>',
+    '<meta charset="UTF-8">',
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '<title>' + esc(cfg.title[0]) + ' | Norcha Print</title>',
+    '<meta name="description" content="' + attr(cfg.desc) + '">',
+    '<meta name="theme-color" content="#F8F4EE" id="metaThemeColor">',
+    '<meta name="color-scheme" content="light dark">',
+    THEME_SCRIPT,
+    '<meta name="mobile-web-app-capable" content="yes">',
+    '<link rel="manifest" href="/manifest.webmanifest">',
+    '<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">',
+    '<link rel="canonical" href="' + url + '">',
+    '<link rel="alternate" hreflang="en" href="' + url + '">',
+    '<link rel="alternate" hreflang="am" href="' + url + '">',
+    '<link rel="alternate" hreflang="x-default" href="' + url + '">',
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="Norcha Print">',
+    '<meta property="og:title" content="' + attr(cfg.title[0] + " — Norcha Print") + '">',
+    '<meta property="og:description" content="' + attr(cfg.desc) + '">',
+    '<meta property="og:url" content="' + url + '">',
+    '<meta property="og:image" content="' + DOMAIN + '/img/og-card.jpg">',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="twitter:image" content="' + DOMAIN + '/img/og-card.jpg">',
+    schemas.map(ldJson).join("\n"),
+    '<link rel="icon" href="/img/icons/icon-192.png">',
+    '<link rel="stylesheet" href="/css/style.css">',
+    '</head>',
+    '<body>',
+    '<a class="skip" href="#mainContent">Skip to content</a>',
+    '<div class="print-only"><h2>' + esc(cfg.title[0] + " — Norcha Print") + '</h2>',
+    '<p>' + esc(D.shop.phone) + ' · ' + esc(D.shop.city) + ' · ' + esc(D.shop.hours) + '</p></div>',
+    '<div class="progress" id="progress" aria-hidden="true"></div>',
+    NAV,
+    '<main id="top">',
+    '<div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>',
+    '<section class="section" id="mainContent">',
+    '  <div class="wrap">',
+    '    <nav class="crumbs" aria-label="Breadcrumb">',
+    '      <a href="/" data-en="Home" data-am="መግቢያ">Home</a><span aria-hidden="true">/</span>',
+    '      <span data-en="' + attr(cfg.title[0]) + '" data-am="' + attr(cfg.title[1]) + '">' + esc(cfg.title[0]) + '</span></nav>',
+    '    <p class="am-eye">' + esc(cfg.title[1]) + '</p>',
+    '    <h1 class="section-h reveal reveal-blur" data-en="' + attr(cfg.title[0]) + '" data-am="' + attr(cfg.title[1]) + '">' + esc(cfg.title[0]) + '</h1>',
+    '    <p class="lead reveal" data-en="' + attr(cfg.lead[0]) + '" data-am="' + attr(cfg.lead[1]) + '">' + esc(cfg.lead[0]) + '</p>',
+    '    <div class="prose">',
+    sections.map(function (sec, i) {
+      return '      <div class="prose-block reveal' + (i ? " d" + Math.min(i, 3) : "") + '">\n' +
+        '        <h2 data-en="' + attr(sec[0]) + '" data-am="' + attr(sec[1]) + '">' + esc(sec[0]) + '</h2>\n' +
+        sec[2].map(function (p) {
+          return '        <p data-en="' + attr(p[0]) + '" data-am="' + attr(p[1]) + '">' + esc(p[0]) + '</p>';
+        }).join("\n") + '\n      </div>';
+    }).join("\n"),
+    '    </div>',
+    '    <div class="prod-cta reveal" style="margin-top:32px">',
+    '      <a class="btn btn-primary" href="https://wa.me/' + D.shop.wa + '" target="_blank" rel="noopener" data-en="Message us on WhatsApp" data-am="በዋትስአፕ ያግኙን">Message us on WhatsApp</a>',
+    '      <a class="btn btn-outline" href="tel:+' + D.shop.wa + '" data-en="Call the studio" data-am="ይደውሉ">Call the studio</a>',
+    '    </div>',
+    '  </div>',
+    '</section>',
+    relatedBlock({ file: cfg.file }),
+    '</main>',
+    FOOTER,
+    '<script src="/js/norcha-data.js"></script>',
+    '<script src="/js/main.js"></script>',
+    TO_TOP,
+    '</body>', '</html>', ''
+  ].join("\n");
+  return body;
+}
+
+function trustPages() {
+  var conf = [
+    [TRUST_STRINGS.privacy, privacySections()],
+    [TRUST_STRINGS.contact, contactSections()],
+    [TRUST_STRINGS.about, aboutSections()]
+  ];
+  return conf.map(function (pair) {
+    var cfg = pair[0];
+    var crumbs = { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN + "/" },
+      { "@type": "ListItem", "position": 2, "name": cfg.title[0], "item": DOMAIN + "/" + cfg.slug } ] };
+    var local = { "@context": "https://schema.org", "@type": "LocalBusiness", "name": "Norcha Print",
+      "url": DOMAIN + "/", "telephone": "+358442715477", "priceRange": "ETB 25 - ETB 4,600",
+      "currenciesAccepted": "ETB", "paymentAccepted": "Cash, Telebirr, Bank transfer",
+      "address": { "@type": "PostalAddress", "addressLocality": "Bole, Addis Ababa", "addressCountry": "ET" } };
+    return { cfg: cfg, html: renderStaticPage(cfg, pair[1], [crumbs, local]) };
+  });
+}
+
 /* ── 4. verification: every reused string must exist on index.html ───── */
 var problems = [];
 function mustExist(s, where) {
@@ -659,13 +875,22 @@ if (CHECK) { written.push("prices.html (checked, " + nPrices + " prices)"); }
 else { fs.writeFileSync(path.join(ROOT, "prices.html"), pricesOut, "utf8");
        written.push("prices.html (" + nPrices + " prices, " + pricesOut.length + " bytes)"); }
 
+/* ── 6c. write the trust set ─────────────────────────────────────────── */
+var TRUST_PAGES_OUT = trustPages();
+TRUST_PAGES_OUT.forEach(function (t) {
+  if (CHECK) { written.push(t.cfg.file + " (checked)"); return; }
+  fs.writeFileSync(path.join(ROOT, t.cfg.file), t.html, "utf8");
+  written.push(t.cfg.file + " (" + t.html.length + " bytes)");
+});
+
 /* ── 7. sitemap ──────────────────────────────────────────────────────── */
 if (!CHECK) {
   var urls = ['<url>\n    <loc>' + DOMAIN + '/</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n' +
     '    <xhtml:link rel="alternate" hreflang="en" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="am" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="x-default" href="' + DOMAIN + '/"/>\n  </url>'];
-  [["prices", "0.9", "monthly"]].concat(PAGES.map(function (p) { return [p.slug, "0.8", "monthly"]; })).forEach(function (row) {
+  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"]]
+    .concat(PAGES.map(function (p) { return [p.slug, "0.8", "monthly"]; })).forEach(function (row) {
     var u = DOMAIN + "/" + row[0];
     urls.push('<url>\n    <loc>' + u + '</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>' + row[2] + '</changefreq>\n    <priority>' + row[1] + '</priority>\n' +
       '    <xhtml:link rel="alternate" hreflang="en" href="' + u + '"/>\n' +
@@ -679,7 +904,7 @@ if (!CHECK) {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
     '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n  ' +
     urls.join("\n  ") + '\n</urlset>\n', "utf8");
-  written.push("sitemap.xml (" + (PAGES.length + 2) + " urls)");
+  written.push("sitemap.xml (" + (PAGES.length + 5) + " urls)");
 }
 
 console.log((CHECK ? "CHECK " : "BUILT ") + PAGES.length + " product pages:");

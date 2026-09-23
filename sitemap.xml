@@ -22,6 +22,33 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/prices"/>
   </url>
   <url>
+    <loc>https://norchaprint.com/contact</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/contact"/>
+  </url>
+  <url>
+    <loc>https://norchaprint.com/about</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/about"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/about"/>
+  </url>
+  <url>
+    <loc>https://norchaprint.com/privacy</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/privacy"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/privacy"/>
+  </url>
+  <url>
     <loc>https://norchaprint.com/standard-prints</loc>
     <lastmod>2026-09-23</lastmod>
     <changefreq>monthly</changefreq>
