@@ -213,7 +213,7 @@
             </div>
           </div>
           <figure class="hero-media">
-            <picture><source type="image/webp" srcset="img/photobook-400.webp 400w, img/photobook-720.webp 720w, img/photobook.webp 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw"><img fetchpriority="high" src="img/photobook.jpg" srcset="img/photobook-400.jpg 400w, img/photobook-720.jpg 720w, img/photobook.jpg 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw" alt="Hardcover photo book with a printed landscape cover on a linen surface" width="1024" height="1024" decoding="async"></picture>
+            <picture><source type="image/webp" srcset="img/photobook-400.webp 400w, img/photobook-720.webp 720w, img/photobook.webp 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw"><img fetchpriority="high" src="img/photobook.jpg" srcset="img/photobook-400.jpg 400w, img/photobook-720.jpg 720w, img/photobook.jpg 1024w" sizes="(max-width: 860px) 100vw, 50vw" alt="Hardcover photo book with a printed landscape cover on a linen surface" width="1024" height="1024" decoding="async"></picture>
           </figure>
         </div>
       </article>
@@ -562,11 +562,18 @@
             </div>
           </div>
           <div class="upload-files">
-            <input id="upFiles" name="photos" type="file" accept="image/*" multiple>
-            <label class="btn btn-outline" for="upFiles" id="upFilesL" data-en="Choose photos" data-am="ፎቶዎችን ይምረጡ">Choose photos</label>
+            <!-- The input carries `hidden` and is opened by the button below.
+                 A label-for-input pair depends on a stylesheet arriving to stop
+                 the native control rendering as a second "Choose files" button;
+                 hidden does not. Belt and braces: see .upload-files CSS too. -->
+            <input id="upFiles" name="photos" type="file" accept="image/*" multiple hidden>
+            <button class="btn btn-outline" type="button" id="upFilesBtn" data-en="Choose photos" data-am="ፎቶዎችን ይምረጡ">Choose photos</button>
+            <button class="btn btn-quiet" type="button" id="upClear" data-en="Clear" data-am="አጽዳ" hidden>Clear</button>
             <span class="upload-list" id="upFileList" aria-live="polite"></span>
             <span class="upload-pct" id="upPct" hidden></span>
           </div>
+          <p class="upload-hint" id="upHint" data-en="No photos chosen yet — JPG, PNG or HEIC, up to 25 MB each." data-am="እስካሁን ፎቶ አልተመረጠም። JPG፣ PNG ወይም HEIC፣ እያንዳንዱ እስከ 25 MB።">No photos chosen yet — JPG, PNG or HEIC, up to 25 MB each.</p>
+          <ul class="upload-thumbs" id="upThumbs" aria-label="Selected photos"></ul>
           <input class="hp" id="upWebsite" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
           <p class="upload-state" id="upState" hidden aria-live="polite"></p>
           <button class="btn btn-primary" id="upSend" type="submit" data-en="Send to the studio" data-am="ወደ ስቱዲዮ ላኩ">Send to the studio</button>

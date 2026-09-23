@@ -129,9 +129,14 @@ if i != -1:
     end = idx.index(">", i)
     tag = idx[start:end + 1]
     if "fetchpriority" not in tag and "loading=" not in tag:
-        idx = idx[:start] + tag.replace("<img ", '<img fetchpriority="high" ', 1) + idx[end + 1:]
+        fixed = tag.replace("<img ", '<img fetchpriority="high" ', 1)
+        # the hero is half-width on desktop, not a grid cell: give it the hero
+        # sizes so it picks the same candidate the preload declares. Mismatched
+        # sizes made the browser preload one file and then request another.
+        fixed = re.sub(r'sizes="[^"]*"', 'sizes="%s"' % HERO_SIZES, fixed)
+        idx = idx[:start] + fixed + idx[end + 1:]
         io.open("index.html", "w", encoding="utf-8").write(idx)
-        print("  ✓ hero image marked fetchpriority=high (first slide only)")
+        print("  ✓ hero image marked fetchpriority=high with hero sizes (first slide only)")
 
 # 4. refuse to ship a malformed candidate list
 bad = re.findall(r'srcset="[^"]*srcset=', idx)

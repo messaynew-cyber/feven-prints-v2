@@ -28,7 +28,7 @@ dom.window.matchMedia = function (q) {
 };
 
 // inject the three scripts in order
-["js/norcha-data.js", "js/norcha-holidays.js", "js/main.js"].forEach(f => {
+["js/norcha-data.js", "js/norcha-holidays.js", "js/main.js", "js/norcha-upload.js"].forEach(f => {
   const s = dom.window.document.createElement("script");
   s.textContent = fs.readFileSync(f, "utf8");
   try {

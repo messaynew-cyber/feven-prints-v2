@@ -27,6 +27,11 @@
     qty:     ["How many", "ብዛት"],
     note:    ["Anything else? (optional)", "ተጨማሪ መረጃ (አማራጭ)"],
     files:   ["Choose photos", "ፎቶዎችን ይምረጡ"],
+    clear:   ["Clear", "አጽዳ"],
+    hint:    ["No photos chosen yet — JPG, PNG or HEIC, up to 25 MB each.",
+              "እስካሁን ፎቶ አልተመረጠም። JPG፣ PNG ወይም HEIC፣ እያንዳንዱ እስከ 25 MB።"],
+    off:     ["Uploads are not switched on at the moment. Please send your photos on WhatsApp — that always works.",
+              "መጫኑ አሁን አይሰራም። እባክዎ ፎቶዎችዎን በዋትስአፕ ይላኩ።"],
     chosen:  ["chosen", "ተመርጠዋል"],
     send:    ["Send to the studio", "ወደ ስቱዲዮ ላኩ"],
     sending: ["Sending…", "በመላክ ላይ…"],
@@ -68,7 +73,10 @@
     if (!card || !form) return;
 
     /* Ask first. Silence is not consent — only an explicit "configured" shows
-       the box. A network failure keeps it hidden. */
+       the box. A network failure keeps it hidden. An environment with no fetch
+       at all (an ancient browser, or jsdom in the test harness) simply never
+       sees the card, which is the same safe answer. */
+    if (typeof fetch !== "function") return;
     fetch("/api/upload", { headers: { accept: "application/json" } })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
       .then(function (d) {
@@ -90,19 +98,59 @@
     var state = el("upState");
     var btn = el("upSend");
 
+    /* Thumbnails, because "did my photos attach?" is the question that decides
+       whether anyone trusts this form. A count alone does not answer it. */
+    var objectUrls = [];
+    function paintThumbs(files) {
+      var box = el("upThumbs");
+      objectUrls.forEach(function (u) { URL.revokeObjectURL(u); });
+      objectUrls = [];
+      if (!box) return;
+      box.innerHTML = "";
+      files.slice(0, 6).forEach(function (f) {
+        if (!/^image\//.test(f.type || "")) return;
+        var url = URL.createObjectURL(f);
+        objectUrls.push(url);
+        var li = document.createElement("li");
+        var img = document.createElement("img");
+        img.src = url; img.alt = f.name; img.loading = "lazy"; img.decoding = "async";
+        li.appendChild(img);
+        box.appendChild(li);
+      });
+    }
+
     function paintFiles() {
       var files = input.files ? Array.prototype.slice.call(input.files) : [];
-      if (!files.length) { list.textContent = ""; return; }
-      var bytes = files.reduce(function (n, f) { return n + f.size; }, 0);
-      list.textContent = files.length + " " + t("chosen") + " · " + (bytes / 1048576).toFixed(1) + " MB";
+      var hint = el("upHint");
+      var clearBtn = el("upClear");
       var tooBig = files.filter(function (f) { return f.size > MAX_PER_FILE; });
       var wrong = files.filter(function (f) {
         return !(OK_TYPE.test(f.type || "") || (OK_EXT.test(f.name || "") && !f.type));
       });
       state.textContent = tooBig.length || wrong.length ? t("errBig") : "";
       state.hidden = !(tooBig.length || wrong.length);
+      if (!files.length) {
+        list.textContent = "";
+        if (hint) { hint.hidden = false; }
+        if (clearBtn) clearBtn.hidden = true;
+        paintThumbs([]);
+        return;
+      }
+      var bytes = files.reduce(function (n, f) { return n + f.size; }, 0);
+      list.textContent = files.length + " " + t("chosen") + " · " + (bytes / 1048576).toFixed(1) + " MB";
+      if (hint) hint.hidden = true;
+      if (clearBtn) clearBtn.hidden = false;
+      paintThumbs(files);
     }
     input.addEventListener("change", paintFiles);
+
+    /* the button opens the picker; `hidden` on the input means no stylesheet is
+       required to stop a native second picker appearing */
+    if (el("upFilesBtn")) el("upFilesBtn").addEventListener("click", function () { input.click(); });
+    if (el("upClear")) el("upClear").addEventListener("click", function () {
+      try { input.value = ""; } catch (e) {}
+      paintFiles();
+    });
 
     /* keep the labels following the EN/አማ switch */
     var segs = document.querySelectorAll(".seg");
@@ -113,7 +161,9 @@
           pair(el("upNameL"), "name"); pair(el("upPhoneL"), "phone");
           pair(el("upProductL"), "product"); pair(el("upSizeL"), "size");
           pair(el("upQtyL"), "qty"); pair(el("upNoteL"), "note");
-          pair(el("upFilesL"), "files"); pair(el("upPrivacy"), "privacy");
+          pair(el("upFilesBtn"), "files"); pair(el("upPrivacy"), "privacy");
+          pair(el("upClear"), "clear"); pair(el("upHint"), "hint");
+          if (!input.files || !input.files.length) paintFiles();
           if (btn && !btn.disabled) btn.textContent = t("send");
           paintFiles();
         }, 0);
@@ -134,7 +184,13 @@
 
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
-      if (card.getAttribute("data-ready") !== "1") return;
+      var state0 = el("upState");
+      if (card.getAttribute("data-ready") !== "1") {
+        /* Never a silent return. A click that does nothing is the worst
+           possible answer — the customer just taps send again and gives up. */
+        if (state0) { state0.textContent = t("off"); state0.hidden = false; }
+        return;
+      }
 
       var files = input.files ? Array.prototype.slice.call(input.files) : [];
       var name = (el("upName").value || "").trim();
@@ -208,6 +264,8 @@
         form.reset();
         list.textContent = "";
         state.hidden = true;
+        paintThumbs([]);
+        paintFiles();
       });
     }
   }
