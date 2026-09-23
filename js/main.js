@@ -558,7 +558,13 @@ var FAMILY_BY_LABEL = {
   (function () {
     var boot = document.getElementById("boot");
     if (!boot) return;
+    var shown = (window.performance && performance.now) ? performance.now() : Date.now();
+    var MIN_MS = 700;            /* long enough to read the wordmark, short enough
+                                    not to be a toll booth on a site this small */
+    var now = function () { return (window.performance && performance.now) ? performance.now() : Date.now(); };
     var dismiss = function () {
+      var waited = now() - shown;
+      if (waited < MIN_MS) { setTimeout(dismiss, MIN_MS - waited + 20); return; }
       boot.classList.add("boot--done");
       setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 500);
     };
