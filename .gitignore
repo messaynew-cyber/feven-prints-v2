@@ -20,3 +20,6 @@ domout.txt
 # jsdom is a dev-only test dependency; node_modules is not deployed
 package.json
 package-lock.json
+
+# generated OG card sources (the JPGs in img/og/ are what ships)
+.ogtmp/

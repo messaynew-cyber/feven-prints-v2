@@ -279,6 +279,49 @@ TRUST.forEach(function (pair) {
   console.log("  · " + file + ": " + paras.length + " paragraphs, " + reveals.length + " reveals, " + (errors.length ? errors.length + " ERRORS" : "clean"));
 });
 
+/* ── share cards ────────────────────────────────────────────────────────
+   A page can point at a card that does not exist, or at a card of the wrong
+   size, and nothing on the page breaks — the preview is just cropped, blank
+   or missing when someone pastes the link, which is precisely when it matters.
+   So: every page that ships must name a card that exists, at 1200x630. */
+function jpegSize(file) {
+  const b = fs.readFileSync(file);
+  if (b[0] !== 0xFF || b[1] !== 0xD8) return null;          // not a JPEG
+  let i = 2;
+  while (i < b.length - 9) {
+    if (b[i] !== 0xFF) { i++; continue; }
+    const marker = b[i + 1];
+    const len = b.readUInt16BE(i + 2);
+    if (marker >= 0xC0 && marker <= 0xCF && marker !== 0xC4 && marker !== 0xC8 && marker !== 0xCC) {
+      return { h: b.readUInt16BE(i + 5), w: b.readUInt16BE(i + 7) };
+    }
+    i += 2 + len;
+  }
+  return null;
+}
+{
+  const withCards = [["index.html", "home"]].concat(PAGES).concat([["prices.html", "prices"]]).concat(TRUST);
+  let checked = 0;
+  withCards.forEach(function (pair) {
+    const [file, slug] = pair;
+    if (!fs.existsSync(path.join(ROOT, file))) return;
+    const html = fs.readFileSync(path.join(ROOT, file), "utf8");
+    const m = html.match(/property="og:image" content="([^"]+)"/);
+    check(file, "declares a share card", !!m, "no og:image");
+    if (!m) return;
+    const want = "https://norchaprint.com/img/og/" + slug + ".jpg";
+    check(file, "share card is its own", m[1] === want, m[1] + " (expected " + want + ")");
+    const local = path.join(ROOT, m[1].replace("https://norchaprint.com/", ""));
+    if (!fs.existsSync(local)) { check(file, "share card file exists", false, local); return; }
+    const size = jpegSize(local);
+    check(file, "share card is 1200x630", !!size && size.w === 1200 && size.h === 630,
+      size ? size.w + "x" + size.h : "unreadable");
+    check(file, "twitter card matches", html.indexOf('name="twitter:image" content="' + m[1] + '"') !== -1);
+    checked++;
+  });
+  console.log("  · share cards: " + checked + " page(s) point at a valid 1200x630 card");
+}
+
 /* the sitemap must advertise every page, or the pages exist for nobody */
 const sm = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 PAGES.forEach(([, slug]) => check("sitemap.xml", "advertises /" + slug, sm.indexOf("https://norchaprint.com/" + slug) !== -1));
