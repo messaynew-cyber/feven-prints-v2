@@ -143,6 +143,29 @@ these without re-running the tests.**
 
 ---
 
+## 4b. THE UPLOAD PATH — built, and switched off on purpose
+
+`functions/api/upload.js` + `js/norcha-upload.js` + `uploadtest.mjs`. The customer picks photos on the site,
+they go to R2 at full quality, and they get an order code (`NOR-XXXXXX`) to quote on WhatsApp.
+
+**It is dormant until the bucket is bound, and that is deliberate:**
+- the card inside *Send us your photos* asks `GET /api/upload` first and stays hidden unless the server says it
+  can take a file. **Never show an upload box that cannot deliver** — a customer who believes their photos
+  arrived and finds out later that they did not has lost something we cannot give back.
+- `uploadtest.mjs` covers the refusals, the honeypot, the rate limit, and the rule that a broken bucket must
+  raise an error rather than return a fake success.
+
+**To switch it on (dashboard, no code change):**
+1. Cloudflare → R2 → enable it (free tier is 10 GB) → create bucket `norcha-uploads`
+2. Pages → project `norcha-print` → Settings → Functions → **R2 bucket bindings** → variable name **`UPLOADS`**
+3. Optional but wanted: `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` secrets so the shop is pinged on arrival
+4. Optional: an R2 lifecycle rule deleting the `u/` prefix after **30 days** — the page promises 30 days, and
+   this rule is the thing that makes that promise true rather than aspirational
+5. Re-run the deploy (any push, or Re-run in Actions) so the binding takes effect
+
+Then verify: `curl -s https://norchaprint.com/api/upload` should say `"configured":true`, and one real
+test upload should land in the bucket **and** arrive on Telegram.
+
 ## 5. FILE MAP
 
 ```

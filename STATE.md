@@ -127,6 +127,24 @@ has NOT been submitted to Search Console** — deliberately, until Feven confirm
 indexes a wrong number. Product-page copy that is *new* Amharic (the ready-date line, "Volume discounts") is
 still awaiting Feven's proofread.
 
+### UPLOAD — photo intake ✅ **SHIPPED DORMANT 2026-09-23** (`b6a368d`) · ⛔ **switched OFF pending one dashboard binding**
+`functions/api/upload.js` (Cloudflare Pages Function) + `js/norcha-upload.js` + a card inside *Send us your photos*.
+Takes the originals at full quality instead of WhatsApp's shrunk copies, and returns a readable order code
+(`NOR-XXXXXX`) that ties the files to the chat.
+- **Files → R2, `meta.json` alongside. No database.** Per-connection daily cap counted in the bucket.
+  Whitelisted types, 25 MB/file, 200 MB total, 40 files, honeypot. The caller's IP is hashed for rate limiting
+  and **never written to the upload record**.
+- 🔴 **The UI asks the server first and stays hidden until uploads are configured.** A visible upload box that
+  silently fails is worse than none — the customer believes their photos arrived. **Verified live:**
+  `GET /api/upload` → `503 {"configured":false}` and the card stays hidden.
+- **Telegram ping is best-effort: if it fails the upload still succeeds.** Nobody loses photographs because a bot is down.
+- Guard: `uploadtest.mjs` — 23 checks (mock bucket + mock Telegram), including *a broken bucket must raise, never
+  fake success*.
+- ⛔ **TO GO LIVE (Architect, ~4 minutes, no code):** ① enable R2 on the Cloudflare account → ② create bucket
+  `norcha-uploads` → ③ Pages project → Settings → Functions → R2 bucket binding, variable name **`UPLOADS`** →
+  ④ optional: `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` secrets, and an R2 lifecycle rule deleting `u/` after
+  **30 days** (the page promises 30 days — the rule is what makes it true). Then re-run the deploy.
+
 ### T1 — were actively costing orders
 | ID | Item | State |
 |---|---|---|
