@@ -533,6 +533,23 @@ var FAMILY_BY_LABEL = {
     mobile.addEventListener("click", function (e) {
       if (e.target.tagName === "A") { mobile.hidden = true; mobile.classList.remove("open"); burger.setAttribute("aria-expanded", "false"); }
     });
+    /* Belt and braces with the CSS above: if the viewport grows past the
+       breakpoint while the menu is open, close it properly so the state and
+       the aria attribute match what is actually on screen. A menu that is
+       open-but-invisible to a screen reader is its own small lie. */
+    var mq = window.matchMedia("(max-width: 940px)");
+    var resetNav = function () {
+      if (mq.matches) return;
+      if (!mobile.hidden || mobile.classList.contains("open")) {
+        mobile.hidden = true;
+        mobile.classList.remove("open");
+        burger.setAttribute("aria-expanded", "false");
+      }
+    };
+    if (mq.addEventListener) mq.addEventListener("change", resetNav);
+    else if (mq.addListener) mq.addListener(resetNav);
+    window.addEventListener("resize", resetNav, { passive: true });
+    window.addEventListener("orientationchange", resetNav);
   }
 
   /* ── scroll reveals (IntersectionObserver) ──────── */

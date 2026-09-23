@@ -180,7 +180,16 @@ ul { margin: 0; padding: 0; list-style: none; }
    dark-on-green at 2:1 before this) */
 .nav-mobile a.btn { color: var(--btn-fg); }
 .nav-mobile a.btn { margin-top: 8px; justify-content: center; }
-.nav-mobile.open { display: flex; transform-origin: top right; animation: menuIn 190ms var(--ease-out); }
+/* 🔴 `.open` must only be able to display the menu at MOBILE widths.
+   Unscoped, opening the burger on a phone and then widening the viewport
+   (rotation, a desktop-mode toggle, a resize) left the menu on screen at
+   desktop width — where the burger is `display:none`, so there was no way to
+   close it and the links simply sat at the top of the page. Measured, not
+   guessed: at 1280px the block came back `display:flex` with the burger gone. */
+@media (max-width: 940px) {
+  .nav-mobile.open { display: flex; transform-origin: top right; animation: menuIn 190ms var(--ease-out); }
+}
+@keyframes menuIn { from { opacity: 0; transform: scale(.97) translateY(-4px); } to { opacity: 1; transform: none; } }
 @keyframes menuIn { from { opacity: 0; transform: scale(.97) translateY(-4px); } to { opacity: 1; transform: none; } }
 
 /* ── nav collapse happens EARLIER than the rest of the layout ─────────
