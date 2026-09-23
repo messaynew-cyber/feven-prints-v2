@@ -181,6 +181,14 @@ export async function onRequestPost(context) {
     httpMetadata: { contentType: "application/json" }
   });
 
+  /* A tiny pointer at a FIXED key, so an order lookup is one read instead of
+     guessing which day the upload happened on. It holds no personal data:
+     the customer's details stay in the meta.json under the day prefix. */
+  await env.UPLOADS.put("index/" + code + ".json",
+    JSON.stringify({ code: code, prefix: prefix, received: stamp }), {
+      httpMetadata: { contentType: "application/json" }
+    });
+
   /* Tell the shop. Best-effort on purpose — the photos are already safe. */
   let pinged = false;
   try {

@@ -84,6 +84,13 @@ const CARDS = [
     url: "norchaprint.com/about"
   },
   {
+    slug: "order", img: null,
+    title: ["Did my photos arrive?", "ፎቶዎቼ ደርሰዋል?"],
+    sub: "Look up your order with the reference and your phone number.",
+    chip: "Reference + phone",
+    url: "norchaprint.com/order"
+  },
+  {
     slug: "privacy", img: null,
     title: ["Your photos, handled properly", "ፎቶዎችዎ በአግባቡ"],
     sub: "Private bucket, deleted after 30 days, never sold.",

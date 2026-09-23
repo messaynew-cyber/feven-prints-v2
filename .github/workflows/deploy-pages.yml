@@ -38,7 +38,7 @@ jobs:
                 --exclude 'node_modules' --exclude 'package.json' \
                 --exclude 'package-lock.json' --exclude 'build-pages.js' \
                 --exclude 'domtest.js' --exclude 'livetest.js' --exclude 'pagetest.js' \
-                --exclude 'uploadtest.mjs' --exclude 'build-images.sh' \
+                --exclude 'uploadtest.mjs' --exclude 'ordertest.mjs' --exclude 'build-images.sh' --exclude 'build-og-cards.js' \
                 ./ dist/
 
       - name: Deploy to Cloudflare Pages

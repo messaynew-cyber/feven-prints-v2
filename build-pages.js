@@ -355,6 +355,15 @@ var TRUST_STRINGS = {
   }
 };
 
+TRUST_STRINGS.order = {
+  slug: "order", file: "order.html",
+  title: ["Check your order", "ትዕዛዝዎን ይመልከቱ"],
+  lead: ["Did your photos arrive? Look it up with the reference we gave you.",
+         "ፎቶዎችዎ ደርሰዋል? የተሰጠዎትን ቁጥር ተጠቅመው ይመልከቱ።"],
+  desc: "Look up a Norcha Print order by its reference to see which photos arrived, when, and when they are deleted.",
+  script: "norcha-order.js"
+};
+
 function privacySections() {
   var R = [
     ["What we collect when you upload photos",
@@ -394,6 +403,22 @@ function privacySections() {
       "በዚህ ገጽ ላይ የማስታወቂያ ኩኪዎች ወይም ᭡ክተሮች የሉም። አሁን ጉብኝቶችን አንለካም።"]]
   ];
   return R;
+}
+
+function orderSections() {
+  return [
+    ["What this shows",
+     "ምን ያሳያል",
+     ["It shows what the studio received: how many photos, when they arrived, and what you asked for. " +
+      "It is not live tracking, because nothing here is automatic past that point — a person checks the sizes " +
+      "and confirms the price before anything is printed.",
+      "ስቱዲዮው የተቀበለውን ያሳያል፦ ስንት ፎቶ፣ መቼ እንደደረሱ እና ምን እንደዘዙ። ቀሪውን ሰው ያረጋግጣል።"]],
+    ["How to find your reference",
+     "ቁጥሩን እንዴት ያገኙት",
+     ["It looks like NOR-ABC123 and appeared on screen when you sent your photos. If you cannot find it, " +
+      "message us on WhatsApp with your name and we will look it up for you.",
+      "NOR-ABC123 ይመስላል። ካጡት በዋትስአፕ ስምዎን ይላኩልን፣ እኛ እንፈልግልዎታለን።"]]
+  ];
 }
 
 function contactSections() {
@@ -466,7 +491,7 @@ function assertProse(html, file) {
   }
 }
 
-function renderStaticPage(cfg, sections, schemas) {
+function renderStaticPage(cfg, sections, schemas, extra) {
   var url = DOMAIN + "/" + cfg.slug;
   var body = [
     '<!DOCTYPE html>', '<html lang="en" data-lang-default="en">', '<head>',
@@ -521,6 +546,7 @@ function renderStaticPage(cfg, sections, schemas) {
         }).join("\n") + '\n      </div>';
     }).join("\n"),
     '    </div>',
+    extra || '',
     '    <div class="prod-cta reveal" style="margin-top:32px">',
     '      <a class="btn btn-primary" href="https://wa.me/' + D.shop.wa + '" target="_blank" rel="noopener" data-en="Message us on WhatsApp" data-am="በዋትስአፕ ያግኙን">Message us on WhatsApp</a>',
     '      <a class="btn btn-outline" href="tel:+' + D.shop.wa + '" data-en="Call the studio" data-am="ይደውሉ">Call the studio</a>',
@@ -532,17 +558,53 @@ function renderStaticPage(cfg, sections, schemas) {
     FOOTER,
     '<script src="/js/norcha-data.js"></script>',
     '<script src="/js/main.js"></script>',
+    cfg.script ? '<script src="/js/' + cfg.script + '"></script>' : '',
     TO_TOP,
     '</body>', '</html>', ''
   ].join("\n");
   return body;
 }
 
+function orderLookupHtml() {
+  var wa = D.shop.wa;
+  return [
+    '    <div class="lookup-card reveal" id="orderLookupCard">',
+    '      <p class="lookup-off" id="orderOff" hidden data-en="Order lookup is not switched on yet. Message us on WhatsApp and we will check for you." data-am="ፍለጋው አልነቃም። በዋትስአፕ ያግኙን።">Order lookup is not switched on yet. Message us on WhatsApp and we will check for you.</p>',
+    '      <form id="orderLookup" hidden novalidate>',
+    '        <h2 id="olTitle" data-en="Check your order" data-am="ትዕዛዝዎን ይመልከቱ">Check your order</h2>',
+    '        <p class="lookup-sub" id="olSub" data-en="Enter the reference we gave you and the phone number you ordered with." data-am="የተሰጠዎትን ቁጥር እና የዘዙበትን ስልክ ያስገቡ።">Enter the reference we gave you and the phone number you ordered with.</p>',
+    '        <div class="lookup-grid">',
+    '          <div class="field"><label for="olCode" id="olCodeL" data-en="Reference" data-am="ቁጥር">Reference</label>',
+    '            <input id="olCode" name="code" type="text" inputmode="text" autocomplete="off" placeholder="NOR-ABC123" spellcheck="false"></div>',
+    '          <div class="field"><label for="olPhone" id="olPhoneL" data-en="Phone number" data-am="ስልክ ቁጥር">Phone number</label>',
+    '            <input id="olPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="09 …"></div>',
+    '        </div>',
+    '        <p class="lookup-state" id="olState" hidden aria-live="polite"></p>',
+    '        <button class="btn btn-primary" id="olGo" type="submit" data-en="Check my order" data-am="ፈልግ">Check my order</button>',
+    '      </form>',
+    '      <div class="lookup-done" id="olResult" hidden aria-live="polite">',
+    '        <h2 id="orTitle" data-en="We have your photos" data-am="ፎቶዎችዎ ደርሰዋል">We have your photos</h2>',
+    '        <p class="lookup-code" id="orCode"></p>',
+    '        <p class="lookup-count" id="orCount"></p>',
+    '        <dl class="lookup-facts">',
+    '          <dt id="orWhenL" data-en="Received" data-am="የደረሱበት ቀን">Received</dt><dd id="orWhen"></dd>',
+    '          <dt id="orJobL" data-en="You asked for" data-am="የዘዙት">You asked for</dt><dd id="orJob"></dd>',
+    '          <dt id="orDelL" data-en="We delete them on" data-am="የምንያጠፋቸው ቀን">We delete them on</dt><dd id="orDel"></dd>',
+    '        </dl>',
+    '        <p class="lookup-note" id="orNote"></p>',
+    '        <a class="btn btn-primary" id="orCta" href="https://wa.me/' + wa + '" target="_blank" rel="noopener" data-en="Message us on WhatsApp" data-am="በዋትስአፕ ያግኙን">Message us on WhatsApp</a>',
+    '        <button class="btn btn-outline" id="orAgain" type="button" data-en="Try another reference" data-am="ሌላ ቁጥር ይሞክሩ">Try another reference</button>',
+    '      </div>',
+    '    </div>'
+  ].join("\n");
+}
+
 function trustPages() {
   var conf = [
-    [TRUST_STRINGS.privacy, privacySections()],
-    [TRUST_STRINGS.contact, contactSections()],
-    [TRUST_STRINGS.about, aboutSections()]
+    [TRUST_STRINGS.privacy, privacySections(), ""],
+    [TRUST_STRINGS.contact, contactSections(), ""],
+    [TRUST_STRINGS.about, aboutSections(), ""],
+    [TRUST_STRINGS.order, orderSections(), orderLookupHtml()]
   ];
   return conf.map(function (pair) {
     var cfg = pair[0];
@@ -553,7 +615,7 @@ function trustPages() {
       "url": DOMAIN + "/", "telephone": "+358442715477", "priceRange": "ETB 25 - ETB 4,600",
       "currenciesAccepted": "ETB", "paymentAccepted": "Cash, Telebirr, Bank transfer",
       "address": { "@type": "PostalAddress", "addressLocality": "Bole, Addis Ababa", "addressCountry": "ET" } };
-    return { cfg: cfg, html: renderStaticPage(cfg, pair[1], [crumbs, local]) };
+    return { cfg: cfg, html: renderStaticPage(cfg, pair[1], [crumbs, local], pair[2]) };
   });
 }
 
@@ -980,7 +1042,7 @@ if (!CHECK) {
     '    <xhtml:link rel="alternate" hreflang="en" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="am" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="x-default" href="' + DOMAIN + '/"/>\n  </url>'];
-  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"]]
+  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"], ["order", "0.4", "yearly"]]
     .concat(PAGES.map(function (p) { return [p.slug, "0.8", "monthly"]; })).forEach(function (row) {
     var u = DOMAIN + "/" + row[0];
     urls.push('<url>\n    <loc>' + u + '</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>' + row[2] + '</changefreq>\n    <priority>' + row[1] + '</priority>\n' +
@@ -995,7 +1057,7 @@ if (!CHECK) {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
     '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n  ' +
     urls.join("\n  ") + '\n</urlset>\n', "utf8");
-  written.push("sitemap.xml (" + (PAGES.length + 5) + " urls)");
+  written.push("sitemap.xml (" + (PAGES.length + 6) + " urls)");
 }
 
 console.log((CHECK ? "CHECK " : "BUILT ") + PAGES.length + " product pages:");

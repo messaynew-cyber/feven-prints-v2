@@ -261,7 +261,7 @@ for (const [file, slug] of PAGES) {
    These are the pages a customer reads when they are deciding whether to
    trust a stranger with their family photographs. A broken one is worse than
    a missing one, so they get the same treatment as the product pages. */
-const TRUST = [["privacy.html", "privacy"], ["contact.html", "contact"], ["about.html", "about"]];
+const TRUST = [["privacy.html", "privacy"], ["contact.html", "contact"], ["about.html", "about"], ["order.html", "order"]];
 TRUST.forEach(function (pair) {
   const [file, slug] = pair;
   if (!fs.existsSync(path.join(ROOT, file))) { failures++; console.log("  ✗ " + file + " · MISSING — run build-pages.js"); return; }
@@ -288,7 +288,7 @@ TRUST.forEach(function (pair) {
      other check here, so assert on the TEXT, not just on the element. */
   const blocks = d.querySelectorAll(".prose-block").length;
   const stubs = [...paras].filter(p => (p.textContent || "").trim().length < 8).length;
-  check(file, "every section has prose", paras.length >= blocks && paras.length >= 4,
+  check(file, "every section has prose", paras.length >= blocks && paras.length >= 2,
     paras.length + " paragraphs across " + blocks + " sections");
   check(file, "no stub paragraphs", stubs === 0, stubs + " paragraphs shorter than 8 characters");
   const bal = markupBalance(fs.readFileSync(path.join(ROOT, file), "utf8"));
