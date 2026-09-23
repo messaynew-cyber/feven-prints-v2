@@ -264,7 +264,14 @@ TRUST.forEach(function (pair) {
   check(file, "all EN strings have AM", noAm === 0, String(noAm));
   // a page of prose is only useful if the prose is actually there
   const paras = d.querySelectorAll(".prose-block p");
-  check(file, "has readable content", paras.length >= 6, String(paras.length) + " paragraphs");
+  /* every section should carry at least one real paragraph. A count alone is
+     not enough — the bug that shipped a page of single letters passed every
+     other check here, so assert on the TEXT, not just on the element. */
+  const blocks = d.querySelectorAll(".prose-block").length;
+  const stubs = [...paras].filter(p => (p.textContent || "").trim().length < 8).length;
+  check(file, "every section has prose", paras.length >= blocks && paras.length >= 4,
+    paras.length + " paragraphs across " + blocks + " sections");
+  check(file, "no stub paragraphs", stubs === 0, stubs + " paragraphs shorter than 8 characters");
   const bal = markupBalance(fs.readFileSync(path.join(ROOT, file), "utf8"));
   check(file, "markup balanced", bal.unclosed.length === 0 && bal.bad.length === 0,
     (bal.unclosed.join(",") || "-") + " / " + (bal.bad.join(",") || "-"));

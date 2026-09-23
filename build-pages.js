@@ -444,6 +444,28 @@ function aboutSections() {
   ];
 }
 
+/* A section's third element is EITHER one [EN, AM] pair OR a list of them.
+   🔴 Getting this wrong does not throw: iterating a single pair treats each
+   SENTENCE as a list and reads its first CHARACTER, so `data-en` silently
+   becomes "T". The page renders, the tests pass, and the prose is gone. That
+   is exactly what shipped for four minutes on 2026-09-23. Hence the length
+   assertion below as well as this normaliser. */
+function normalizeParas(x) {
+  if (!Array.isArray(x) || !x.length) return [];
+  return (typeof x[0] === "string") ? [x] : x;
+}
+function assertProse(html, file) {
+  var bad = [];
+  var re = /<p data-en="([^"]*)"/g, m;
+  while ((m = re.exec(html)) !== null) {
+    if (m[1].length < 8) bad.push(m[1]);
+  }
+  if (bad.length) {
+    throw new Error("prose guard: " + file + " has " + bad.length +
+      " paragraph(s) whose data-en is a stub (" + JSON.stringify(bad.slice(0, 5)) + ")");
+  }
+}
+
 function renderStaticPage(cfg, sections, schemas) {
   var url = DOMAIN + "/" + cfg.slug;
   var body = [
@@ -494,8 +516,8 @@ function renderStaticPage(cfg, sections, schemas) {
     sections.map(function (sec, i) {
       return '      <div class="prose-block reveal' + (i ? " d" + Math.min(i, 3) : "") + '">\n' +
         '        <h2 data-en="' + attr(sec[0]) + '" data-am="' + attr(sec[1]) + '">' + esc(sec[0]) + '</h2>\n' +
-        sec[2].map(function (p) {
-          return '        <p data-en="' + attr(p[0]) + '" data-am="' + attr(p[1]) + '">' + esc(p[0]) + '</p>';
+        normalizeParas(sec[2]).map(function (pr) {
+          return '        <p data-en="' + attr(pr[0]) + '" data-am="' + attr(pr[1]) + '">' + esc(pr[0]) + '</p>';
         }).join("\n") + '\n      </div>';
     }).join("\n"),
     '    </div>',
@@ -878,6 +900,7 @@ else { fs.writeFileSync(path.join(ROOT, "prices.html"), pricesOut, "utf8");
 /* ── 6c. write the trust set ─────────────────────────────────────────── */
 var TRUST_PAGES_OUT = trustPages();
 TRUST_PAGES_OUT.forEach(function (t) {
+  assertProse(t.html, t.cfg.file);
   if (CHECK) { written.push(t.cfg.file + " (checked)"); return; }
   fs.writeFileSync(path.join(ROOT, t.cfg.file), t.html, "utf8");
   written.push(t.cfg.file + " (" + t.html.length + " bytes)");
