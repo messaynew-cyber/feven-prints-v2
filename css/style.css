@@ -1209,18 +1209,19 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
   background: var(--pine-soft); border: 1px solid transparent; }
 .chip-quiet { background: transparent; color: var(--text-mute); border-color: var(--line); }
 
-.prod-grid { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
-  gap: 32px; align-items: start; }
-@media (max-width: 900px) { .prod-grid { grid-template-columns: 1fr; gap: 24px; } }
-.prod-media { margin: 0; border-radius: 12px; overflow: hidden; background: var(--white);
-  border: 1px solid rgba(255,255,255,.10);
+/* The photo hangs on the dark wall; the prices print on paper underneath it.
+   They were briefly side by side, which put a dark heading on the dark band
+   and made it nearly unreadable — a screenshot caught it, the tests could not. */
+.prod-media { display: block; margin: 0 auto; max-width: 880px; border-radius: 12px;
+  overflow: hidden; background: var(--white); border: 1px solid rgba(255,255,255,.10);
   box-shadow: 0 1px 1px rgba(0,0,0,.30), 0 26px 46px -24px rgba(0,0,0,.72); }
 .prod-media img { display: block; width: 100%; height: auto; }
 
-.prod-panel .price-card { margin: 0 0 16px; }
-.prod-panel .price-card:last-of-type { margin-bottom: 22px; }
-.prod-panel .price-h { font-size: 16.5px; font-weight: 720; padding-bottom: 12px;
-  border-bottom: 1px solid var(--line); margin: 0 0 10px; }
+.prod-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px; margin: 40px 0 32px; }
+.price-card .price-h { font-size: 16.5px; font-weight: 720; padding-bottom: 12px;
+  border-bottom: 1px solid var(--line); margin: 0 0 6px; }
+.price-card .price-note { margin: 0 0 12px; font-size: 13.5px; line-height: 1.55; color: var(--text-mute); }
 .prod-cta { display: flex; flex-wrap: wrap; gap: 12px; }
 .prod-cta .btn { min-height: 46px; }
 

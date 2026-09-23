@@ -42,6 +42,28 @@ const PAGES = [
   ["framed-prints.html", "framed-prints"]
 ];
 
+/* tiny tag-balance walker: enough to catch the stray-close-tag class of bug */
+function markupBalance(html) {
+  const VOID = new Set(["meta","link","br","img","source","input","hr","area","base","col","embed","param","track","wbr"]);
+  const stack = [], bad = [];
+  const re = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b[^>]*?(\/?)>/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    const close = m[1] === "/", tag = m[2].toLowerCase(), self = m[3] === "/";
+    if (tag === "script" || tag === "style") {                   /* skip contents */
+      const end = html.toLowerCase().indexOf("</" + tag, re.lastIndex);
+      if (end !== -1) re.lastIndex = end;
+      continue;
+    }
+    if (VOID.has(tag) || self) continue;
+    if (!close) stack.push(tag);
+    else if (stack.length === 0) bad.push("extra </" + tag + ">");
+    else if (stack[stack.length - 1] === tag) stack.pop();
+    else bad.push("</" + tag + "> closes <" + stack[stack.length - 1] + ">");
+  }
+  return { unclosed: stack, bad: bad };
+}
+
 let failures = 0;
 function check(page, label, ok, detail) {
   if (!ok) { failures++; console.log("  ✗ " + page + " · " + label + (detail ? " → " + detail : "")); }
@@ -158,6 +180,14 @@ for (const [file, slug] of PAGES) {
     check(file, "ready date is not in the past", ready.getTime() >= new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime(),
       ready.toISOString().slice(0, 10));
   }
+
+  /* 8. markup balance. jsdom silently tolerates a stray </div> and the
+     browser just moves the structure around, so a broken close tag can look
+     fine in every other check here — it shifted the price block on top of the
+     dark panel and only a screenshot caught it. Cheap to assert, so assert. */
+  const bal = markupBalance(html);
+  check(file, "markup balanced", bal.unclosed.length === 0 && bal.bad.length === 0,
+    (bal.unclosed.join(",") || "-") + " / " + (bal.bad.join(",") || "-"));
 
   /* footer + scripts survived */
   check(file, "footer present", !!d.querySelector("footer.footer"));
