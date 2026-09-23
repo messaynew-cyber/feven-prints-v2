@@ -158,6 +158,167 @@ var PAGES = [
   }
 ];
 
+/* ── 3b. the public price list (T-03) ────────────────────────────────────
+   "How much?" is the single most common question this shop gets, and the
+   answer was sitting inside a homepage section that cannot be linked to,
+   printed cleanly, or found by anyone searching for a price. This page is
+   the same numbers in a shape built to be forwarded on WhatsApp and printed
+   at the counter.
+
+   Every figure comes from js/norcha-data.js. Nothing here is typed by hand.
+   The one-tap button reuses main.js's catalogue builder (id="catSend"), so
+   the message it sends and the page you are reading cannot disagree. */
+var ACCENT = {};
+PAGES.forEach(function (p) { ACCENT[p.family] = p.accent; });
+var FAMILY_ORDER = ["prints", "canvas", "books", "frames", "calendars", "mugs"];
+
+/* Newly written strings — listed so the [FEVEN] proofread list stays honest
+   about what has NOT been checked by a native speaker yet. */
+var PRICES_STRINGS = {
+  title:    ["Price list", "የዋጋ ዝርዝር"],
+  lead:     ["Every size we print, and what it costs. Bulk orders get a discount — the ladder is on each card.",
+             "የምናትመው ሁሉም መጠን እና ዋጋው። በብዛት ሲዘዙ ቅናሽ አለ።"],
+  inBirr:   ["All prices in ETB.", "ሁሉም ዋጋዎች በብር ናቸው።"],
+  send:     ["Send this list on WhatsApp", "ይህን ዝርዝር በዋትስአፕ ይላኩ"],
+  print:    ["Print this list", "ዝርዝሩን ያትሙ"],
+  order:    ["Order on WhatsApp", "በዋትስአፕ ይዘዙ"],
+  packs:    ["Priced per pack — see the quantities above.", "ዋጋው በጥቅል ነው።"]
+};
+
+function pricesCards() {
+  return FAMILY_ORDER.map(function (fam) {
+    var d = D.products[fam];
+    var rows = d.sizes.map(function (sz) {
+      return '          <tr><td>' + esc(sz.label) + '</td>' +
+        '<td data-temp-price="' + attr(sz.key) + '" data-en="' + attr(money(sz.price)) + '" data-am="' + attr(moneyAm(sz.price)) + '">' + esc(money(sz.price)) + '</td></tr>';
+    }).join("\n");
+    var tiers = (D.tiers[d.tier] || []).filter(function (t) { return t.min > 1; });
+    var tail = tiers.length
+      ? '<p class="price-note"><span data-en="Bulk" data-am="በብዛት">Bulk</span>: ' +
+        tiers.map(function (t) { return t.min + '+ −' + t.pct + '%'; }).join(" · ") + '</p>'
+      : '<p class="price-note" data-en="' + attr(PRICES_STRINGS.packs[0]) + '" data-am="' + attr(PRICES_STRINGS.packs[1]) + '">' + esc(PRICES_STRINGS.packs[0]) + '</p>';
+    return [
+      '      <div class="price-card ' + (ACCENT[fam] || "accent-green") + '">',
+      '        <h3 data-en="' + attr(d.label.en) + '" data-am="' + attr(d.label.am) + '">' + esc(d.label.en) + '</h3>',
+      '        <table>',
+      '          <thead><tr><th data-en="Size" data-am="መጠን">Size</th><th data-en="Price" data-am="ዋጋ">Price</th></tr></thead>',
+      '          <tbody>',
+      rows,
+      '          </tbody>',
+      '        </table>',
+      '        ' + tail,
+      '      </div>'
+    ].join("\n");
+  }).join("\n");
+}
+
+function renderPrices() {
+  var url = DOMAIN + "/prices";
+  var waText = encodeURIComponent("Hello Norcha Print - I have a question about your prices.");
+  var desc = "Every print size and price at Norcha Print, Bole, Addis Ababa — canvas, photo books, calendars, framed prints, mugs and standard prints, with bulk discounts.";
+  var itemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Norcha Print price list",
+    "itemListElement": PAGES.map(function (p, i) {
+      return { "@type": "ListItem", "position": i + 1, "name": p.name[0], "url": DOMAIN + "/" + p.slug };
+    })
+  };
+  var head = [
+    '<!DOCTYPE html>', '<html lang="en" data-lang-default="en">', '<head>',
+    '<meta charset="UTF-8">',
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '<title>' + esc(PRICES_STRINGS.title[0]) + ' — every size and price | Norcha Print</title>',
+    '<meta name="description" content="' + attr(desc) + '">',
+    '<meta name="theme-color" content="#F8F4EE" id="metaThemeColor">',
+    '<meta name="msapplication-TileColor" content="#0E5C41">',
+    '<meta name="color-scheme" content="light dark">',
+    THEME_SCRIPT,
+    '<meta name="mobile-web-app-capable" content="yes">',
+    '<link rel="manifest" href="/manifest.webmanifest">',
+    '<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">',
+    '<link rel="canonical" href="' + url + '">',
+    '<link rel="alternate" hreflang="en" href="' + url + '">',
+    '<link rel="alternate" hreflang="am" href="' + url + '">',
+    '<link rel="alternate" hreflang="x-default" href="' + url + '">',
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="Norcha Print">',
+    '<meta property="og:title" content="Price list — Norcha Print, Addis Ababa">',
+    '<meta property="og:description" content="' + attr(desc) + '">',
+    '<meta property="og:url" content="' + url + '">',
+    '<meta property="og:image" content="' + DOMAIN + '/img/og-card.jpg">',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="twitter:image" content="' + DOMAIN + '/img/og-card.jpg">',
+    ldJson(itemList),
+    ldJson({ "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN + "/" },
+      { "@type": "ListItem", "position": 2, "name": "Price list", "item": url } ] }),
+    '<link rel="icon" href="/img/icons/icon-192.png">',
+    '<link rel="stylesheet" href="/css/style.css">',
+    '</head>'
+  ].join("\n");
+
+  var body = [
+    '<body>',
+    '',
+    '<a class="skip" href="#prices">Skip to content</a>',
+    '<div class="print-only">',
+    '  <h2>Norcha Print — price list</h2>',
+    '  <p>' + esc(D.shop.phone) + ' · ' + esc(D.shop.city) + ' · ' + esc(D.shop.hours) + '</p>',
+    '</div>',
+    '<div class="progress" id="progress" aria-hidden="true"></div>',
+    '',
+    NAV,
+    '',
+    '<main id="top">',
+    '<div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>',
+    '',
+    '<section class="section" id="prices">',
+    '  <div class="wrap">',
+    '    <nav class="crumbs" aria-label="Breadcrumb">',
+    '      <a href="/" data-en="Home" data-am="መግቢያ">Home</a><span aria-hidden="true">/</span>',
+    '      <span data-en="' + attr(PRICES_STRINGS.title[0]) + '" data-am="' + attr(PRICES_STRINGS.title[1]) + '">' + esc(PRICES_STRINGS.title[0]) + '</span>',
+    '    </nav>',
+    '    <p class="am-eye">' + esc(PRICES_STRINGS.title[1]) + '</p>',
+    '    <h1 class="section-h reveal reveal-blur" data-en="' + attr(PRICES_STRINGS.title[0]) + '" data-am="' + attr(PRICES_STRINGS.title[1]) + '">' + esc(PRICES_STRINGS.title[0]) + '</h1>',
+    '    <p class="lead reveal" data-en="' + attr(PRICES_STRINGS.lead[0]) + '" data-am="' + attr(PRICES_STRINGS.lead[1]) + '">' + esc(PRICES_STRINGS.lead[0]) + '</p>',
+    '    <p class="lead-meta reveal"><span class="chip chip-quiet" data-en="' + attr(PRICES_STRINGS.inBirr[0]) + '" data-am="' + attr(PRICES_STRINGS.inBirr[1]) + '">' + esc(PRICES_STRINGS.inBirr[0]) + '</span></p>',
+    '  </div>',
+    '  <div class="wrap">',
+    '    <div class="price-block">',
+    '      <p class="price-note reveal" data-en="Prices depend on paper and finish — we confirm the exact price when you order." data-am="ዋጋው እንደ ወረቀቱ እና አጨራረሱ ይለያያል፤ ትክክለኛውን ዋጋ ሲያዙ እናረጋግጣለን።">Prices depend on paper and finish — we confirm the exact price when you order.</p>',
+    '      <div class="price-grid reveal">',
+    pricesCards(),
+    '      </div>',
+    '      <div class="prod-cta reveal">',
+    '        <button class="btn btn-primary" id="catSend" type="button" data-en="' + attr(PRICES_STRINGS.send[0]) + '" data-am="' + attr(PRICES_STRINGS.send[1]) + '">' + esc(PRICES_STRINGS.send[0]) + '</button>',
+    '        <button class="btn btn-outline" id="printList" type="button" data-en="' + attr(PRICES_STRINGS.print[0]) + '" data-am="' + attr(PRICES_STRINGS.print[1]) + '">' + esc(PRICES_STRINGS.print[0]) + '</button>',
+    '        <a class="btn btn-outline" href="https://wa.me/' + D.shop.wa + '?text=' + waText + '" target="_blank" rel="noopener" data-en="' + attr(PRICES_STRINGS.order[0]) + '" data-am="' + attr(PRICES_STRINGS.order[1]) + '">' + esc(PRICES_STRINGS.order[0]) + '</a>',
+    '      </div>',
+    '    </div>',
+    '  </div>',
+    '</section>',
+    '',
+    relatedBlock({ file: "prices.html" }),
+    '',
+    '</main>',
+    '',
+    FOOTER,
+    '',
+    '<script src="/js/norcha-data.js"></script>',
+    '<script src="/js/main.js"></script>',
+    TO_TOP,
+    '<script>',
+    '  (function () {',
+    '    var b = document.getElementById("printList");',
+    '    if (b) b.addEventListener("click", function () { window.print(); });',
+    '  })();',
+    '</script>',
+    '</body>', '</html>', ''
+  ].join("\n");
+  return head + "\n" + body;
+}
+
 /* ── 4. verification: every reused string must exist on index.html ───── */
 var problems = [];
 function mustExist(s, where) {
@@ -264,6 +425,7 @@ function faqBlock(p) {
 
 function relatedBlock(p) {
   var others = PAGES.filter(function (x) { return x.file !== p.file; });
+  if (others.length < 5) others = PAGES;   /* called from the price list */
   var links = others.map(function (x) {
     return '        <a class="related-link" href="/' + x.slug + '">' +
       '<span data-en="' + attr(x.name[0]) + '" data-am="' + attr(x.name[1]) + '">' + esc(x.name[0]) + '</span>' +
@@ -485,15 +647,27 @@ PAGES.forEach(function (p) {
   written.push(p.file + " (" + nPrices + " prices, " + out.length + " bytes)");
 });
 
+/* ── 6b. write the price list ───────────────────────────────────────── */
+var pricesOut = renderPrices();
+var nPrices = (pricesOut.match(/data-temp-price=/g) || []).length;
+var expectPrices = FAMILY_ORDER.reduce(function (n, f) { return n + D.products[f].sizes.length; }, 0);
+if (nPrices !== expectPrices) {
+  console.error("FATAL: prices.html wrote " + nPrices + " price cells, expected " + expectPrices);
+  process.exit(1);
+}
+if (CHECK) { written.push("prices.html (checked, " + nPrices + " prices)"); }
+else { fs.writeFileSync(path.join(ROOT, "prices.html"), pricesOut, "utf8");
+       written.push("prices.html (" + nPrices + " prices, " + pricesOut.length + " bytes)"); }
+
 /* ── 7. sitemap ──────────────────────────────────────────────────────── */
 if (!CHECK) {
   var urls = ['<url>\n    <loc>' + DOMAIN + '/</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n' +
     '    <xhtml:link rel="alternate" hreflang="en" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="am" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="x-default" href="' + DOMAIN + '/"/>\n  </url>'];
-  PAGES.forEach(function (p) {
-    var u = DOMAIN + "/" + p.slug;
-    urls.push('<url>\n    <loc>' + u + '</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n' +
+  [["prices", "0.9", "monthly"]].concat(PAGES.map(function (p) { return [p.slug, "0.8", "monthly"]; })).forEach(function (row) {
+    var u = DOMAIN + "/" + row[0];
+    urls.push('<url>\n    <loc>' + u + '</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>' + row[2] + '</changefreq>\n    <priority>' + row[1] + '</priority>\n' +
       '    <xhtml:link rel="alternate" hreflang="en" href="' + u + '"/>\n' +
       '    <xhtml:link rel="alternate" hreflang="am" href="' + u + '"/>\n' +
       '    <xhtml:link rel="alternate" hreflang="x-default" href="' + u + '"/>\n  </url>');
@@ -505,7 +679,7 @@ if (!CHECK) {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
     '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n  ' +
     urls.join("\n  ") + '\n</urlset>\n', "utf8");
-  written.push("sitemap.xml (" + (PAGES.length + 1) + " urls)");
+  written.push("sitemap.xml (" + (PAGES.length + 2) + " urls)");
 }
 
 console.log((CHECK ? "CHECK " : "BUILT ") + PAGES.length + " product pages:");

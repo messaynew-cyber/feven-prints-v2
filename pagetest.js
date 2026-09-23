@@ -204,9 +204,44 @@ for (const [file, slug] of PAGES) {
   console.log("  · " + file + ": " + reveals.length + " reveals, " + cells.length + " prices, " + (errors.length ? errors.length + " ERRORS" : "clean"));
 }
 
+/* ── the public price list (T-03): same treatment, its own expectations ── */
+(function () {
+  const file = "prices.html";
+  if (!fs.existsSync(path.join(ROOT, file))) { failures++; console.log("  ✗ " + file + " · MISSING — run build-pages.js"); return; }
+  const { dom, errors } = load(file);
+  const d = dom.window.document;
+  check(file, "runtime errors", errors.length === 0, errors.join(" | "));
+  const reveals = d.querySelectorAll(".reveal");
+  let hidden = 0;
+  reveals.forEach(r => { if (!r.classList.contains("in")) hidden++; });
+  check(file, "reveal elements visible", reveals.length > 0 && hidden === 0, hidden + " hidden");
+  const cells = d.querySelectorAll("[data-temp-price]");
+  const expected = Object.keys(D.products).reduce((n, f) => n + D.products[f].sizes.length, 0);
+  check(file, "every price in the data file is listed", cells.length === expected, cells.length + " of " + expected);
+  cells.forEach(c => {
+    const key = c.getAttribute("data-temp-price"), fam = familyOfKey(key);
+    check(file, "known price key", fam !== null, key);
+    if (fam) check(file, "price matches the data file", c.textContent.trim() === D.money(D.priceOf(fam, key)), key);
+  });
+  const canon = d.querySelector('link[rel="canonical"]');
+  check(file, "canonical /prices", canon && canon.getAttribute("href") === "https://norchaprint.com/prices", canon && canon.getAttribute("href"));
+  const types = [...d.querySelectorAll('script[type="application/ld+json"]')].map(b => { try { return JSON.parse(b.textContent)["@type"]; } catch (e) { check(file, "JSON-LD parses", false, e.message); return "?"; } });
+  ["ItemList", "BreadcrumbList"].forEach(t => check(file, "schema " + t, types.indexOf(t) !== -1, types.join(",")));
+  check(file, "one-tap WhatsApp list button", !!d.getElementById("catSend"));
+  check(file, "print button", !!d.getElementById("printList"));
+  const noAm = [...d.querySelectorAll("[data-en]")].filter(n => !n.hasAttribute("data-am")).length;
+  check(file, "all EN strings have AM", noAm === 0, String(noAm));
+  const bal = markupBalance(fs.readFileSync(path.join(ROOT, file), "utf8"));
+  check(file, "markup balanced", bal.unclosed.length === 0 && bal.bad.length === 0,
+    (bal.unclosed.join(",") || "-") + " / " + (bal.bad.join(",") || "-"));
+  dom.window.close();
+  console.log("  · " + file + ": " + cells.length + " prices, " + (errors.length ? errors.length + " ERRORS" : "clean"));
+})();
+
 /* the sitemap must advertise every page, or the pages exist for nobody */
 const sm = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 PAGES.forEach(([, slug]) => check("sitemap.xml", "advertises /" + slug, sm.indexOf("https://norchaprint.com/" + slug) !== -1));
+check("sitemap.xml", "advertises /prices", sm.indexOf("https://norchaprint.com/prices") !== -1);
 
 console.log(failures === 0 ? "\nALL PRODUCT PAGES PASS" : "\n" + failures + " FAILURE(S) — DO NOT PUSH");
 process.exit(failures === 0 ? 0 : 1);
