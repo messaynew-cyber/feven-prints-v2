@@ -183,6 +183,15 @@ ul { margin: 0; padding: 0; list-style: none; }
 .nav-mobile.open { display: flex; transform-origin: top right; animation: menuIn 190ms var(--ease-out); }
 @keyframes menuIn { from { opacity: 0; transform: scale(.97) translateY(-4px); } to { opacity: 1; transform: none; } }
 
+/* ── nav collapse happens EARLIER than the rest of the layout ─────────
+   Measured: the inline row needs ~960px to fit brand + links + CTA. Riding on
+   the 860px layout breakpoint overflowed the header for ~20px of viewport.
+   The menu is the first thing that runs out of room, so it collapses first. */
+@media (max-width: 940px) {
+  .nav-links, .nav-cta .lang-group, .nav-cta .btn { display: none; }
+  .nav-burger { display: flex; }
+}
+
 /* ── hero ────────────────────────────────────────────── */
 .hero { padding: 76px 0 88px; overflow: hidden; background: radial-gradient(1000px 620px at 86% -16%, var(--hero-glow), transparent 60%), var(--paper); }
 .hero-grid { display: grid; grid-template-columns: 1.06fr 0.94fr; gap: 64px; align-items: center; }
@@ -325,6 +334,30 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* opacity note: at .10 on cream the numeral measured a 4/255 channel
    difference - present in the DOM, invisible to a human. Raised until it
    reads as a watermark rather than a rumour. */
+/* ── the chapter numerals ─────────────────────────────────────────────
+   The homepage carries one ornament-scale Ge'ez numeral behind the section
+   that opens its order flow. Generated pages carry one too — a different
+   numeral and a different treatment each, so it reads as a system rather
+   than a repeated sticker. Same device, one shape, never a new motif.
+
+   Every numeral sits at z-index -1: it is a watermark, never behind text a
+   person has to read. `has-ghost` gives the section a positioning context,
+   which #send has on the homepage and the generated sections do not. */
+.has-ghost { position: relative; }
+.ghost-num--outline { color: var(--gold); opacity: .12; }
+@supports (-webkit-text-stroke: 1px #000) {
+  /* a woven outline instead of a fill — the tibeb idea at glyph scale.
+     Guarded, because with `color: transparent` an unsupporting browser
+     renders nothing at all rather than something quieter. */
+  .ghost-num--outline { color: transparent; -webkit-text-stroke: 1.7px var(--gold); opacity: .38; }
+}
+.ghost-num--soft { opacity: .13; font-size: clamp(190px, 30vw, 360px); top: 8px; }
+[data-theme="dark"] .ghost-num--soft { opacity: .17; }
+.ghost-num--left { right: auto; left: 2vw; }
+@media (max-width: 640px) {
+  /* on a phone it steps back rather than competing with the copy */
+  .ghost-num { font-size: clamp(120px, 34vw, 200px); opacity: .16; }
+}
 .ghost-num { position: absolute; z-index: -1; top: 34px; right: 3vw;
   font-family: var(--display); font-size: clamp(140px, 22vw, 260px); line-height: .8;
   color: var(--gold); opacity: .22; pointer-events: none; user-select: none; }
@@ -881,8 +914,9 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
   .tile-wide { grid-column: span 12; }
 }
 @media (max-width: 860px) {
-  .nav-links, .nav-cta .lang-group, .nav-cta .btn { display: none; }
-  .nav-burger { display: flex; }
+  /* the nav rules live in their own query at 940px — see below. The inline row
+     measures ~457px of links plus a 288px CTA plus the brand, so collapsing it
+     at 860 left a window (861–880) where it overflowed its container. */
   .send-grid { grid-template-columns: 1fr; gap: 30px; }
   .order-form { grid-template-columns: 1fr; padding: 20px; gap: 18px; }
   .field-half { grid-column: 1 / -1; }

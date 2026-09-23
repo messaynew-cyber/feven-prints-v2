@@ -273,7 +273,8 @@ function renderPrices() {
     '<main id="top">',
     '<div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>',
     '',
-    '<section class="section" id="prices">',
+    '<section class="section has-ghost" id="prices">',
+    ghostMark("prices", "  "),
     '  <div class="wrap">',
     '    <nav class="crumbs" aria-label="Breadcrumb">',
     '      <a href="/" data-en="Home" data-am="መግቢያ">Home</a><span aria-hidden="true">/</span>',
@@ -545,6 +546,33 @@ function assertProse(html, file) {
   }
 }
 
+/* Each generated page gets its own Ge'ez numeral and treatment. Uniqueness is
+   the point: the numeral is a chapter mark, so two pages sharing one would
+   read as a mistake. Ge'ez numerals run ፩–፱, then ፲ ፳ ፴ … ፺, then ፻. */
+var GHOSTS = {
+  "standard-prints": ["፯", "ghost-num--soft"],
+  "canvas":          ["፪", ""],
+  "photo-books":     ["፫", "ghost-num--outline"],
+  "wall-calendars":  ["፬", "ghost-num--soft ghost-num--left"],
+  "photo-mugs":      ["፭", "ghost-num--outline ghost-num--left"],
+  "framed-prints":   ["፮", ""],
+  "prices":          ["፰", "ghost-num--outline"],
+  "contact":         ["፱", ""],
+  "about":           ["፲", "ghost-num--soft"],
+  "privacy":         ["፳", "ghost-num--outline"],
+  "accessibility":   ["፴", "ghost-num--soft"],
+  "order":           ["፵", "ghost-num--outline"],
+  "guides":          ["፶", "ghost-num--soft"],
+  "guides/photo-gifts-ethiopian-holidays": ["፷", ""],
+  "guides/photos-that-print-well":         ["፸", "ghost-num--outline"],
+  "guides/hanging-a-photo-wall":           ["፹", "ghost-num--soft ghost-num--left"]
+};
+function ghostMark(slug, indent) {
+  var g = GHOSTS[slug];
+  if (!g) return "";
+  return (indent || "") + '<span class="ghost-num ' + g[1] + '" aria-hidden="true">' + g[0] + '</span>';
+}
+
 function renderStaticPage(cfg, sections, schemas, extra) {
   var url = DOMAIN + "/" + cfg.slug;
   var body = [
@@ -583,7 +611,8 @@ function renderStaticPage(cfg, sections, schemas, extra) {
     NAV,
     '<main id="top">',
     '<div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>',
-    '<section class="section" id="mainContent">',
+    '<section class="section has-ghost" id="mainContent">',
+    ghostMark(cfg.slug, "  "),
     '  <div class="wrap">',
     '    <nav class="crumbs" aria-label="Breadcrumb">',
     '      <a href="/" data-en="Home" data-am="መግቢያ">Home</a><span aria-hidden="true">/</span>',
@@ -1185,7 +1214,8 @@ function render(p) {
     '<main id="top">',
     '<div class="tibeb-wrap reveal" aria-hidden="true"><i class="tibeb"></i></div>',
     '',
-    '<section class="section" id="product">',
+    '<section class="section has-ghost" id="product">',
+    ghostMark(p.slug, "  "),
     '  <div class="wrap">',
     '    <nav class="crumbs" aria-label="Breadcrumb">',
     '      <a href="/" data-en="Home" data-am="መግቢያ">Home</a><span aria-hidden="true">/</span>',

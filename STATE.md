@@ -196,6 +196,18 @@ anywhere). Plus a `/guides` index. **Sitemap now 17 URLs.**
 - Guard: `pagetest.js` now covers the guides — reveals, canonical, heading minimum per page type, bilingual
   completeness, markup balance, and their share cards.
 
+### CHAPTER NUMERALS + NAV BREAKPOINT ✅ **SHIPPED 2026-09-23**
+- **Every generated page now carries an ornament-scale Ge'ez numeral** — the same device the home page uses behind
+  its order-flow step, extended with **17 distinct numerals and three treatments** (filled, woven outline,
+  soft/large, plus a left-anchored variant). `build-pages.js` owns the map, so uniqueness is checkable:
+  *17 pages, 17 distinct, 0 duplicates.* The outline treatment is wrapped in `@supports (-webkit-text-stroke)`
+  because a transparent fill without stroke support renders nothing at all. All of them sit at `z-index: -1`;
+  `has-ghost` gives the generated sections the positioning context that `#send` has by hand.
+- 🔴 **Nav bug found by measuring breakpoints:** the inline nav needed ~960px but only collapsed at **860px**, so
+  between **861 and ~880px the header overflowed its container by 24px**. The menu now collapses at **940px** in
+  its own media query — the menu is the first thing to run out of room, so it should fold first, not with the rest
+  of the layout.
+
 ### T1 — were actively costing orders
 | ID | Item | State |
 |---|---|---|
