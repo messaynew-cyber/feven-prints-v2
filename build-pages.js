@@ -316,6 +316,7 @@ function renderPrices() {
     '    if (b) b.addEventListener("click", function () { window.print(); });',
     '  })();',
     '</script>',
+    ANALYTICS,
     '</body>', '</html>', ''
   ].join("\n");
   return head + "\n" + body;
@@ -407,10 +408,12 @@ function privacySections() {
       "in your own browser, so the site remembers you. They never leave your phone.",
       "የቋንቋ ምርጫዎ፣ ገጽታው እና የትዕዛዝ ቁጥሮችዎ በራስዎ አሳሽ ውስጥ ይቀመጣሉ። ከስልክዎ አይወጡም።"]],
     ["Cookies and tracking",
-     "ኩኪዎችና ᭡ክት ማድረግ",
-     ["There are no advertising cookies and no trackers on this site. We are not currently measuring traffic " +
-      "at all — if that changes, it will be a privacy-friendly count, not a profile of you.",
-      "በዚህ ገጽ ላይ የማስታወቂያ ኩኪዎች ወይም ᭡ክተሮች የሉም። አሁን ጉብኝቶችን አንለካም።"]]
+     "ኩኪዎችና መከታተል",
+     ["No advertising cookies, and no trackers that follow you to other websites. We do count visits, using " +
+      "Cloudflare Web Analytics — cookieless, no profile of you, and the reason this site needs no cookie " +
+      "banner. That is the whole of it: we know roughly how many people looked at the price list, not who you " +
+      "are.",
+      "የማስታወቂያ ኩኪዎች የሉም። ጉብኝቶችን በCloudflare Web Analytics እንቆጥራለን — ኩኪ አይጠቀምም፣ መገለጫም አይሰራም።"]]
   ];
   return R;
 }
@@ -568,6 +571,14 @@ var GHOSTS = {
   "guides/photos-that-print-well":         ["፸", "ghost-num--outline"],
   "guides/hanging-a-photo-wall":           ["፹", "ghost-num--soft ghost-num--left"]
 };
+/* Cloudflare Web Analytics — one snippet for every generated page.
+   Cookieless: it counts visits without profiling anyone, which is why the site
+   still needs no consent banner. The token is a public identifier (it is in the
+   HTML of every page by design), not a secret. */
+var ANALYTICS =
+  '<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" ' +
+  'data-cf-beacon=\'{"token": "24a828aefc76467ab9054c14a4830154"}\'></script>';
+
 /* The boot mark, for generated pages. Markup only — the CSS does the hiding. */
 function bootMark(indent) {
   return (indent || "") + '<div class="boot" id="boot" aria-hidden="true"><span class="boot-mark">ኖርቻ ፕሪንት</span><span class="boot-thread"></span></div>';
@@ -650,6 +661,7 @@ function renderStaticPage(cfg, sections, schemas, extra) {
     '<script src="/js/main.js"></script>',
     cfg.script ? '<script src="/js/' + cfg.script + '"></script>' : '',
     TO_TOP,
+    ANALYTICS,
     '</body>', '</html>', ''
   ].join("\n");
   return body;
@@ -1289,6 +1301,7 @@ function render(p) {
     '  })();',
     '</script>',
     '</body>',
+    ANALYTICS,
     '</html>',
     ''
   ].join("\n");
