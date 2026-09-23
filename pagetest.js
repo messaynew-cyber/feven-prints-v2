@@ -50,9 +50,15 @@ function markupBalance(html) {
   let m;
   while ((m = re.exec(html)) !== null) {
     const close = m[1] === "/", tag = m[2].toLowerCase(), self = m[3] === "/";
-    if (tag === "script" || tag === "style") {                   /* skip contents */
-      const end = html.toLowerCase().indexOf("</" + tag, re.lastIndex);
-      if (end !== -1) re.lastIndex = end;
+    /* A raw-text element is skipped whole: its opening tag jumps the cursor
+       past its contents, and its closing tag is then a no-op (it was never
+       pushed). Treating the close as an open swallowed the rest of the file;
+       treating it as a normal close reported every script as unbalanced. */
+    if (tag === "script" || tag === "style") {
+      if (!close) {
+        const end = html.toLowerCase().indexOf("</" + tag, re.lastIndex);
+        if (end !== -1) re.lastIndex = end;
+      }
       continue;
     }
     if (VOID.has(tag) || self) continue;
