@@ -355,8 +355,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 [data-theme="dark"] .ghost-num--soft { opacity: .17; }
 .ghost-num--left { right: auto; left: 2vw; }
 @media (max-width: 640px) {
-  /* on a phone it steps back rather than competing with the copy */
-  .ghost-num { font-size: clamp(120px, 34vw, 200px); opacity: .16; }
+  /* on a phone it steps back rather than competing with the copy, and moves
+     clear of the edge: measured at 412px the glyph box ended 4px from the
+     viewport, which reads as overflow rather than placement. */
+  .ghost-num { font-size: clamp(96px, 28vw, 170px); opacity: .2; right: 16px; }
+  .ghost-num--left { right: auto; left: 16px; }
 }
 .ghost-num { position: absolute; z-index: -1; top: 34px; right: 3vw;
   font-family: var(--display); font-size: clamp(140px, 22vw, 260px); line-height: .8;
