@@ -261,6 +261,7 @@ function renderPrices() {
   var body = [
     '<body>',
     '',
+    bootMark(""),
     '<a class="skip" href="#prices">Skip to content</a>',
     '<div class="print-only">',
     '  <h2>Norcha Print — price list</h2>',
@@ -567,6 +568,11 @@ var GHOSTS = {
   "guides/photos-that-print-well":         ["፸", "ghost-num--outline"],
   "guides/hanging-a-photo-wall":           ["፹", "ghost-num--soft ghost-num--left"]
 };
+/* The boot mark, for generated pages. Markup only — the CSS does the hiding. */
+function bootMark(indent) {
+  return (indent || "") + '<div class="boot" id="boot" aria-hidden="true"><span class="boot-mark">ኖርቻ ፕሪንት</span><span class="boot-thread"></span></div>';
+}
+
 function ghostMark(slug, indent) {
   var g = GHOSTS[slug];
   if (!g) return "";
@@ -604,6 +610,7 @@ function renderStaticPage(cfg, sections, schemas, extra) {
     '<link rel="stylesheet" href="/css/style.css">',
     '</head>',
     '<body>',
+    bootMark(""),
     '<a class="skip" href="#mainContent">Skip to content</a>',
     '<div class="print-only"><h2>' + esc(cfg.title[0] + " — Norcha Print") + '</h2>',
     '<p>' + esc(D.shop.phone) + ' · ' + esc(D.shop.city) + ' · ' + esc(D.shop.hours) + '</p></div>',
@@ -900,7 +907,7 @@ function trustPages() {
       { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN + "/" },
       { "@type": "ListItem", "position": 2, "name": cfg.title[0], "item": DOMAIN + "/" + cfg.slug } ] };
     var local = { "@context": "https://schema.org", "@type": "LocalBusiness", "name": "Norcha Print",
-      "url": DOMAIN + "/", "telephone": "+358442715477", "priceRange": "ETB 25 - ETB 4,600",
+      "url": DOMAIN + "/", "telephone": "+251911729779", "priceRange": "ETB 25 - ETB 4,600",
       "currenciesAccepted": "ETB", "paymentAccepted": "Cash, Telebirr, Bank transfer",
       "address": { "@type": "PostalAddress", "addressLocality": "Bole, Addis Ababa", "addressCountry": "ET" } };
     return { cfg: cfg, html: renderStaticPage(cfg, pair[1], [crumbs, local], pair[2]) };
@@ -1116,7 +1123,7 @@ function productSchema(p) {
       "highPrice": String(Math.max.apply(null, fam.sizes.map(function (s) { return s.price; }))),
       "offerCount": fam.sizes.length,
       "availability": "https://schema.org/InStock",
-      "seller": { "@type": "LocalBusiness", "name": "Norcha Print", "telephone": "+358442715477" }
+      "seller": { "@type": "LocalBusiness", "name": "Norcha Print", "telephone": "+251911729779" }
     }
   };
 }
@@ -1202,6 +1209,7 @@ function render(p) {
   var body = [
     '<body>',
     '',
+    bootMark(""),
     '<a class="skip" href="#product">Skip to content</a>',
     '<div class="print-only">',
     '  <h2>' + esc(p.name[0]) + ' — Norcha Print</h2>',

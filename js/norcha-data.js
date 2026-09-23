@@ -19,8 +19,8 @@
   /* Currency + shop facts */
   var SHOP = {
     name: "Norcha Print",
-    phone: "+358 44 2715477",          // [FEVEN] confirm: a Finnish number on an Addis shop
-    wa: "358442715477",
+    phone: "+251 911 729 779",         // confirmed by the Architect 2026-09-23
+    wa: "251911729779",                // digits only — this form goes into wa.me links
     currency: "ETB",
     city: "Bole, Addis Ababa",
     hours: "Mon-Sat 8:30-19:00, Sun 10:00-17:00",

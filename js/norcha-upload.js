@@ -256,7 +256,7 @@
       pair(el("upAgain"), "again");
       var msg = "Hello Norcha Print - I uploaded my photos on the website. Reference: " + code;
       el("upDoneCta").setAttribute("href",
-        "https://wa.me/" + ((typeof NorchaData !== "undefined" && NorchaData.shop.wa) || "358442715477") +
+        "https://wa.me/" + ((typeof NorchaData !== "undefined" && NorchaData.shop.wa) || "251911729779") +
         "?text=" + encodeURIComponent(msg));
       el("upAgain").addEventListener("click", function () {
         panel.hidden = true;

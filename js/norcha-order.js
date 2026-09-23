@@ -106,7 +106,7 @@
           el("orDel").textContent = fmtDate(d.delete_after, lang);
           el("orNote").textContent = d.stage_note || "";
           var cta = el("orCta");
-          cta.href = "https://wa.me/" + ((typeof NorchaData !== "undefined" && NorchaData.shop.wa) || "358442715477") +
+          cta.href = "https://wa.me/" + ((typeof NorchaData !== "undefined" && NorchaData.shop.wa) || "251911729779") +
             "?text=" + encodeURIComponent("Hello Norcha Print - about my order " + d.code);
           pair(el("orCta"), "cta");
           pair(el("orAgain"), "retry");

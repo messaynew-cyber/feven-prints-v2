@@ -552,6 +552,21 @@ var FAMILY_BY_LABEL = {
     window.addEventListener("orientationchange", resetNav);
   }
 
+  /* ── boot mark ───────────────────────────────────
+     Only ever makes it leave SOONER. If this block never runs, the CSS
+     animation still removes it — assumed by design, not by hope. */
+  (function () {
+    var boot = document.getElementById("boot");
+    if (!boot) return;
+    var dismiss = function () {
+      boot.classList.add("boot--done");
+      setTimeout(function () { if (boot.parentNode) boot.parentNode.removeChild(boot); }, 500);
+    };
+    if (document.readyState === "complete") dismiss();
+    else window.addEventListener("load", dismiss, { once: true });
+    setTimeout(dismiss, 2500);   /* a hard ceiling, whatever happens */
+  })();
+
   /* ── scroll reveals (IntersectionObserver) ──────── */
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var reveals = document.querySelectorAll(".reveal");
@@ -570,7 +585,7 @@ var FAMILY_BY_LABEL = {
   }
 
   /* ── order form → WhatsApp (no server, nothing stored) ── */
-  var ORDER_WA = "https://wa.me/358442715477?text=";
+  var ORDER_WA = "https://wa.me/251911729779?text=";
   var ORDER_KEY = "fevens-orders";
   var ORDER_MSG = {
     product: { en: "Please choose what you want printed.", am: "እባክዎ ምን ማተም እንደሚፈልጉ ይምረጡ።" },

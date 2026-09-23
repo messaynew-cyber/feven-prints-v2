@@ -1376,3 +1376,36 @@ html.past-hero .hero-slide[aria-hidden="false"] .hero-media img { animation-play
 .lookup-facts dd { margin: 0; font-size: 15.5px; color: var(--ink); }
 .lookup-note { margin: 0 0 18px; font-size: 14.5px; line-height: 1.6; color: var(--text-soft); }
 .lookup-done .btn { margin-right: 10px; margin-top: 6px; }
+
+/* ═══════════ THE BOOT MARK ═══════════
+   A brief brand moment while the page settles: the woven tibeb draws itself
+   under the Amharic wordmark.
+
+   🔴 THE SAFETY PROPERTY, and the reason this is built the way it is:
+   the loader hides itself with a CSS animation, not with JavaScript. This
+   project has twice shipped a page with invisible content, and a loader that
+   waits for a script that never runs is exactly that failure again, only
+   worse — it would hide the WHOLE page. So: `animation-fill-mode: forwards`
+   takes it to opacity 0, visibility hidden and pointer-events none after
+   900ms whether or not a single line of JS executes. JS then removes the node
+   early when the page is genuinely ready.
+
+   Skipped entirely for reduced motion, and never printed. */
+.boot {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-content: center;
+  justify-items: center; gap: 18px; background: var(--paper);
+  animation: bootOut 420ms var(--ease-out) 900ms forwards;
+}
+.boot-mark { font-family: 'Noto Sans Ethiopic', var(--body); font-size: 30px; font-weight: 600;
+  color: var(--pine-deep); letter-spacing: .04em; opacity: 0; animation: bootIn 520ms var(--ease-out) forwards; }
+.boot-thread { width: 148px; height: 11px; background-color: var(--gold);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='9' viewBox='0 0 11 9'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.9'%3E%3Cpath d='M5.5 1.1L9.4 4.5 5.5 7.9 1.6 4.5z'/%3E%3Cpath d='M0 4.5h1.6M9.4 4.5H11'/%3E%3C/g%3E%3C/svg%3E");
+  -webkit-mask-size: 11px 9px; mask-size: 11px 9px; -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+  transform: scaleX(0); transform-origin: left; animation: bootThread 760ms var(--ease-out) 120ms forwards; }
+.boot--done { animation-delay: 0ms; }
+@keyframes bootIn { to { opacity: 1; } }
+@keyframes bootThread { to { transform: scaleX(1); } }
+@keyframes bootOut { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+@media (prefers-reduced-motion: reduce) { .boot { display: none !important; } }
+@media print { .boot { display: none !important; } }
