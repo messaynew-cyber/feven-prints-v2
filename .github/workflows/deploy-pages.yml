@@ -35,6 +35,9 @@ jobs:
           mkdir -p dist
           rsync -a --exclude '.git' --exclude '.github' --exclude 'DESIGN.md' \
                 --exclude 'styleguide.html' --exclude '*.md' --exclude '.gitignore' \
+                --exclude 'node_modules' --exclude 'package.json' \
+                --exclude 'package-lock.json' --exclude 'build-pages.js' \
+                --exclude 'domtest.js' --exclude 'livetest.js' --exclude 'pagetest.js' \
                 ./ dist/
 
       - name: Deploy to Cloudflare Pages
