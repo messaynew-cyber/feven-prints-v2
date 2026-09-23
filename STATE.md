@@ -182,6 +182,20 @@ gold Amharic accents on cream sit near the contrast floor, and the photo upload 
 picker. It ends with how to report a failure and the offer to take the order by phone instead — which is how most
 orders happen anyway. A false "WCAG AA compliant" badge would have been the easiest thing in this repo to fake.
 
+### GUIDES ✅ **SHIPPED 2026-09-23**
+Three articles, bilingual, at `/guides`: **what to print for the Ethiopian holidays** (occasion-led, ours to own),
+**why your photos come out soft** (the practical fix for the most common support question — WhatsApp compression,
+300 dpi arithmetic per size, never send a screenshot), and **hanging a photo wall** (craft advice that is true
+anywhere). Plus a `/guides` index. **Sitemap now 17 URLs.**
+- 🔴 **Every paragraph is one of three things:** arithmetic, general craft advice, or a description of a product this
+  studio already sells — *priced by the price list, never by the guide*. No capability claims, no invented lead times.
+- Each guide links into the product pages it names and into `/prices`, so the content feeds the commercial pages
+  instead of sitting beside them. `Article` + `BreadcrumbList` schema, its own share card.
+- **ifolor has 152 articles and we had zero.** This is the first three; the plan is to add what customers keep
+  asking, not what a keyword tool suggests.
+- Guard: `pagetest.js` now covers the guides — reveals, canonical, heading minimum per page type, bilingual
+  completeness, markup balance, and their share cards.
+
 ### T1 — were actively costing orders
 | ID | Item | State |
 |---|---|---|

@@ -84,6 +84,30 @@ const CARDS = [
     url: "norchaprint.com/about"
   },
   {
+    slug: "guide-holidays", img: "photobook",
+    title: ["What to print for the holidays", "ለበዓላት ምን ማተም"],
+    sub: "Meskel, Genna, Timket, Fasika, Enkutatash — the printing that gets given.",
+    url: "norchaprint.com/guides"
+  },
+  {
+    slug: "guide-send-photos", img: "flatlay",
+    title: ["Why photos come out soft", "ፎቶ ለምን ደብዘዝ ይላል"],
+    sub: "Nine times out of ten it is the file that arrived, not the printer.",
+    url: "norchaprint.com/guides"
+  },
+  {
+    slug: "guide-photo-wall", img: "frames",
+    title: ["Hanging a photo wall", "የፎቶ ግድግዳ መስቀል"],
+    sub: "One big print beats nine small ones, almost every time.",
+    url: "norchaprint.com/guides"
+  },
+  {
+    slug: "guides", img: null,
+    title: ["Guides", "መመሪያዎች"],
+    sub: "Practical answers about printing photographs, written by the studio.",
+    url: "norchaprint.com/guides"
+  },
+  {
     slug: "order", img: null,
     title: ["Did my photos arrive?", "ፎቶዎቼ ደርሰዋል?"],
     sub: "Look up your order with the reference and your phone number.",

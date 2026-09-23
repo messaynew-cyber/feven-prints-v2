@@ -67,6 +67,42 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/accessibility"/>
   </url>
   <url>
+    <loc>https://norchaprint.com/guides</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/guides"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/guides"/>
+  </url>
+  <url>
+    <loc>https://norchaprint.com/guides/photo-gifts-ethiopian-holidays</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/guides/photo-gifts-ethiopian-holidays"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/guides/photo-gifts-ethiopian-holidays"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/guides/photo-gifts-ethiopian-holidays"/>
+  </url>
+  <url>
+    <loc>https://norchaprint.com/guides/photos-that-print-well</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/guides/photos-that-print-well"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/guides/photos-that-print-well"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/guides/photos-that-print-well"/>
+  </url>
+  <url>
+    <loc>https://norchaprint.com/guides/hanging-a-photo-wall</loc>
+    <lastmod>2026-09-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://norchaprint.com/guides/hanging-a-photo-wall"/>
+    <xhtml:link rel="alternate" hreflang="am" href="https://norchaprint.com/guides/hanging-a-photo-wall"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://norchaprint.com/guides/hanging-a-photo-wall"/>
+  </url>
+  <url>
     <loc>https://norchaprint.com/standard-prints</loc>
     <lastmod>2026-09-23</lastmod>
     <changefreq>monthly</changefreq>

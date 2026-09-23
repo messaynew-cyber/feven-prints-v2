@@ -568,9 +568,9 @@ function renderStaticPage(cfg, sections, schemas, extra) {
     '<meta property="og:title" content="' + attr(cfg.title[0] + " — Norcha Print") + '">',
     '<meta property="og:description" content="' + attr(cfg.desc) + '">',
     '<meta property="og:url" content="' + url + '">',
-    '<meta property="og:image" content="' + DOMAIN + '/img/og/' + cfg.slug + '.jpg">',
+    '<meta property="og:image" content="' + DOMAIN + '/img/og/' + (cfg.card || cfg.slug) + '.jpg">',
     '<meta name="twitter:card" content="summary_large_image">',
-    '<meta name="twitter:image" content="' + DOMAIN + '/img/og/' + cfg.slug + '.jpg">',
+    '<meta name="twitter:image" content="' + DOMAIN + '/img/og/' + (cfg.card || cfg.slug) + '.jpg">',
     schemas.map(ldJson).join("\n"),
     '<link rel="icon" href="/img/icons/icon-192.png">',
     '<link rel="stylesheet" href="/css/style.css">',
@@ -651,6 +651,210 @@ function orderLookupHtml() {
     '      </div>',
     '    </div>'
   ].join("\n");
+}
+
+/* ── 3d. the guides ──────────────────────────────────────────────────────
+   The one thing ifolor has that we had none of: content. 152 articles on
+   theirs, zero here. Guides are how a print shop gets found for the question
+   somebody actually types — "what do I print for Meskel", "why do my photos
+   come out soft" — instead of only for "photo printing Addis".
+
+   THE RULE FOR EVERY PARAGRAPH IN HERE: it is either (a) arithmetic,
+   (b) general craft advice that is true anywhere, or (c) a description of a
+   product this studio already sells, priced by the price list rather than by
+   this file. No capability claims, no invented lead times, no new prices.
+
+   New Amharic throughout is on the [FEVEN] proofread list. */
+var GUIDES = [
+  {
+    slug: "guides/photo-gifts-ethiopian-holidays", card: "guide-holidays",
+    img: "photobook", accent: "accent-red",
+    title: ["What to print for the Ethiopian holidays", "ለኢትዮጵያ በዓላት ምን ማተም ይቻላል"],
+    lead: ["Meskel, Genna, Timket, Fasika, Enkutatash — the printing that actually gets given.",
+           "መስቀል፣ ገና፣ ጥምቀት፣ ፋሲካ፣ እንቁጣጣሽ — በእውነት የሚሰጠው ህትመት።"],
+    desc: "Photo gift ideas for Ethiopian holidays — photo books, calendars, canvas and prints, and the deadline that actually matters for each one.",
+    sections: [
+      ["Start from the date, not the gift",
+       "ከቀን ይጀምሩ፣ ከስጦታ አይደለም",
+       ["Every holiday has a last day to order, and it is earlier than people expect because a photo book takes " +
+        "longer than a print. The strip at the top of our home page shows the next one and counts it down.",
+        "ለየበዓሉ የመዘዝ የመጨረሻ ቀን አለ፤ የፎቶ መጽሐፍ ከህትመት የበለጠ ጊዜ ስለሚወስድ ቀኑ ቶሎ ያልቃል።"]],
+      ["Photo books — the one people keep",
+       "የፎቶ መጽሐፍ — በእውነት የሚቀመጠው",
+       ["A photo book is the gift that survives the year. Twenty pages is enough for a whole occasion — a wedding, " +
+        "a first year, a parent's whole life in pictures. They come in four formats from 20 × 20 cm to 30 × 30 cm, " +
+        "with the sizes and prices on the price list.",
+        "የፎቶ መጽሐፍ ለዓመታት የሚቆይ ስጦታ ነው። ሃያ ገጽ ለአንድ ዝግጅት በቂ ነው። ከ20×20 እስከ 30×30 ሳ.ሜ አራት መጠን አለው።"]],
+      ["Calendars — the gift that gets used every day",
+       "የቀን መቁጠሪያ — በየቀኑ የሚያገለግል",
+       ["A wall calendar with twelve of your photographs on it is the most-used gift on this list, because it hangs " +
+        "in the room where the family already is. For Enkutatash it also does a second job: it carries the whole " +
+        "year that is starting.",
+        "አስራ ሁለት ፎቶዎችዎ ያሉበት የግድግዳ የቀን መቁጠሪያ በጣም የሚያገለግል ስጦታ ነው። ለእንቁጣጣሽ የሚጀምረውን ዓመት ይይዛል።"]],
+      ["Canvas and framed prints — for the wall, not the shelf",
+       "ካንቫስና በፍሬም የተዘጋጁ — ለግድግዳ",
+       ["A canvas is what you give when the photograph is going to be looked at every day — a wedding portrait, " +
+        "grandparents, a family photograph that took three attempts to get everyone in one frame. Framed prints do " +
+        "the same job at smaller sizes, and cost less.",
+        "ካንቫስ በየቀኑ የሚታይ ፎቶ ሲሰጥ ይመረጣል — የሰርግ ፎቶ፣ አያቶች። በፍሬም የተዘጋጁ በትንሽ መጠን ተመሳሳይ ስራ ይሰራሉ።"]],
+      ["Prints, for the whole family",
+       "ህትመቶች — ለመላው ቤተሰብ",
+       ["Sometimes the honest answer is a stack of ordinary prints for everyone, at the price of a coffee each. " +
+        "Bulk orders get a discount, and that is usually the difference between giving one person something big and " +
+        "everybody getting something.",
+        "አንዳንድ ጊዜ ለሁሉም ተራ ህትመቶች መስጠት ይሻላል። በብዛት ሲዘዙ ቅናሽ አለ።"]]
+    ],
+    products: ["books", "calendars", "canvas", "prints"]
+  },
+  {
+    slug: "guides/photos-that-print-well", card: "guide-send-photos",
+    img: "flatlay", accent: "accent-yellow",
+    title: ["Why your photos come out soft — and how to fix it", "ፎቶዎ ለምን ደብዘዝ ይላል — እንዴት እንደሚስተካከል"],
+    lead: ["Nine times out of ten it is not the printer. It is the file that arrived.",
+           "ብዙ ጊዜ ችግሩ በማተሚያው አይደለም። በፋይሉ ነው።"],
+    desc: "Why printed photos come out soft or pixelated, what resolution each size really needs, and how to send a file that prints properly.",
+    sections: [
+      ["WhatsApp shrinks your photos unless you tell it not to",
+       "ዋትስአፕ ፎቶዎን ያሳንሳል",
+       ["Sending a photo as a Photo makes WhatsApp compress it hard — often down to a tenth of its size. That is " +
+        "fine on a screen and visible immediately on paper. Send it as a Document instead: same photo, original " +
+        "quality, no compression. You can also use the upload box on our home page, which never re-compresses.",
+        "ፎቶውን እንደ ፎቶ ከላኩ ዋትስአፕ በጣም ያሳንሰዋል። በስክሪን ላይ ጥሩ ይመስላል፣ በወረቀት ላይ ግን ይታያል። እንደ ሰነድ ይላኩ።"]],
+      ["How many pixels each size needs",
+       "ለየመጠኑ ስንት ፒክሰል ያስፈልጋል",
+       ["At 300 dots per inch — the usual standard for a crisp print — a 10 × 15 cm print needs about 1180 × 1770 " +
+        "pixels, A4 needs about 2480 × 3508, and an 80 × 120 cm canvas would need roughly 9450 × 14175, which no " +
+        "phone makes. That last number is why large canvas is looked at from further away: send the biggest " +
+        "original you have and we will tell you honestly how it will look before printing.",
+        "በ300 dpi ለ10×15 ሳ.ሜ ወደ 1180×1770 ፒክሰል፣ ለA4 ወደ 2480×3508 ይፈልጋል። የሚገኘውን ትልቁን ዋና ፋይል ይላኩ፤ ከማተም በፊት እንነግርዎታለን።"]],
+      ["Never send a screenshot of a photo",
+       "የፎቶ ስክሪንሾት አይላኩ",
+       ["A screenshot is your screen, not your photograph. It arrives smaller, cropped to the shape of a phone, and " +
+        "with the phone's own user interface in it if you were not careful. Send the original from your gallery — " +
+        "the file the camera wrote.",
+        "ስክሪንሾት ፎቶው አይደለም፤ የስክሪንዎ ምስል ነው። ከጋለሪዎ ዋናውን ፋይል ይላኩ።"]],
+      ["Real photographs of old prints are better than nothing",
+       "የቆዩ ፎቶዎች ፎቶ ከመጥፋት ይሻላል",
+       ["If the only copy of a photograph is a print from thirty years ago, photograph it in daylight, straight on, " +
+        "filling the frame, with no shadow from your hand. We can print from that. It will never be as sharp as the " +
+        "original negative would have been, and we will tell you what to expect.",
+        "የብሉ ቅጂ የፎቶ ህትመት ብቻ ከሆነ በብርሃን ቀጥ ብለው ፎቶ ያንሱ። ከዚያ ማተም እንችላለን።"]],
+      ["What we can and cannot fix",
+       "ምን ማስተካከል እንችላለን",
+       ["We can correct brightness, contrast and colour a little. We cannot invent detail that is not in the file, " +
+        "and we will not pretend otherwise — if a photo will come out soft at the size you want, we would rather " +
+        "tell you before printing than after.",
+        "ብሩህነትንና ቀለምን በትንሹ ማስተካከል እንችላለን። በፋይሉ የሌለውን ዝርዝር ማፍለቅ አንችልም።"]]
+    ],
+    products: ["prints", "canvas", "frames"]
+  },
+  {
+    slug: "guides/hanging-a-photo-wall", card: "guide-photo-wall",
+    img: "frames", accent: "accent-green",
+    title: ["Hanging a photo wall that looks deliberate", "ቆንጆ የፎቶ ግድግዳ እንዴት ይሰቀላል"],
+    lead: ["One big print beats nine small ones, almost every time.",
+           "አንድ ትልቅ ህትመት ከዘጠኝ ትንሽ ይሻላል።"],
+    desc: "How to hang photographs so a wall looks intentional: heights, spacing, one-large-versus-many, and frame choices.",
+    sections: [
+      ["The one rule that matters",
+       "በጣም አስፈልጋሚው ህግ",
+       ["Hang the middle of the picture at eye level — around 145 to 150 cm from the floor for most rooms. Almost " +
+        "every wall that looks wrong is wrong for this reason alone: the pictures are too high because somebody " +
+        "hung them above the furniture instead of for the person standing there.",
+        "የስዕሉን መሃከል ከወለሉ ወደ 145–150 ሳ.ሜ ከፍታ ላይ ይስቀሉ። የተሳሳቱ ግድግዳዎች ብዙውን ጊዜ ከፍ ብለው ስለተሰቀሉ ነው።"]],
+      ["One big print, or a grid",
+       "አንድ ትልቅ ወይም ብዙ ትንሽ",
+       ["A single large canvas on an empty wall looks like a decision. The same wall covered in nine small frames " +
+        "looks like a pile that got away from you. If you want several, make them a deliberate row or grid: equal " +
+        "gaps, aligned edges, same size.",
+        "በባዶ ግድግዳ ላይ አንድ ትልቅ ካንቫስ ውሳኔ ይመስላል። ዘጠኝ ትንሽ ክፈፎች ግን ብዙ ይመስላሉ። ብዙ ከፈለጉ እኩል ክፍተት ይኑሩ።"]],
+      ["Spacing, in numbers",
+       "ክፍተት፣ በቁጥር",
+       ["Leave 5 to 8 cm between frames in a grid, and at least 20 cm of clear wall around the whole group so it " +
+        "reads as one thing rather than something squeezed into the corner. If you are hanging above furniture, " +
+        "leave 15 to 25 cm between the bottom edge and the top of the furniture.",
+        "በክፈፎች መካከል 5–8 ሳ.ሜ፣ በቡድኑ ዙሪያ ቢያንስ 20 ሳ.ሜ ይተዉ። ከቤት ዕቃ በላይ ከሆነ 15–25 ሳ.ሜ ይተዉ።"]],
+      ["Frames: cheaper than you think, and they change everything",
+       "ክፈፎች — ከሚጠብቁት ያነሰ ዋጋ",
+       ["The same photograph looks expensive in a frame and unfinished without one. Keep the frame colour " +
+        "consistent across a group — all black, or all natural wood — and let the photographs carry the variety. " +
+        "Our framed prints arrive ready to hang.",
+        "ተመሳሳይ ፎቶ በክፈፍ ውስጥ የተለየ ይመስላል። የክፈፉን ቀለም ለሁሉም አንድ ያድርጉ። የእኛ በፍሬም የተዘጋጁ ለመስቀል ዝግጁ ናቸው።"]],
+      ["Lighting",
+       "መብራት",
+       ["Photographs are paper. Strong sunlight through glass fades them over years, so a wall that never takes " +
+        "direct sun will look better for longer. If the wall does catch the sun, that is a reason to choose a matte " +
+        "paper rather than a glossy one.",
+        "ፎቶዎች ወረቀት ናቸው። ቀጥተኛ የፀሐይ ብርሃን በዓመታት ያደበዝዛቸዋል። ፀሐይ የሚደርስበት ግድግዳ ከሆነ ወረቀቱን ይመርጡ።"]]
+    ],
+    products: ["frames", "canvas", "prints"]
+  }
+];
+GUIDES.forEach(function (g) { if (!g.card) g.card = g.slug.replace(/\//g, "-"); });
+
+function guideHtml(g) {
+  var cfg = {
+    slug: g.slug, file: g.slug.split("/").pop() + ".html",
+    title: g.title, lead: g.lead, desc: g.desc, img: g.img, card: g.card
+  };
+  var article = {
+    "@context": "https://schema.org", "@type": "Article",
+    "headline": g.title[0], "description": g.desc, "inLanguage": "en",
+    "image": DOMAIN + "/img/" + g.img + ".jpg",
+    "author": { "@type": "Organization", "name": "Norcha Print" },
+    "publisher": { "@type": "Organization", "name": "Norcha Print" },
+    "mainEntityOfPage": DOMAIN + "/" + g.slug
+  };
+  /* a short list of the products the article points at, priced from the data file */
+  var related = PAGES.filter(function (pg) { return (g.products || []).indexOf(pg.family) !== -1; });
+  var links = related.map(function (pg) {
+    return '      <div class="price-card ' + pg.accent + '">\n' +
+      '        <h3 data-en="' + attr(pg.name[0]) + '" data-am="' + attr(pg.name[1]) + '">' + esc(pg.name[0]) + '</h3>\n' +
+      '        <p class="price-note" data-en="from ' + attr(D.money(Math.min.apply(null, D.products[pg.family].sizes.map(function (x) { return x.price; })))) + '" data-am="ከ' + attr(moneyAm(Math.min.apply(null, D.products[pg.family].sizes.map(function (x) { return x.price; })))) + ' ጀምሮ">from ' + esc(D.money(Math.min.apply(null, D.products[pg.family].sizes.map(function (x) { return x.price; })))) + '</p>\n' +
+      '        <a class="link-cta" href="/' + pg.slug + '" data-en="Sizes and prices" data-am="መጠን እና ዋጋ">Sizes and prices</a>\n' +
+      '      </div>';
+  }).join("\n");
+  var extra = '\n    <div class="wrap"><div class="prose-block reveal"><h2 data-en="The products in this guide" data-am="በዚህ መመሪያ ያሉት ምርቶች">The products in this guide</h2>\n' +
+    '    <div class="prod-cards">\n' + links + '\n    </div>\n' +
+    '    <p class="price-note"><a class="link-cta" href="/prices" data-en="See the whole price list" data-am="ሙሉ የዋጋ ዝርዝር">See the whole price list</a></p>\n' +
+    '    </div></div>\n';
+  var crumbs = [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN + "/" },
+    { "@type": "ListItem", "position": 2, "name": "Guides", "item": DOMAIN + "/guides" },
+    { "@type": "ListItem", "position": 3, "name": g.title[0], "item": DOMAIN + "/" + g.slug }
+  ];
+  return renderStaticPage(cfg, g.sections, [
+    article,
+    { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": crumbs }
+  ], extra);
+}
+
+function guidesIndexHtml() {
+  var cards = GUIDES.map(function (g) {
+    return '      <div class="price-card ' + (g.accent || "accent-green") + '">\n' +
+      '        <h3 data-en="' + attr(g.title[0]) + '" data-am="' + attr(g.title[1]) + '">' + esc(g.title[0]) + '</h3>\n' +
+      '        <p class="price-note" data-en="' + attr(g.lead[0]) + '" data-am="' + attr(g.lead[1]) + '">' + esc(g.lead[0]) + '</p>\n' +
+      '        <a class="link-cta" href="/' + g.slug + '" data-en="Read it" data-am="ያንብቡ">Read it</a>\n' +
+      '      </div>';
+  }).join("\n");
+  var extra = '\n    <div class="wrap"><div class="prod-cards reveal">\n' + cards + '\n    </div></div>\n';
+  var cfg = {
+    slug: "guides", file: "guides.html", card: "guides",
+    title: ["Guides", "መመሪያዎች"],
+    lead: ["Practical answers about printing photographs — written by the studio, not for a search engine.",
+           "ስለ ፎቶ ህትመት ጠቃሚ መልሶች — በስቱዲዮው የተጻፉ።"],
+    desc: "Guides from Norcha Print: what to print for the Ethiopian holidays, why photos come out soft, and how to hang a photo wall."
+  };
+  var lb = { "@context": "https://schema.org", "@type": "CollectionPage", "name": "Norcha Print guides", "inLanguage": "en",
+    "hasPart": GUIDES.map(function (g) { return { "@type": "Article", "name": g.title[0], "url": DOMAIN + "/" + g.slug }; }) };
+  return renderStaticPage(cfg, [
+    ["What is in here", "በዚህ ውስጥ ያለው",
+     [["Three guides so far, each one answering something a customer actually asked us. If there is a question you " +
+       "keep having to ask, tell us and it becomes the next one.",
+       "እስካሁን ሦስት መመሪያዎች። ተደጋግሞ የሚጠይቁት ጥያቄ ካለ ይንገሩን፣ ቀጣዩ ይሆናል።"]]]
+  ], [lb, { "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": DOMAIN + "/" },
+      { "@type": "ListItem", "position": 2, "name": "Guides", "item": DOMAIN + "/guides" } ] }], extra);
 }
 
 function trustPages() {
@@ -1091,13 +1295,27 @@ TRUST_PAGES_OUT.forEach(function (t) {
   written.push(t.cfg.file + " (" + t.html.length + " bytes)");
 });
 
+/* ── 6d. write the guides + their index ─────────────────────────────── */
+if (!CHECK) fs.mkdirSync(path.join(ROOT, "guides"), { recursive: true });
+GUIDES.forEach(function (g) {
+  var html = guideHtml(g);
+  assertProse(html, g.slug);
+  if (CHECK) { written.push(g.slug + " (checked)"); return; }
+  fs.writeFileSync(path.join(ROOT, g.slug + ".html"), html, "utf8");
+  written.push(g.slug + ".html (" + html.length + " bytes)");
+});
+var guidesIdx = guidesIndexHtml();
+if (!CHECK) { fs.writeFileSync(path.join(ROOT, "guides.html"), guidesIdx, "utf8");
+              written.push("guides.html (" + guidesIdx.length + " bytes)"); }
+
 /* ── 7. sitemap ──────────────────────────────────────────────────────── */
 if (!CHECK) {
   var urls = ['<url>\n    <loc>' + DOMAIN + '/</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n' +
     '    <xhtml:link rel="alternate" hreflang="en" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="am" href="' + DOMAIN + '/"/>\n' +
     '    <xhtml:link rel="alternate" hreflang="x-default" href="' + DOMAIN + '/"/>\n  </url>'];
-  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"], ["order", "0.4", "yearly"], ["accessibility", "0.3", "yearly"]]
+  [["prices", "0.9", "monthly"], ["contact", "0.6", "yearly"], ["about", "0.5", "yearly"], ["privacy", "0.3", "yearly"], ["order", "0.4", "yearly"], ["accessibility", "0.3", "yearly"], ["guides", "0.6", "monthly"]]
+    .concat(GUIDES.map(function (g) { return [g.slug, "0.7", "monthly"]; }))
     .concat(PAGES.map(function (p) { return [p.slug, "0.8", "monthly"]; })).forEach(function (row) {
     var u = DOMAIN + "/" + row[0];
     urls.push('<url>\n    <loc>' + u + '</loc>\n    <lastmod>2026-09-23</lastmod>\n    <changefreq>' + row[2] + '</changefreq>\n    <priority>' + row[1] + '</priority>\n' +
@@ -1112,7 +1330,7 @@ if (!CHECK) {
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n' +
     '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n  ' +
     urls.join("\n  ") + '\n</urlset>\n', "utf8");
-  written.push("sitemap.xml (" + (PAGES.length + 7) + " urls)");
+  written.push("sitemap.xml (" + (PAGES.length + 8 + GUIDES.length) + " urls)");
 }
 
 console.log((CHECK ? "CHECK " : "BUILT ") + PAGES.length + " product pages:");

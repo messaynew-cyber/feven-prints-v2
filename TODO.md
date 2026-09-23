@@ -28,6 +28,7 @@
 | T-17 | FAQ anchors + schema | ✅ shipped | `eeaefda` |
 | T-FAQ | per-product question trees | ✅ shipped | — |
 | OG | per-page social share cards | ✅ shipped | `39985f8` |
+| GUIDES | three bilingual guides + index | ✅ shipped | — |
 | T-19 | Amharic font subset (−76.5%) | ✅ shipped | `676d904` |
 | T-18 | gift vouchers (offline codes) | ✅ shipped | `3826be0` |
 | T-20 | counter sheet (/counter.html) | ✅ shipped | `6af1de1` |

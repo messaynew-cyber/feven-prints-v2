@@ -341,6 +341,53 @@ function jpegSize(file) {
   console.log("  · share cards: " + checked + " page(s) point at a valid 1200x630 card");
 }
 
+/* ── the guides ─────────────────────────────────────────────────────────
+   Content pages are the easiest place to ship a page that reads well and
+   breaks: a missing reveal, a card that does not exist, a stray tag. Same
+   treatment as everything else. */
+const GUIDES = [
+  ["guides/photo-gifts-ethiopian-holidays.html", "guides/photo-gifts-ethiopian-holidays", "guide-holidays", 4],
+  ["guides/photos-that-print-well.html", "guides/photos-that-print-well", "guide-send-photos", 4],
+  ["guides/hanging-a-photo-wall.html", "guides/hanging-a-photo-wall", "guide-photo-wall", 4],
+  ["guides.html", "guides", "guides", 2]
+];
+GUIDES.forEach(function (triple) {
+  const [file, urlslug, card, minSections] = triple;
+  if (!fs.existsSync(path.join(ROOT, file))) { failures++; console.log("  ✗ " + file + " · MISSING — run build-pages.js"); return; }
+  const { dom, errors } = load(file);
+  const d = dom.window.document;
+  check(file, "runtime errors", errors.length === 0, errors.join(" | "));
+  const reveals = d.querySelectorAll(".reveal");
+  let hidden = 0;
+  reveals.forEach(r => { if (!r.classList.contains("in")) hidden++; });
+  check(file, "reveal elements visible", reveals.length > 0 && hidden === 0, hidden + " hidden");
+  check(file, "exactly one h1", d.querySelectorAll("h1").length === 1);
+  const canon = d.querySelector('link[rel="canonical"]');
+  check(file, "canonical /" + urlslug, canon && canon.getAttribute("href") === "https://norchaprint.com/" + urlslug, canon && canon.getAttribute("href"));
+  const shown = [...d.querySelectorAll("h2[data-en]")].filter(h => (h.textContent || "").trim().length > 4).length;
+  check(file, "has real sections", shown >= minSections, shown + " headings (need " + minSections + ")");
+  const noAm = [...d.querySelectorAll("[data-en]")].filter(n => !n.hasAttribute("data-am")).length;
+  check(file, "all EN strings have AM", noAm === 0, String(noAm));
+  const types = [...d.querySelectorAll('script[type="application/ld+json"]')].map(b => { try { return JSON.parse(b.textContent)["@type"]; } catch (e) { return "?"; } });
+  check(file, "declares structured data", types.length >= 2, types.join(","));
+  const bal = markupBalance(fs.readFileSync(path.join(ROOT, file), "utf8"));
+  check(file, "markup balanced", bal.unclosed.length === 0 && bal.bad.length === 0,
+    (bal.unclosed.join(",") || "-") + " / " + (bal.bad.join(",") || "-"));
+  const og = (fs.readFileSync(path.join(ROOT, file), "utf8").match(/property="og:image" content="([^"]+)"/) || [])[1];
+  check(file, "share card is its own", og === "https://norchaprint.com/img/og/" + card + ".jpg", String(og));
+  const cardFile = path.join(ROOT, "img/og/" + card + ".jpg");
+  const size = fs.existsSync(cardFile) ? jpegSize(cardFile) : null;
+  check(file, "share card is 1200x630", !!size && size.w === 1200 && size.h === 630, size ? size.w + "x" + size.h : "missing");
+  dom.window.close();
+  console.log("  · " + file + ": " + shown + " sections, " + reveals.length + " reveals, " + (errors.length ? errors.length + " ERRORS" : "clean"));
+});
+{
+  /* read the sitemap here rather than leaning on a variable declared further
+     down the file — that is exactly how this line crashed the whole guard. */
+  const smGuides = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
+  GUIDES.forEach(([file, urlslug]) => check("sitemap.xml", "advertises /" + urlslug, smGuides.indexOf("https://norchaprint.com/" + urlslug) !== -1));
+}
+
 /* the sitemap must advertise every page, or the pages exist for nobody */
 const sm = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 PAGES.forEach(([, slug]) => check("sitemap.xml", "advertises /" + slug, sm.indexOf("https://norchaprint.com/" + slug) !== -1));
