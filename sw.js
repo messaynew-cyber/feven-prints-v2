@@ -31,7 +31,7 @@
    precached, so without this bump a returning visitor keeps the old prices. */
 /* v8: reorder, quote requests and the order-reference reply (T-10/11/12),
    plus the order-message brand name corrected to Norcha Print. */
-const CACHE = "fevens-v9";
+const CACHE = "fevens-v10";
 
 const SHELL = [
   "./",
@@ -47,8 +47,8 @@ const SHELL = [
   "./fonts/noto-ethiopic-slim.woff2",
   "./img/icons/icon-192.png",
   "./img/icons/icon-512.png",
-  "./img/canvas.webp",
-  "./img/calendar.webp"
+  "./img/canvas-720.webp",
+  "./img/calendar-720.webp"
 ];
 
 self.addEventListener("install", (event) => {

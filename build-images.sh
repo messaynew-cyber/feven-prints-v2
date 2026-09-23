@@ -34,7 +34,7 @@ for src in img/*"$MASTER_SUFFIX"; do
   case "$name" in *-400|*-720|og-card) continue;; esac
   for w in $WIDTHS; do
     # jpg fallback for browsers/paths without WebP (and for the og/social scrapers)
-    magick "$src" -resize "${w}x${w}" -strip -quality 78 "img/${name}-${w}.jpg"
+    magick "$src" -resize "${w}x${w}" -strip -sampling-factor 4:2:0 -interlace JPEG -quality 70 "img/${name}-${w}.jpg"
     # webp is what almost every visitor actually gets
     cwebp -quiet -q 80 -resize "$w" "$w" "$src" -o "img/${name}-${w}.webp"
   done
@@ -68,12 +68,21 @@ def sizes_for(name, hero=False, prod=False):
 def rewrite(html, prod=False):
     # <source type="image/webp" srcset="img/x.webp">  →  + srcset list + sizes
     def fix_source(m):
+        tag = m.group(0)
+        if 'sizes=' in tag:
+            return tag                      # already done — stay idempotent
         src = m.group(2)
         name, ext = src.rsplit("/", 1)[1].rsplit(".", 1)
         root = src.rsplit("/", 1)[0]
         sizes = sizes_for(name, prod=prod)
-        return '%s%s srcset="%s" sizes="%s"%s' % (
-            m.group(1), src, srcset(name, ext, root), sizes, m.group(3))
+        # group 1 already carries `srcset="`, so the value is replaced, not
+        # appended. Appending it produced `srcset="a.webp srcset="b.webp 400w"`
+        # — a candidate with no descriptor next to candidates with one, which
+        # makes the whole srcset invalid and silently sends everyone to JPEG.
+        # group 3 still carries the closing quote of the OLD srcset value, so
+        # it is dropped — otherwise the tag ends `sizes="..."">`
+        return '%s%s" sizes="%s"%s' % (m.group(1), srcset(name, ext, root), sizes,
+                                       m.group(3).lstrip('"'))
     html = re.sub(r'(<source type="image/webp" srcset=")([^"]+)("[^>]*>)', fix_source, html)
 
     # <img src="img/x.jpg" ...>  →  add srcset + sizes (keeps width/height)
@@ -111,14 +120,27 @@ if old in idx:
     io.open("index.html", "w", encoding="utf-8").write(idx.replace(old, new))
     print("  ✓ hero preload now carries imagesrcset")
 
-# the LCP image must not be lazy
+# the LCP image is the first hero slide, and only it: mark it high priority.
+# This runs last because the srcset patch rewrites the tag it targets.
 idx = io.open("index.html", encoding="utf-8").read()
-before = idx
-idx = idx.replace('<img src="img/photobook.jpg" alt="Hardcover photo book',
-                  '<img src="img/photobook.jpg" fetchpriority="high" alt="Hardcover photo book')
-if idx != before:
-    io.open("index.html", "w", encoding="utf-8").write(idx)
-    print("  ✓ hero image marked fetchpriority=high")
+i = idx.find('src="img/photobook.jpg"')
+if i != -1:
+    start = idx.rindex("<img", 0, i)
+    end = idx.index(">", i)
+    tag = idx[start:end + 1]
+    if "fetchpriority" not in tag and "loading=" not in tag:
+        idx = idx[:start] + tag.replace("<img ", '<img fetchpriority="high" ', 1) + idx[end + 1:]
+        io.open("index.html", "w", encoding="utf-8").write(idx)
+        print("  ✓ hero image marked fetchpriority=high (first slide only)")
+
+# 4. refuse to ship a malformed candidate list
+bad = re.findall(r'srcset="[^"]*srcset=', idx)
+if bad:
+    raise SystemExit("FATAL: malformed srcset in index.html")
+for attr in ("srcset", "sizes", "imagesrcset", "imagesizes"):
+    if re.search(attr + r'="[^"]*""', idx):
+        raise SystemExit("FATAL: " + attr + " closed twice in index.html")
+print("  ✓ image markup verified: no duplicated srcset attribute")
 PY
 
 echo "── 3. totals ──────────────────────────────────────────────"
