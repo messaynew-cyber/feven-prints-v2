@@ -29,8 +29,11 @@ deployed site, not the repo.
    250ms: opacity 1, 1, 0, then removed from the DOM — visible at first paint, gone inside a second, and the page is
    fully usable afterwards. Honest number: it reads for roughly half to three-quarters of a second, not the full
    1.2s the delay suggests, because the markup paints before the script that starts the clock.
-2. **The Architect owes two dashboard clicks:** www → apex redirect, and Cloudflare Web Analytics + Search Console.
-   Neither is code; both are in his hands.
+2. **The Architect owes dashboard clicks:** the **www → apex redirect** (needs `Zone → Rulesets: Edit` on the token
+   or one dashboard rule) and **Search Console verification** (URL-prefix + the HTML tag; send me the tag and I add it
+   to every page from the generator). ✅ **Cloudflare Web Analytics went live 2026-09-24 00:11** — one beacon on all
+   17 pages, wired from one place in `build-pages.js`, and the privacy page was corrected in the same commit because
+   it had promised we measured nothing.
 3. **Search Console is deliberately NOT submitted** until Feven confirms prices, so Google never indexes a
    placeholder number.
 4. **The Feven interview sheet** — ten questions that unlock wall materials, greeting cards, the calendar range
