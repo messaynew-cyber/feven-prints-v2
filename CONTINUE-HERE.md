@@ -25,8 +25,10 @@ deployed site, not the repo.
 | **fixes** | nav collapses at **940px** (was 860, which overflowed 861–880); mobile menu can no longer stay open at desktop width; the phone number is the real one, **+251 911 729 779** |
 
 ### 🔴 OPEN — the first things to touch next session
-1. **Unverified:** the boot mark's 700ms minimum display (`072e44f`). It is deployed; the timing check was cut off
-   before it ran. Measure it: it should be visible ~700ms then gone, ~1.2s in total.
+1. ~~Unverified: the boot mark's minimum display.~~ ✅ **VERIFIED 2026-09-24 10:30** by sampling the live page every
+   250ms: opacity 1, 1, 0, then removed from the DOM — visible at first paint, gone inside a second, and the page is
+   fully usable afterwards. Honest number: it reads for roughly half to three-quarters of a second, not the full
+   1.2s the delay suggests, because the markup paints before the script that starts the clock.
 2. **The Architect owes two dashboard clicks:** www → apex redirect, and Cloudflare Web Analytics + Search Console.
    Neither is code; both are in his hands.
 3. **Search Console is deliberately NOT submitted** until Feven confirms prices, so Google never indexes a
