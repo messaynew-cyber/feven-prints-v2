@@ -33,18 +33,46 @@
     { id: "graduation", en: "Graduation season",  am: "የምረቃ ወቅት",   md: [7, 1]  }
   ];
 
-  /* Orthodox Easter (Fasika) — Meeus/Jones/Butcher Gregorian algorithm,
-     then the Julian-based Orthodox offset. Good enough for a shop banner;
-     [FEVEN] should confirm against the official Ethiopian calendar. */
+  /* Orthodox Easter (Fasika).
+   *
+   * 🔴 CORRECTED 2026-09-25 — this previously added 7 days and was a week or
+   * more out, on a WRONG WEEKDAY, every single year.
+   *
+   * WHAT WAS WRONG
+   * Meeus/Jones/Butcher as written above yields a date in the JULIAN calendar.
+   * The old code added 7 days, commented "Orthodox is usually +1 week". But
+   * +7 days never converts Julian to Gregorian — the offset has been 13 days
+   * since 1900 (it becomes 14 in 2100). The result was not just late, it was
+   * arithmetically impossible: it produced a MONDAY every year for 2025-2030.
+   * Easter is a Sunday in every tradition.
+   *
+   *   was: 14 Apr 2025, 6 Apr 2026, 26 Apr 2027   (all Mondays)
+   *   now: 20 Apr 2025, 12 Apr 2026,  2 May 2027  (all Sundays, and matching
+   *                                                  every published Orthodox
+   *                                                  Easter calendar)
+   *
+   * TWO FIXES, not one
+   * 1. The offset: +7 became the century table below.
+   * 2. The calendar: Date.UTC, not local time. The old code used the local
+   *    getDate/setDate pair, which shifts by a day in any timezone whose UTC
+   *    offset crosses midnight — and would have been silently wrong again the
+   *    moment anything compared these dates against a UTC value.
+   *
+   * [FEVEN] should still confirm against the official Ethiopian calendar; this
+   * is now consistent with published Orthodox dates, not with her shop's list.
+   */
   function fasika(year) {
     var a = year % 4, b = year % 7, c = year % 19;
     var d = (19 * c + 15) % 30;
     var e = (2 * a + 4 * b - d + 34) % 7;
     var month = Math.floor((d + e + 114) / 31);
     var day = ((d + e + 114) % 31) + 1;
-    var greg = new Date(year, month - 1, day);       // Western Easter
-    greg.setDate(greg.getDate() + 7);                // Orthodox is usually +1 week
-    return greg;
+
+    /* This is the JULIAN date. Convert it to the Gregorian calendar. */
+    var julian = new Date(Date.UTC(year, month - 1, day));
+    var offset = (year < 1900) ? 12 : (year < 2100 ? 13 : 14);
+    julian.setUTCDate(julian.getUTCDate() + offset);
+    return julian;
   }
 
   /* The most generous lead time in the catalogue, in production days.
@@ -52,11 +80,11 @@
   var MAX_LEAD = 3;      // photo books
 
   function ymd(d) {
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    return d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + d.getUTCDate();
   }
 
   function startOfDay(d) {
-    return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   }
 
   function daysBetween(a, b) {
@@ -65,14 +93,14 @@
 
   /* Every upcoming occasion, soonest first, with its real order-by date. */
   function upcoming(from, horizonDays, leadDays) {
-    from = startOfDay(from || new Date());
+    from = startOfDay(from || new Date());   /* startOfDay normalises to UTC */
     horizonDays = horizonDays || 90;
     leadDays = (leadDays === undefined) ? MAX_LEAD : leadDays;
 
-    var out = [], y = from.getFullYear();
+    var out = [], y = from.getUTCFullYear();
     for (var yi = 0; yi <= 1; yi++) {
       HOLIDAYS.forEach(function (h) {
-        var d = new Date(y + yi, h.md[0] - 1, h.md[1]);
+        var d = new Date(Date.UTC(y + yi, h.md[0] - 1, h.md[1]));
         out.push({ id: h.id, en: h.en, am: h.am, date: d });
       });
       out.push({ id: "fasika", en: "Fasika", am: "ፋሲካ", date: fasika(y + yi) });
@@ -81,11 +109,16 @@
     return out
       .filter(function (h) { return daysBetween(from, h.date) >= 0; })
       .map(function (h) {
-        var orderBy = new Date(h.date);
+        /* Step back leadDays WORKING days. A Sunday is stepped over without
+           counting, because the shop is shut — a deadline that lands on a day
+           the customer cannot act on is not a deadline. All arithmetic is UTC
+           so that a fixed-date holiday and the computed Fasika date are
+           measured on the same calendar. */
+        var orderBy = new Date(h.date.getTime());
         var back = leadDays;
-        while (back > 0) {                         // step back over Sundays
-          orderBy.setDate(orderBy.getDate() - 1);
-          if (orderBy.getDay() !== 0) back--;
+        while (back > 0) {
+          orderBy.setUTCDate(orderBy.getUTCDate() - 1);
+          if (orderBy.getUTCDay() !== 0) back--;
         }
         return {
           id: h.id, en: h.en, am: h.am,
@@ -157,7 +190,7 @@
   };
   function fmt(d, lang) {
     var L = (lang === "am") ? "am" : "en";
-    return DAY_NAMES[L][d.getDay()] + " " + d.getDate() + " " + MONTHS[L][d.getMonth()];
+    return DAY_NAMES[L][d.getUTCDay()] + " " + d.getUTCDate() + " " + MONTHS[L][d.getUTCMonth()];
   }
 
   root.NorchaHolidays = {
