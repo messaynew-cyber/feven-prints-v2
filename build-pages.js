@@ -730,9 +730,9 @@ var GUIDES = [
       ["Photo books — the one people keep",
        "የፎቶ መጽሐፍ — በእውነት የሚቀመጠው",
        ["A photo book is the gift that survives the year. Twenty pages is enough for a whole occasion — a wedding, " +
-        "a first year, a parent's whole life in pictures. They come in four formats from 20 × 20 cm to 30 × 30 cm, " +
-        "with the sizes and prices on the price list.",
-        "የፎቶ መጽሐፍ ለዓመታት የሚቆይ ስጦታ ነው። ሃያ ገጽ ለአንድ ዝግጅት በቂ ነው። ከ20×20 እስከ 30×30 ሳ.ሜ አራት መጠን አለው።"]],
+        "a first year, a parent's whole life in pictures. One book, one price — see the price list, and message us " +
+        "if you want something larger.",
+        "የፎቶ መጽሐፍ ለዓመታት የሚቆይ ስጦታ ነው። ሃያ ገጽ ለአንድ ዝግጅት በቂ ነው። አንድ መጠን፣ አንድ ዋጋ አለው።"]],
       ["Calendars — the gift that gets used every day",
        "የቀን መቁጠሪያ — በየቀኑ የሚያገለግል",
        ["A wall calendar with twelve of your photographs on it is the most-used gift on this list, because it hangs " +
@@ -771,7 +771,7 @@ var GUIDES = [
       ["How many pixels each size needs",
        "ለየመጠኑ ስንት ፒክሰል ያስፈልጋል",
        ["At 300 dots per inch — the usual standard for a crisp print — a 10 × 15 cm print needs about 1180 × 1770 " +
-        "pixels, A4 needs about 2480 × 3508, and an 80 × 120 cm canvas would need roughly 9450 × 14175, which no " +
+        "pixels, A4 needs about 2480 × 3508, and a 60 × 120 cm canvas would need roughly 7085 × 14175, which no " +
         "phone makes. That last number is why large canvas is looked at from further away: send the biggest " +
         "original you have and we will tell you honestly how it will look before printing.",
         "በ300 dpi ለ10×15 ሳ.ሜ ወደ 1180×1770 ፒክሰል፣ ለA4 ወደ 2480×3508 ይፈልጋል። የሚገኘውን ትልቁን ዋና ፋይል ይላኩ፤ ከማተም በፊት እንነግርዎታለን።"]],
@@ -1018,7 +1018,7 @@ function tierTable(p) {
    New Amharic in here is on the [FEVEN] proofread list. The size lists and
    prices are numbers and units, so they are language-neutral by construction. */
 function pickPixels(label) {
-  /* "80 × 120 cm" → the pixels a 300 dpi print of that size needs. Pure
+  /* "60 × 120 cm" → the pixels a 300 dpi print of that size needs. Pure
      arithmetic, so it cannot be wrong about a photo we have not seen. */
   var m = String(label).match(/(\d+(?:\.\d+)?)\s*×\s*(\d+(?:\.\d+)?)/);
   if (!m) return null;

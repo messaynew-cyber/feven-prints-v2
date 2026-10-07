@@ -554,7 +554,7 @@
             </div>
             <div class="field">
               <label for="upSize" id="upSizeL" data-en="Size, if you know it" data-am="መጠን (ካወቁ)">Size, if you know it</label>
-              <input id="upSize" name="size" type="text" placeholder="30 × 40 cm">
+              <input id="upSize" name="size" type="text" placeholder="40 × 60 cm">
             </div>
             <div class="field">
               <label for="upQty" id="upQtyL" data-en="How many" data-am="ብዛት">How many</label>
@@ -639,19 +639,27 @@
 
       <div class="field">
         <label for="of-size" data-en="Size" data-am="መጠን">Size</label>
-        <input id="of-size" name="size" type="text" list="of-sizes" placeholder="e.g. 30 × 40 cm"
-               data-en-ph="e.g. 30 × 40 cm" data-am-ph="ምሳሌ፡ 30 × 40 ሳ.ሜ" autocomplete="off">
+        <input id="of-size" name="size" type="text" list="of-sizes" placeholder="e.g. 40 × 60 cm"
+               data-en-ph="e.g. 40 × 60 cm" data-am-ph="ምሳሌ፡ 40 × 60 ሳ.ሜ" autocomplete="off">
         <datalist id="of-sizes">
           <option value="10 × 15 cm"></option>
           <option value="13 × 18 cm"></option>
           <option value="15 × 21 cm"></option>
+          <option value="15 × 20 cm"></option>
           <option value="20 × 30 cm"></option>
-          <option value="A4 (21 × 30 cm)"></option>
-          <option value="A3 (30 × 42 cm)"></option>
-          <option value="30 × 40 cm"></option>
+          <option value="30 × 46 cm"></option>
+          <option value="30 × 60 cm"></option>
+          <option value="30 × 90 cm"></option>
           <option value="40 × 60 cm"></option>
-          <option value="60 × 80 cm"></option>
-          <option value="80 × 120 cm"></option>
+          <option value="50 × 80 cm"></option>
+          <option value="60 × 90 cm"></option>
+          <option value="60 × 120 cm"></option>
+          <option value="A4 framed"></option>
+          <option value="A3 framed"></option>
+          <option value="40 × 60 cm framed"></option>
+          <option value="A5 calendar"></option>
+          <option value="Photo book"></option>
+          <option value="Photo mug"></option>
         </datalist>
         <p class="field-hint" data-en="Not sure? Leave it blank and we will advise." data-am="እርግጠኛ ካልሆኑ ባዶ ይተዉት፣ እኛ እንመክርዎታለን።">Not sure? Leave it blank and we will advise.</p>
       </div>
@@ -938,11 +946,11 @@
     <div class="wall-stage">
       <figure class="hung hung-a reveal reveal-scale accent-green">
         <picture><source type="image/webp" srcset="img/canvas-400.webp 400w, img/canvas-720.webp 720w, img/canvas.webp 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw"><img src="img/canvas.jpg" srcset="img/canvas-400.jpg 400w, img/canvas-720.jpg 720w, img/canvas.jpg 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw" alt="Gallery-wrapped canvas print of a highland landscape hanging on a wall" width="1024" height="1024" loading="lazy" decoding="async"></picture>
-        <figcaption><span data-en="Canvas print" data-am="የካንቫስ ህትመት">Canvas print</span><em data-en="60 × 80 cm" data-am="60 × 80 ሳ.ሜ">60 × 80 cm</em></figcaption>
+        <figcaption><span data-en="Canvas print" data-am="የካንቫስ ህትመት">Canvas print</span><em data-en="40 × 60 cm" data-am="40 × 60 ሳ.ሜ">40 × 60 cm</em></figcaption>
       </figure>
       <figure class="hung hung-b reveal reveal-scale accent-red">
         <picture><source type="image/webp" srcset="img/frames-400.webp 400w, img/frames-720.webp 720w, img/frames.webp 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw"><img src="img/frames.jpg" srcset="img/frames-400.jpg 400w, img/frames-720.jpg 720w, img/frames.jpg 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw" alt="Three framed landscape photographs arranged on a wall" width="1024" height="1024" loading="lazy" decoding="async"></picture>
-        <figcaption><span data-en="Framed set" data-am="የተከፈፉ ህትመቶች">Framed set</span><em data-en="from 30 × 40 cm" data-am="ከ30 × 40 ሳ.ሜ">from 30 × 40 cm</em></figcaption>
+        <figcaption><span data-en="Framed set" data-am="የተከፈፉ ህትመቶች">Framed set</span><em data-en="A4 and A3" data-am="A4 እና A3">A4 and A3</em></figcaption>
       </figure>
       <figure class="hung hung-c reveal reveal-scale accent-yellow">
         <picture><source type="image/webp" srcset="img/flatlay-400.webp 400w, img/flatlay-720.webp 720w, img/flatlay.webp 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw"><img src="img/flatlay.jpg" srcset="img/flatlay-400.jpg 400w, img/flatlay-720.jpg 720w, img/flatlay.jpg 1024w" sizes="(max-width: 860px) calc(100vw - 48px), (max-width: 1024px) 34vw, 46vw" alt="Assorted printed landscape photographs laid out on linen" width="1024" height="1024" loading="lazy" decoding="async"></picture>
