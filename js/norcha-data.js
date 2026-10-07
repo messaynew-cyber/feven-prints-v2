@@ -7,9 +7,31 @@
  * their own copy, they will drift apart, and a customer will be quoted two
  * prices for the same print. So: one file, one number, read by everyone.
  *
- * ⚠️ [FEVEN] Every price below is marked TEMPORARY and must be confirmed
- * before this file is treated as final. They came from the existing page,
- * not from the shop. Changing a number here changes it everywhere.
+ * 🔴 SOURCE OF TRUTH FOR PRICES, AS OF 2026-10-07.
+ *
+ * The shop supplied its real prices that day: Price_List_1.xlsx (the "BOARD"
+ * column) and a typed list. "BOARD" means CANVAS. Every number below is now
+ * the shop's, replacing the placeholders that this file used to carry.
+ *
+ * TWO PRICE KINDS — DO NOT CONFUSE THEM
+ * Norcha outsources all printing and takes a 40% margin on every print.
+ *   • Price_List_1.xlsx holds the ORIGINAL (supplier) prices — the COST.
+ *     A sell price is cost x 1.40.
+ *   • The typed list holds prices ALREADY marked up. Used as given.
+ * Canvas below comes from the first kind (x1.40 applied). Frames, calendar,
+ * book and mug come from the second.
+ *
+ * 🔴 STANDARD PRINTS ARE STILL PLACEHOLDERS. The shop has never supplied
+ *    paper-print prices. The `prints` family below is UNCONFIRMED and must
+ *    not be published as real. The Android app (norcha-android) carries the
+ *    same placeholders deliberately, so the two agree — they agree on being
+ *    wrong, which is better than disagreeing in front of a customer.
+ *
+ * 80 x 120 is REMOVED (canvas and framed). It arrived at 3,500, which sat
+ * below the smaller 60 x 120 (6,440) and equal to 50 x 80 (3,500) — 3,500
+ * divided by 1.40 is exactly the sheet's 50 x 80 original, so the figure was
+ * that row mislabelled. The Architect asked for the size gone rather than
+ * repriced. See also norcha-android's PRICE-SOURCES.md.
  *
  * Lead times are in PRODUCTION DAYS (working days, before shipping/pickup).
  */
@@ -25,7 +47,12 @@
     city: "Bole, Addis Ababa",
     hours: "Mon-Sat 8:30-19:00, Sun 10:00-17:00",
     cutoffHour: 16,                     // same-day cut-off
-    pricesAreTemporary: true            // flip to false when Feven confirms
+    /* The shop supplied its sheet on 2026-10-07, so the prices are real.
+       EXCEPT standard prints — the shop has never given paper-print prices,
+       and those six entries remain placeholders. This flag drives the
+       counter sheet's warning banner; keep the prints caveat in mind
+       regardless of what it says. */
+    pricesAreTemporary: false
   };
 
   /* Product families. `lead` = production days. `tier` = volume discount id. */
@@ -47,57 +74,68 @@
       label: { en: "Canvas prints", am: "የካንቫስ ህትመት" },
       lead: 1,
       tier: "wall",
+      /* Original x 1.40, from the shop's sheet. "45 x 60" is on the sheet
+         with a dash and no price, so it is absent rather than guessed. */
       sizes: [
-        { key: "canvas-30x40",  label: "30 × 40 cm",  price: 950 },
-        { key: "canvas-40x60",  label: "40 × 60 cm",  price: 1600 },
-        { key: "canvas-60x80",  label: "60 × 80 cm",  price: 2700 },
-        { key: "canvas-80x120", label: "80 × 120 cm", price: 4600 }
+        { key: "canvas-10x15",  label: "10 × 15 cm",  price: 420 },
+        { key: "canvas-15x20",  label: "15 × 20 cm",  price: 700 },
+        { key: "canvas-20x30",  label: "20 × 30 cm",  price: 1050 },
+        { key: "canvas-30x46",  label: "30 × 46 cm",  price: 1820 },
+        { key: "canvas-30x60",  label: "30 × 60 cm",  price: 2240 },
+        { key: "canvas-30x90",  label: "30 × 90 cm",  price: 2660 },
+        { key: "canvas-40x60",  label: "40 × 60 cm",  price: 2660 },
+        { key: "canvas-50x80",  label: "50 × 80 cm",  price: 3500 },
+        { key: "canvas-60x90",  label: "60 × 90 cm",  price: 3780 },
+        { key: "canvas-60x120", label: "60 × 120 cm", price: 6440 }
       ]
     },
     books: {
       label: { en: "Photo books", am: "የፎቶ መጽሐፍ" },
       lead: 2,                          // 2-3 days; use the pessimistic number
       tier: "books",
+      /* One price from the shop. The four old size tiers were placeholders.
+         ⚠️ Confirm whether 1,820 is one fixed book or the entry tier. */
       sizes: [
-        { key: "book-20x20-20", label: "20 × 20 cm · 20 pages", price: 1800 },
-        { key: "book-21x21-30", label: "21 × 21 cm · 30 pages", price: 2600 },
-        { key: "book-28x28-40", label: "28 × 28 cm · 40 pages", price: 3800 },
-        { key: "book-30x30-80", label: "30 × 30 cm · 80 pages", price: 6400 }
+        { key: "book-standard", label: "Photo book", price: 1820 }
       ]
     },
     frames: {
       label: { en: "Framed prints", am: "የተከፈፈ ህትመት" },
       lead: 1,
       tier: "wall",
+      /* Black wood frame with glass — a different product from framed
+         canvas, and confirmed as such by the Architect on 2026-10-07.
+         A 80 x 120 frame exists at 28,000 but is NOT listed: the print size
+         it would hold was removed, and a frame for a print we do not sell
+         is a dead entry. Restore it with the size if the size returns. */
       sizes: [
-        { key: "frame-a4",   label: "A4 framed",     price: 600 },
-        { key: "frame-a3",   label: "A3 framed",     price: 900 },
-        { key: "frame-40x60",label: "40 × 60 cm framed", price: 1500 }
+        { key: "frame-a4",   label: "A4 framed",     price: 2200 },
+        { key: "frame-a3",   label: "A3 framed",     price: 2800 },
+        { key: "frame-40x60",label: "40 × 60 cm framed", price: 5600 }
       ]
     },
     calendars: {
       label: { en: "Wall calendars", am: "የግድግዳ የቀን መቁጠሪያ" },
       lead: 1,
       tier: "wall",
+      /* A5 ONLY — confirmed by the Architect: it is the only size the
+         calendar comes in. The old A4/A3 entries were placeholders. */
       sizes: [
-        { key: "cal-a4", label: "A4 wall calendar", price: 450 },
-        { key: "cal-a3", label: "A3 wall calendar", price: 700 }
+        { key: "cal-a5", label: "A5 calendar", price: 1680 }
       ]
     },
     mugs: {
       label: { en: "Photo mugs", am: "የፎቶ ሙግ" },
       lead: 0,
-      /* 🔴 tier: "mugs" is DELIBERATELY its own ladder — a flat one.
-         Mugs already carry pack pricing in `sizes` (1 / 2 / 4 at 350 / 650 /
-         1200). Applying a percentage ladder on top of that double-discounts:
-         "2 mugs" came out as 650 via the 2-pack and 644 via 350×2 −8%. Two
-         prices for one order. So mugs use pack prices ONLY, and the tier
-         below is a flat no-discount ladder that makes that explicit. */
-      tier: "mugs",
+      /* ONE size at 1,120 from the shop. The old 1 / 2 / 4 pack ladder
+         (350 / 650 / 1200) was a placeholder and is gone, which also removes
+         the double-discount trap it created: a 2-pack price colliding with
+         the gifts ladder gave two prices for the same order. With one size
+         there is nothing to collide with.
+         ⚠️ Confirm 1,120 is PER MUG, not a pack. */
+      tier: "gifts",
       sizes: [
-        { key: "mug-1", label: "1 mug",   price: 350 },
-        { key: "mug-2", label: "2 mugs",  price: 650 },
-        { key: "mug-4", label: "4 mugs",  price: 1200 }
+        { key: "mug-1", label: "Photo mug", price: 1120 }
       ]
     }
   };
@@ -124,12 +162,6 @@
       { min: 1, pct: 0 },
       { min: 2, pct: 8 },
       { min: 5, pct: 15 }
-    ],
-    /* Mugs price by the pack, not by a percentage — see the note on
-       `mugs` above. A flat ladder keeps quote() honest for them and leaves
-       this key free for genuinely small goods that are NOT pack-priced. */
-    mugs: [
-      { min: 1, pct: 0 }
     ],
     gifts: [                              // small goods that price per unit
       { min: 1, pct: 0 },

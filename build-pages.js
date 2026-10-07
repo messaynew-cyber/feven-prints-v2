@@ -1039,17 +1039,38 @@ function productFaqs(p) {
        "በ" + fam.lead + "–" + (fam.lead + 1) + " የስራ ቀን"];
   var tiers = (D.tiers[fam.tier] || []).filter(function (t) { return t.min > 1; });
 
+  /* 🔴 A SINGLE-SIZE FAMILY MUST NOT BE ASKED ABOUT SIZES.
+     When the shop's real sheet landed, mugs went from a 1/2/4 pack ladder to
+     one product, and this question produced:
+
+         "Which sizes do photo mugs come in?" -> "Photo mug."
+
+     which is not an answer. A one-item family has no size question, so it
+     gets asked what it IS instead. products.html's guard caught this
+     (pagetest.js asserts every answer is longer than 10 characters) — the
+     check is not pedantic, it is the thing that noticed the copy was broken. */
+  var single = fam.sizes.length === 1;
   var list = [
-    { id: "sizes-" + p.slug,
-      q: ["Which sizes do " + p.name[0].toLowerCase() + " come in?", "የሚገኙት መጠኖች ምን ናቸው?"],
-      a: [sizes + ".", sizes + "።"] },
+    single
+      ? { id: "sizes-" + p.slug,
+          q: ["What do I get?", "ምን አገኛለሁ?"],
+          a: [p.name[0] + ": " + sizes + ". One size only — no size to choose.",
+              p.name[1] + "፦ " + sizes + "። አንድ መጠን ብቻ ነው።"] }
+      : { id: "sizes-" + p.slug,
+          q: ["Which sizes do " + p.name[0].toLowerCase() + " come in?", "የሚገኙት መጠኖች ምን ናቸው?"],
+          a: [sizes + ".", sizes + "።"] },
     { id: "price-" + p.slug,
       q: ["How much does it cost?", "ዋጋው ስንት ነው?"],
-      a: ["From " + D.money(low) + " to " + D.money(high) + ", depending on size." +
+      a: [(single
+              ? D.money(low) + "."
+              : "From " + D.money(low) + " to " + D.money(high) + ", depending on size.") +
           (tiers.length ? " More than one gets a discount: " +
             tiers.map(function (t) { return t.min + "+ items, " + t.pct + "% off"; }).join("; ") + "." : "") +
           " Prices depend on paper and finish — we confirm the exact price when you order.",
-          "ከ" + moneyAm(low) + " እስከ " + moneyAm(high) + "፣ እንደ መጠኑ። ዋጋው እንደ ወረቀቱና አጨራረሱ ይለያያል፤ ሲያዙ እናረጋግጣለን።"] },
+          (single
+            ? moneyAm(low) + "።"
+            : "ከ" + moneyAm(low) + " እስከ " + moneyAm(high) + "፣ እንደ መጠኑ።") +
+          " ዋጋው እንደ ወረቀቱና አጨራረሱ ይለያያል፤ ሲያዙ እናረጋግጣለን።"] },
     { id: "turnaround-" + p.slug,
       q: ["How long does it take?", "ምን ያህል ጊዜ ይወስዳል?"],
       a: [p.name[0] + " are ready " + lead[0] + ".", p.name[1] + " " + lead[1] + " ዝግጁ ይሆናሉ።"] }
